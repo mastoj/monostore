@@ -1,0 +1,5 @@
+### Get logged in user cart
+GET http://localhost:5170/cart
+
+### Get cart by id
+GET http://localhost:5170/cart/4
