@@ -6,26 +6,39 @@ using Orleans;
 
 public static class TodoEndpoints
 {
+  public static string CartGrainId(string cartId) => $"cart/{cartId.ToLower()}";
   public static void MapCartEndpoints(this IEndpointRouteBuilder routes)
   {
-    routes.MapGet("/", async (IGrainFactory grains) =>
+    routes.MapPost("/", async (IGrainFactory grains, CreateCart createCart) =>
     {
-      var cartGrain = grains.GetGrain<ICartGrain>("cart");
-      return await cartGrain.GetCart("1");
+      var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(createCart.CartId.ToString()));
+      return await cartGrain.CreateCart(createCart.CartId);
     });
 
-    routes.MapGet("/{id}", async (IGrainFactory grains, int id) =>
+    routes.MapPost("/{id}/items", async (IGrainFactory grains, Contracts.AddItem addItem) =>
     {
-      var cartGrain = grains.GetGrain<ICartGrain>("cart");
-      return await cartGrain.GetCart(id.ToString());
+      var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(addItem.CartId));
+      return await cartGrain.AddItem(addItem);
     });
 
-    routes.MapPost("/", async (IGrainFactory grains, AddItem addItem) =>
-    {
-      var cartGrain = grains.GetGrain<ICartGrain>("cart");
-      var cart = await cartGrain.GetCart(addItem.CartId);
-      return cart;
-    });
+    // routes.MapGet("/", async (IGrainFactory grains) =>
+    // {
+    //   var cartGrain = grains.GetGrain<ICartGrain>("cart");
+    //   return await cartGrain.GetCart("1");
+    // });
+
+    // routes.MapGet("/{id}", async (IGrainFactory grains, int id) =>
+    // {
+    //   var cartGrain = grains.GetGrain<ICartGrain>("cart" + id);
+    //   return await cartGrain.GetCart(id.ToString());
+    // });
+
+    // routes.MapPost("/", async (IGrainFactory grains, AddItem addItem) =>
+    // {
+    //   var cartGrain = grains.GetGrain<ICartGrain>("cart");
+    //   var cart = await cartGrain.GetCart(addItem.CartId);
+    //   return cart;
+    // });
   }
   // dotnet add package Microsoft.AspNetCore.App
 }

@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
@@ -14,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoStore.Cart.Tests", "src\cart\MonoStore.Cart.Tests\MonoStore.Cart.Tests.csproj", "{8B1125D1-35E7-4502-9CBB-789D1D8E6506}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoStore.Cart.Contracts", "src\cart\MonoStore.Cart.Contracts\MonoStore.Cart.Contracts.csproj", "{2FA49A36-F8DD-4651-AE59-45C25CE86F2C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "product", "product", "{0F9AA03B-CC94-478A-8B34-59851DF2563E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +44,7 @@ Global
 		{2FA49A36-F8DD-4651-AE59-45C25CE86F2C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{0F9AA03B-CC94-478A-8B34-59851DF2563E} = {3A654C76-9569-4E99-85BE-1FC3221077CE}
 		{5FC876A8-D9CF-46AB-95FD-3B267396E4D8} = {3A654C76-9569-4E99-85BE-1FC3221077CE}
 		{E7C332E8-9DF0-4A98-8498-A3CB226EA9AD} = {3A654C76-9569-4E99-85BE-1FC3221077CE}
 		{AFC1CDA9-849B-4D64-A202-33FEF4F68F25} = {E7C332E8-9DF0-4A98-8498-A3CB226EA9AD}

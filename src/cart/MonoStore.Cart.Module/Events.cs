@@ -1,0 +1,1 @@
+public record ItemAdded(string cartId, string itemId, decimal price, decimal priceExVat);
