@@ -62,9 +62,9 @@ public static class ApiExtensions
 {
   public static WebApplicationBuilder AddCart(this WebApplicationBuilder builder)
   {
-    var connectionString = $"{builder.Configuration.GetConnectionString("cart")};sslmode=prefer";
+    //    var connectionString = $"{builder.Configuration.GetConnectionString("cart")};sslmode=prefer";
     // var connectionString = "Host=localhost;Port=65356;Username=postgres;Password=Rvb+Zm5sR4kCUDHTvJZ8!V;sslmode=prefer"; //builder.Configuration.GetConnectionString("cart");
-    Console.WriteLine($"Cart ConnectionString: {connectionString}, schema: {Environment.GetEnvironmentVariable("SchemaName")}");
+    //Console.WriteLine($"Cart ConnectionString: {connectionString}, schema: {Environment.GetEnvironmentVariable("SchemaName")}");
     builder.Services
       .AddTransient<IEventStore, MartenEventStore>();
     builder.Services.AddMarten(s =>
