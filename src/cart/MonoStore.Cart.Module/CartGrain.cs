@@ -6,6 +6,7 @@ namespace MonoStore.Cart.Module;
 public interface ICartGrain : IGrainWithStringKey
 {
   Task<Contracts.Cart> CreateCart(Guid id);
+  Task<Contracts.Cart> GetCart(Guid id);
   Task<Contracts.Cart> AddItem(Contracts.AddItem addItem);
   Task<Contracts.Cart> RemoveItem(Contracts.RemoveItem removeItem);
   Task<Contracts.Cart> IncreaseItemQuantity(Contracts.IncreaseItemQuantity increaseItemQuantity);
@@ -101,36 +102,16 @@ public sealed class CartGrain
     return Task.FromResult(_currentCart.AsContract());
   }
 
-  // public async Task<CartDetails> CreateCart(string id)
-  // {
-  //   Console.WriteLine($"Getting cart for {id} {state.State}");
-  //   if (state.State.Id is "")
-  //   {
-  //     var newState = new CartDetails
-  //     {
-  //       Id = id
-  //     };
-  //     state.State = newState;
-  //     Console.WriteLine($"Cart for {id} is new {newState.Id}");
-  //   }
-  //   await state.WriteStateAsync();
-  //   Console.WriteLine($"Cart for {id} is {state.State.Id}");
-  //   return state.State;
-  // }
-
-  // Task<Contracts.Cart> ICartGrain.CreateCart(string id)
-  // {
-
-  // }
-
-  // public Task<Contracts.Cart> AddItem(Contracts.AddItem addItem)
-  // {
-  //   throw new NotImplementedException();
-  // }
-
   public Task<Contracts.Cart> RemoveItem(Contracts.RemoveItem removeItem)
   {
-    throw new NotImplementedException();
+    var result = Handle(_currentCart, new RemoveItem(Guid.Parse(removeItem.CartId), removeItem.ProductId));
+    if (result.IsSuccessful)
+    {
+      _eventStore.AppendToStream(Guid.Parse(removeItem.CartId), result.Value, default);
+      _currentCart = _currentCart.Apply(result.Value);
+    }
+    Console.WriteLine($"Removed item {removeItem.ProductId} from cart {removeItem.CartId}: " + _currentCart);
+    return Task.FromResult(_currentCart.AsContract());
   }
 
   public Task<Contracts.Cart> IncreaseItemQuantity(Contracts.IncreaseItemQuantity increaseItemQuantity)
@@ -153,6 +134,11 @@ public sealed class CartGrain
       _currentCart = Cart.Create(result.Value);
     }
     Console.WriteLine($"Created cart {id}: " + _currentCart);
+    return Task.FromResult(_currentCart.AsContract());
+  }
+
+  public Task<Contracts.Cart> GetCart(Guid id)
+  {
     return Task.FromResult(_currentCart.AsContract());
   }
 }

@@ -11,6 +11,7 @@ public static class TodoEndpoints
   {
     routes.MapPost("/", async (IGrainFactory grains, CreateCart createCart) =>
     {
+      Console.WriteLine("CreateCart");
       var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(createCart.CartId.ToString()));
       return await cartGrain.CreateCart(createCart.CartId);
     });
@@ -19,6 +20,22 @@ public static class TodoEndpoints
     {
       var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(addItem.CartId));
       return await cartGrain.AddItem(addItem);
+    });
+
+    routes.MapDelete("/{id}/items/{productId}", async (IGrainFactory grains, Guid id, string productId) =>
+    {
+      var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(id.ToString()));
+      return await cartGrain.RemoveItem(new Contracts.RemoveItem
+      {
+        CartId = id.ToString(),
+        ProductId = productId
+      });
+    });
+
+    routes.MapGet("/{id}", async (IGrainFactory grains, string id) =>
+    {
+      var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(id));
+      return await cartGrain.GetCart(Guid.Parse(id));
     });
 
     // routes.MapGet("/", async (IGrainFactory grains) =>

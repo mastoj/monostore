@@ -29,7 +29,7 @@ public record class RemoveItem
   [Id(0)]
   public string CartId { get; set; } = "";
   [Id(1)]
-  public string ItemId { get; set; } = "";
+  public string ProductId { get; set; } = "";
 }
 [GenerateSerializer, Alias(nameof(IncreaseItemQuantity))]
 public record class IncreaseItemQuantity
