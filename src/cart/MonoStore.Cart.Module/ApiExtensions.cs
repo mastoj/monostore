@@ -74,7 +74,7 @@ public static class ApiExtensions
 
       var connectionString = $"{builder.Configuration.GetConnectionString("cart")};sslmode=prefer;CommandTimeout=300";
       // var connectionString = "Host=localhost;Port=65356;Username=postgres;Password=Rvb+Zm5sR4kCUDHTvJZ8!V;sslmode=prefer"; //builder.Configuration.GetConnectionString("cart");
-      Thread.Sleep(4000);
+      // Thread.Sleep(4000);
       Console.WriteLine($"Cart ConnectionString: {connectionString}, schema: {Environment.GetEnvironmentVariable("SchemaName")}");
       builder.Services
         .AddTransient<IEventStore, MartenEventStore>();
