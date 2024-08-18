@@ -25,7 +25,8 @@ internal record ItemQuantityDecreased(Guid CartId, string ProductId);
 internal record Cart(
     Guid Id,
     CartStatus Status,
-    IEnumerable<CartItem> Items
+    IEnumerable<CartItem> Items,
+    int Version = 1
 )
 
 {

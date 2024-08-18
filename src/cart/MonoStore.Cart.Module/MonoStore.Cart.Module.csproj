@@ -12,5 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MonoStore.Cart.Contracts\MonoStore.Cart.Contracts.csproj" />
+    <ProjectReference Include="..\..\infrastructure\MonoStore.Marten\MonoStore.Marten.csproj" />
   </ItemGroup>
 </Project>

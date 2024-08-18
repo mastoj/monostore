@@ -13,10 +13,18 @@ builder.Host.UseOrleans(static siloBuilder =>
         .AddMemoryGrainStorage("carts");
 });
 
+builder.AddNpgsqlDataSource("cart");
+
+#region Domains
 builder.AddCart();
+#endregion
+
 var app = builder.Build();
 
+#region Endpoints
 app.UseCart("cart");
+#endregion
+
 // app.MapGroup("cart").MapCartEndpoints();
 
 // // Configure the HTTP request pipeline.
@@ -32,7 +40,7 @@ app.UseCart("cart");
 
 // // app.UseRouting();
 
-// // app.UseAuthorization();
+//app.UseAuthorization();
 
 // // // app.MapRazorPages();
 

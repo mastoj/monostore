@@ -16,8 +16,8 @@ public interface ICartGrain : IGrainWithStringKey
 
 public interface IEventStore
 {
-  Task<T> CreateStream<T>(Guid id, T @event, CancellationToken ct);
-  Task<T> AppendToStream<T>(Guid id, T @event, CancellationToken ct);
+  Task<TState> CreateStream<T, TState>(Guid id, T @event, Func<T, TState> apply, CancellationToken ct) where T : class;
+  Task<TState> AppendToStream<T, TState>(Guid id, T @event, int version, Func<T, TState> apply, CancellationToken ct) where T : class;
 }
 
 internal static class Mappers
@@ -82,36 +82,46 @@ public sealed class CartGrain
     return base.OnActivateAsync(cancellationToken);
   }
 
-
   public override Task OnDeactivateAsync(DeactivationReason reason, CancellationToken cancellationToken)
   {
     Console.WriteLine($"Deactivating! {this.GetPrimaryKeyString()}");
     return base.OnDeactivateAsync(reason, cancellationToken);
   }
-  public Task<Contracts.Cart> AddItem(Contracts.AddItem addItem)
+
+  public async Task<Contracts.Cart> CreateCart(Guid id)
+  {
+    var cartId = id;
+    var result = Create(new CreateCart(cartId));
+    if (result.IsSuccessful)
+    {
+      _currentCart = await _eventStore.CreateStream(cartId, result.Value, Cart.Create, default);
+    }
+    Console.WriteLine($"Created cart {id}: " + _currentCart);
+    return _currentCart.AsContract();
+  }
+
+  public async Task<Contracts.Cart> AddItem(Contracts.AddItem addItem)
   {
     // Should get product from product facade
     var product = new Product(addItem.ProductId, "Name: " + addItem.ProductId, 100, 100);
     var result = Handle(_currentCart, new AddItem(Guid.Parse(addItem.CartId), product));
     if (result.IsSuccessful)
     {
-      _eventStore.AppendToStream(Guid.Parse(addItem.CartId), result.Value, default);
-      _currentCart = _currentCart.Apply(result.Value);
+      _currentCart = await _eventStore.AppendToStream(Guid.Parse(addItem.CartId), result.Value, 1, _currentCart.Apply, default);
     }
     Console.WriteLine($"Added item {addItem.ProductId} to cart {addItem.CartId}: " + _currentCart);
-    return Task.FromResult(_currentCart.AsContract());
+    return _currentCart.AsContract();
   }
 
-  public Task<Contracts.Cart> RemoveItem(Contracts.RemoveItem removeItem)
+  public async Task<Contracts.Cart> RemoveItem(Contracts.RemoveItem removeItem)
   {
     var result = Handle(_currentCart, new RemoveItem(Guid.Parse(removeItem.CartId), removeItem.ProductId));
     if (result.IsSuccessful)
     {
-      _eventStore.AppendToStream(Guid.Parse(removeItem.CartId), result.Value, default);
-      _currentCart = _currentCart.Apply(result.Value);
+      _currentCart = await _eventStore.AppendToStream(Guid.Parse(removeItem.CartId), result.Value, 2, _currentCart.Apply, default);
     }
     Console.WriteLine($"Removed item {removeItem.ProductId} from cart {removeItem.CartId}: " + _currentCart);
-    return Task.FromResult(_currentCart.AsContract());
+    return _currentCart.AsContract();
   }
 
   public Task<Contracts.Cart> IncreaseItemQuantity(Contracts.IncreaseItemQuantity increaseItemQuantity)
@@ -122,19 +132,6 @@ public sealed class CartGrain
   public Task<Contracts.Cart> DecreaseItemQuantity(Contracts.DecreaseItemQuantity decreaseItemQuantity)
   {
     throw new NotImplementedException();
-  }
-
-  public Task<Contracts.Cart> CreateCart(Guid id)
-  {
-    var cartId = id;
-    var result = Create(new CreateCart(cartId));
-    if (result.IsSuccessful)
-    {
-      _eventStore.CreateStream(cartId, result.Value, default);
-      _currentCart = Cart.Create(result.Value);
-    }
-    Console.WriteLine($"Created cart {id}: " + _currentCart);
-    return Task.FromResult(_currentCart.AsContract());
   }
 
   public Task<Contracts.Cart> GetCart(Guid id)
