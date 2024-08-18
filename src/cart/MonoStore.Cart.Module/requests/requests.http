@@ -27,3 +27,6 @@ GET http://localhost:5170/cart
 
 ### Get cart by id
 GET http://localhost:5170/cart/4
+
+### Get cart 
+GET http://localhost:5170/cart/f9bd58e7-13c5-41f5-96eb-3d0c8252894c
