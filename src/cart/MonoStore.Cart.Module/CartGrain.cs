@@ -18,6 +18,7 @@ public interface IEventStore
 {
   Task<TState> CreateStream<T, TState>(Guid id, T @event, Func<T, TState> apply, CancellationToken ct) where T : class;
   Task<TState> AppendToStream<T, TState>(Guid id, T @event, int version, Func<T, TState> apply, CancellationToken ct) where T : class;
+  Task<TState> GetState<TState>(Guid id, CancellationToken ct) where TState : class;
 }
 
 internal static class Mappers
@@ -75,11 +76,14 @@ public sealed class CartGrain
     _eventStore = eventStore;
   }
 
-  public override Task OnActivateAsync(CancellationToken cancellationToken)
+  public override async Task OnActivateAsync(CancellationToken cancellationToken)
   {
     //    DelayDeactivation(TimeSpan.FromMinutes(10));
     Console.WriteLine($"Activating! {this.GetPrimaryKeyString()}");
-    return base.OnActivateAsync(cancellationToken);
+    var id = Guid.Parse(this.GetPrimaryKeyString().Split("/")[1]);
+    Console.WriteLine($"Loading cart {id}");
+    _currentCart = await _eventStore.GetState<Cart>(id, default);
+    await base.OnActivateAsync(cancellationToken);
   }
 
   public override Task OnDeactivateAsync(DeactivationReason reason, CancellationToken cancellationToken)

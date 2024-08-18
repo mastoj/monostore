@@ -4,10 +4,10 @@ namespace MonoStore.Cart.Module;
 
 #region Types
 public record Product(string ProductId, string Name, decimal Price, decimal PriceExVat);
-internal record CartItem(Product Product, int Quantity);
+public record CartItem(Product Product, int Quantity);
 
-internal record CartCreated(Guid CartId);
-internal enum CartStatus
+public record CartCreated(Guid CartId);
+public enum CartStatus
 {
   Open,
   TimedOut,
@@ -16,13 +16,13 @@ internal enum CartStatus
 #endregion
 
 #region Events
-internal record ItemAddedToCart(Guid CartId, Product Product);
-internal record ItemRemovedFromCart(Guid CartId, string ProductId);
-internal record ItemQuantityIncreased(Guid CartId, string ProductId);
-internal record ItemQuantityDecreased(Guid CartId, string ProductId);
+public record ItemAddedToCart(Guid CartId, Product Product);
+public record ItemRemovedFromCart(Guid CartId, string ProductId);
+public record ItemQuantityIncreased(Guid CartId, string ProductId);
+public record ItemQuantityDecreased(Guid CartId, string ProductId);
 #endregion
 
-internal record Cart(
+public record Cart(
     Guid Id,
     CartStatus Status,
     IEnumerable<CartItem> Items,

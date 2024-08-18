@@ -4,7 +4,7 @@ POST http://localhost:5170/cart
 Content-Type: application/json
 
 {
-  "cartId": "7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C8"
+  "cartId": "7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C7"
 }
 
 ### Add item to cart
@@ -12,7 +12,7 @@ POST http://localhost:5170/cart/7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C8/items
 Content-Type: application/json
 
 {
-  "CartId": "7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C8",
+  "CartId": "7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C7",
   "ProductId": "7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C8"
 }
 
@@ -20,7 +20,7 @@ Content-Type: application/json
 DELETE http://localhost:5170/cart/7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C8/items/7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C8
 
 ### Get cart
-GET http://localhost:5170/cart/7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C8
+GET http://localhost:5170/cart/7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C7
 
 ### Get logged in user cart
 GET http://localhost:5170/cart

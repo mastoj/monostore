@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="Aspire.Npgsql" Version="8.1.0" />
+    <PackageReference Include="Marten" Version="7.26.2" />
     <PackageReference Include="Microsoft.Orleans.Server" Version="8.2.0" />
   </ItemGroup>
 
