@@ -2,6 +2,8 @@ using MonoStore.Cart.Module;
 [assembly: GenerateCodeForDeclaringAssembly(typeof(MonoStore.Cart.Contracts.Cart))]
 
 var builder = WebApplication.CreateBuilder(args);
+builder.AddServiceDefaults();
+
 // Add services to the container.
 // builder.Services.AddRazorPages();
 builder.Host.UseOrleans(static siloBuilder =>
