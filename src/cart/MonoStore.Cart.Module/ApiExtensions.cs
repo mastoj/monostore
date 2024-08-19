@@ -7,60 +7,40 @@ using MonoStore.Marten;
 
 namespace MonoStore.Cart.Module;
 
-// public class DummyEventStore : IEventStore
-// {
-//   private static Dictionary<Guid, List<object>> _streams = new();
-//   public Task<TState> AppendToStream<T, TState>(Guid id, T @event, int version, Func<T, TState> apply, CancellationToken ct) where T : class
-//   {
-
-//     if (!_streams.ContainsKey(id))
-//     {
-//       _streams[id] = new List<object>();
-//     }
-
-//     _streams[id].Add(@event);
-//     return Task.FromResult(apply(@event));
-//   }
-
-//   public Task<TState> CreateStream<T, TState>(Guid id, T @event, Func<T, TState> create, CancellationToken ct) where T : class
-//   {
-//     if (!_streams.ContainsKey(id))
-//     {
-//       _streams[id] = new List<object>();
-//     }
-
-//     _streams[id].Add(@event);
-//     return Task.FromResult(create(@event));
-//   }
-// }
-
 public class MartenEventStore : IEventStore
 {
-  private IDocumentSession _session;
-  public MartenEventStore(IDocumentSession session)
+  private IDocumentStore _documentStore;
+  public MartenEventStore(IDocumentStore documentStore)
   {
-    _session = session;
+    _documentStore = documentStore;
   }
 
   public async Task<TState> AppendToStream<T, TState>(Guid id, T @event, int version, Func<T, TState> apply, CancellationToken ct) where T : class
   {
-    var state = apply(@event);
-    Console.WriteLine($"Appending event {id} to stream: " + @event);
-    _session.Events.Append(id, @event);
-    await _session.SaveChangesAsync(token: ct);
-    return state;
+    using (var session = _documentStore.LightweightSession())
+    {
+      var state = apply(@event);
+      Console.WriteLine($"Appending event {id} to stream: " + @event);
+      session.Events.Append(id, @event);
+      await session.SaveChangesAsync(token: ct);
+      return state;
+    }
   }
 
   public async Task<TState> CreateStream<T, TState>(Guid id, T @event, Func<T, TState> create, CancellationToken ct) where T : class
   {
-    var state = create(@event);
-    _session.Events.StartStream<T>(id, @event);
-    await _session.SaveChangesAsync(token: ct);
-    return state;
+    using (var session = _documentStore.LightweightSession())
+    {
+      var state = create(@event);
+      session.Events.StartStream<T>(id, @event);
+      await session.SaveChangesAsync(token: ct);
+      return state;
+    }
   }
 
   public async Task<TState> GetState<TState>(Guid id, CancellationToken ct) where TState : class
   {
+    using var _session = _documentStore.QuerySession();
     var result = await _session.Events.AggregateStreamAsync<TState>(id, token: ct);
     return result;
   }

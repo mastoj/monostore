@@ -12,7 +12,7 @@ POST http://localhost:5170/cart/7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C8/items
 Content-Type: application/json
 
 {
-  "CartId": "7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C7",
+  "CartId": "7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C8",
   "ProductId": "7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C9"
 }
 
@@ -29,4 +29,10 @@ GET http://localhost:5170/cart
 GET http://localhost:5170/cart/4
 
 ### Get cart 
-GET http://localhost:5170/cart/f9bd58e7-13c5-41f5-96eb-3d0c8252894c
+GET http://localhost:5170/cart/7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C8
+
+### Increase quantity of item in cart
+POST http://localhost:5170/cart/7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C8/items/7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C9/increase
+
+### Decrease quantity of item in cart
+POST http://localhost:5170/cart/7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C8/items/7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C9/decrease

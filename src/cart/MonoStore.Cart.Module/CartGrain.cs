@@ -1,4 +1,5 @@
 
+using DotNext;
 using static MonoStore.Cart.Module.CartService;
 
 namespace MonoStore.Cart.Module;
@@ -130,12 +131,24 @@ public sealed class CartGrain
 
   public Task<Contracts.Cart> IncreaseItemQuantity(Contracts.IncreaseItemQuantity increaseItemQuantity)
   {
-    throw new NotImplementedException();
+    var result = Handle(_currentCart, new IncreaseItemQuantity(Guid.Parse(increaseItemQuantity.CartId), increaseItemQuantity.ProductId));
+    if (result.IsSuccessful)
+    {
+      _currentCart = _currentCart.Apply(result.Value);
+    }
+    Console.WriteLine($"Increased item {increaseItemQuantity.ProductId} quantity in cart {increaseItemQuantity.CartId}: " + _currentCart);
+    return Task.FromResult(_currentCart.AsContract());
   }
 
   public Task<Contracts.Cart> DecreaseItemQuantity(Contracts.DecreaseItemQuantity decreaseItemQuantity)
   {
-    throw new NotImplementedException();
+    var result = Handle(_currentCart, new DecreaseItemQuantity(Guid.Parse(decreaseItemQuantity.CartId), decreaseItemQuantity.ProductId));
+    if (result.IsSuccessful)
+    {
+      _currentCart = _currentCart.Apply(result.Value);
+    }
+    Console.WriteLine($"Decreased item {decreaseItemQuantity.ProductId} quantity in cart {decreaseItemQuantity.CartId}: " + _currentCart);
+    return Task.FromResult(_currentCart.AsContract());
   }
 
   public Task<Contracts.Cart> GetCart(Guid id)
@@ -143,19 +156,3 @@ public sealed class CartGrain
     return Task.FromResult(_currentCart.AsContract());
   }
 }
-
-// [GenerateSerializer, Alias(nameof(CartDetails))]
-// public sealed record class CartDetails
-// {
-//   [Id(0)]
-//   public string Id { get; set; } = "";
-// }
-
-// [GenerateSerializer, Alias(nameof(AddItem))]
-// public sealed record class AddItem
-// {
-//   [Id(0)]
-//   public string cartId { get; set; } = "";
-//   [Id(1)]
-//   public string itemId { get; set; } = "";
-// }

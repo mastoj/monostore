@@ -32,6 +32,26 @@ public static class TodoEndpoints
       });
     });
 
+    routes.MapPost("/{id}/items/{productId}/increase", async (IGrainFactory grains, Guid id, string productId) =>
+    {
+      var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(id.ToString()));
+      return await cartGrain.IncreaseItemQuantity(new Contracts.IncreaseItemQuantity
+      {
+        CartId = id.ToString(),
+        ProductId = productId
+      });
+    });
+
+    routes.MapPost("/{id}/items/{productId}/decrease", async (IGrainFactory grains, Guid id, string productId) =>
+    {
+      var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(id.ToString()));
+      return await cartGrain.DecreaseItemQuantity(new Contracts.DecreaseItemQuantity
+      {
+        CartId = id.ToString(),
+        ProductId = productId
+      });
+    });
+
     routes.MapGet("/{id}", async (IGrainFactory grains, string id) =>
     {
       var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(id));

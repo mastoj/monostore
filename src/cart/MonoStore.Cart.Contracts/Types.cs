@@ -37,7 +37,7 @@ public record class IncreaseItemQuantity
   [Id(0)]
   public string CartId { get; set; } = "";
   [Id(1)]
-  public string ItemId { get; set; } = "";
+  public string ProductId { get; set; } = "";
 }
 [GenerateSerializer, Alias(nameof(DecreaseItemQuantity))]
 public record class DecreaseItemQuantity
@@ -45,7 +45,7 @@ public record class DecreaseItemQuantity
   [Id(0)]
   public string CartId { get; set; } = "";
   [Id(1)]
-  public string ItemId { get; set; } = "";
+  public string ProductId { get; set; } = "";
 }
 
 [GenerateSerializer, Alias(nameof(Product))]
