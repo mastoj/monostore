@@ -10,7 +10,8 @@ builder.Host.UseOrleans(static siloBuilder =>
 {
     siloBuilder
         .UseLocalhostClustering()
-        .AddMemoryGrainStorage("carts");
+        .AddMemoryGrainStorage("carts")
+        .AddActivityPropagation();
 });
 
 builder.AddNpgsqlDataSource("cart");
