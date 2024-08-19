@@ -13,7 +13,7 @@ Content-Type: application/json
 
 {
   "CartId": "7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C7",
-  "ProductId": "7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C8"
+  "ProductId": "7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C9"
 }
 
 ### Remove item from cart

@@ -45,7 +45,8 @@ public class MartenEventStore : IEventStore
   public async Task<TState> AppendToStream<T, TState>(Guid id, T @event, int version, Func<T, TState> apply, CancellationToken ct) where T : class
   {
     var state = apply(@event);
-    _session.Events.Append(id, @event, ct);
+    Console.WriteLine($"Appending event {id} to stream: " + @event);
+    _session.Events.Append(id, @event);
     await _session.SaveChangesAsync(token: ct);
     return state;
   }
