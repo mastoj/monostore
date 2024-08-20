@@ -63,6 +63,8 @@ public static class ApiExtensions
       builder.Services.AddMarten(s =>
         {
           var options = new StoreOptions();
+          options.Events.MetadataConfig.CorrelationIdEnabled = true;
+          options.Events.MetadataConfig.CausationIdEnabled = true;
           // var schemaName = Environment.GetEnvironmentVariable("SchemaName") ?? "public";
           // options.Events.DatabaseSchemaName = schemaName;
           // options.DatabaseSchemaName = schemaName;

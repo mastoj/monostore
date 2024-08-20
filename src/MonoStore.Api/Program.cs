@@ -1,8 +1,12 @@
 using MonoStore.Cart.Module;
+using OpenTelemetry.Resources;
 [assembly: GenerateCodeForDeclaringAssembly(typeof(MonoStore.Cart.Contracts.Cart))]
 
 var builder = WebApplication.CreateBuilder(args);
-builder.AddServiceDefaults();
+builder.AddServiceDefaults(c =>
+{
+    c.AddService("monostore-api");
+});
 
 // Add services to the container.
 // builder.Services.AddRazorPages();
@@ -25,6 +29,8 @@ var app = builder.Build();
 #region Endpoints
 app.UseCart("cart");
 #endregion
+
+app.MapDefaultEndpoints();
 
 // app.MapGroup("cart").MapCartEndpoints();
 

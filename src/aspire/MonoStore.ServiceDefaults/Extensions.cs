@@ -16,9 +16,9 @@ namespace Microsoft.Extensions.Hosting;
 // To learn more about using this project, see https://aka.ms/dotnet/aspire/service-defaults
 public static class Extensions
 {
-    public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder)
+    public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder, Action<OpenTelemetry.Resources.ResourceBuilder> configureOtel)
     {
-        builder.ConfigureOpenTelemetry();
+        builder.ConfigureOpenTelemetry(configureOtel);
 
         builder.AddDefaultHealthChecks();
 
@@ -42,7 +42,7 @@ public static class Extensions
         return builder;
     }
 
-    public static IHostApplicationBuilder ConfigureOpenTelemetry(this IHostApplicationBuilder builder)
+    public static IHostApplicationBuilder ConfigureOpenTelemetry(this IHostApplicationBuilder builder, Action<OpenTelemetry.Resources.ResourceBuilder> configureOtel)
     {
         builder.Logging.AddOpenTelemetry(logging =>
         {
@@ -51,11 +51,13 @@ public static class Extensions
         });
 
         builder.Services.AddOpenTelemetry()
+            .ConfigureResource(configureOtel)
             .WithMetrics(metrics =>
             {
                 metrics.AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddRuntimeInstrumentation()
+                    .AddMeter("Marten")
                     .AddMeter("Microsoft.Orleans");
             })
             .WithTracing(tracing =>
@@ -70,6 +72,7 @@ public static class Extensions
                     .AddHttpClientInstrumentation()
                     .AddSource("Microsoft.Orleans.Runtime")
                     .AddSource("Microsoft.Orleans.Application")
+                    .AddSource("Marten")
                     .AddNpgsql();
             });
 
