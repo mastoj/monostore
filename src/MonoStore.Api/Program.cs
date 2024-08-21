@@ -1,11 +1,19 @@
+using System.Diagnostics.Metrics;
+using Google.Protobuf.WellKnownTypes;
+using Monostore.ServiceDefaults;
 using MonoStore.Cart.Module;
 using OpenTelemetry.Resources;
 [assembly: GenerateCodeForDeclaringAssembly(typeof(MonoStore.Cart.Contracts.Cart))]
 
 var builder = WebApplication.CreateBuilder(args);
+var serviceName = "monostore-api";
+
 builder.AddServiceDefaults(c =>
 {
-    c.AddService("monostore-api");
+    c.AddService(serviceName);
+}, cm =>
+{
+    cm.AddMeter(DiagnosticConfig.meter.Name);
 });
 
 // Add services to the container.

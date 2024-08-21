@@ -16,9 +16,9 @@ namespace Microsoft.Extensions.Hosting;
 // To learn more about using this project, see https://aka.ms/dotnet/aspire/service-defaults
 public static class Extensions
 {
-    public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder, Action<OpenTelemetry.Resources.ResourceBuilder> configureOtel)
+    public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder, Action<OpenTelemetry.Resources.ResourceBuilder> configureOtel, Action<MeterProviderBuilder>? configureMetrics = null)
     {
-        builder.ConfigureOpenTelemetry(configureOtel);
+        builder.ConfigureOpenTelemetry(configureOtel, configureMetrics);
 
         builder.AddDefaultHealthChecks();
 
@@ -42,7 +42,7 @@ public static class Extensions
         return builder;
     }
 
-    public static IHostApplicationBuilder ConfigureOpenTelemetry(this IHostApplicationBuilder builder, Action<OpenTelemetry.Resources.ResourceBuilder> configureOtel)
+    public static IHostApplicationBuilder ConfigureOpenTelemetry(this IHostApplicationBuilder builder, Action<OpenTelemetry.Resources.ResourceBuilder> configureOtelResource, Action<MeterProviderBuilder>? configureMetrics = null)
     {
         builder.Logging.AddOpenTelemetry(logging =>
         {
@@ -51,7 +51,7 @@ public static class Extensions
         });
 
         builder.Services.AddOpenTelemetry()
-            .ConfigureResource(configureOtel)
+            .ConfigureResource(configureOtelResource)
             .WithMetrics(metrics =>
             {
                 metrics.AddAspNetCoreInstrumentation()
@@ -59,6 +59,8 @@ public static class Extensions
                     .AddRuntimeInstrumentation()
                     .AddMeter("Marten")
                     .AddMeter("Microsoft.Orleans");
+                configureMetrics(metrics);
+
             })
             .WithTracing(tracing =>
             {

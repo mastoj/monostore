@@ -4,7 +4,7 @@ POST http://localhost:5170/cart
 Content-Type: application/json
 
 {
-  "cartId": "7E64A8B2-91BD-44F7-98FC-C67FE8B6F0DD"
+  "cartId": "2E64A8B2-91BD-44F7-98FC-C67FE8B6F0DD"
 }
 
 ### Add item to cart

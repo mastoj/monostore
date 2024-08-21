@@ -2,6 +2,7 @@ namespace MonoStore.Cart.Module;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
+using Monostore.ServiceDefaults;
 using Orleans;
 
 public static class TodoEndpoints
@@ -11,6 +12,7 @@ public static class TodoEndpoints
   {
     routes.MapPost("/", async (IGrainFactory grains, CreateCart createCart) =>
     {
+      DiagnosticConfig.CreateCartCounter.Add(1, new KeyValuePair<string, object?>("operatingChain", "OCNOELK"));
       Console.WriteLine("CreateCart");
       var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(createCart.CartId.ToString()));
       return await cartGrain.CreateCart(createCart.CartId);
@@ -54,6 +56,8 @@ public static class TodoEndpoints
 
     routes.MapGet("/{id}", async (IGrainFactory grains, string id) =>
     {
+      DiagnosticConfig.CreateCartCounter.Add(1, new KeyValuePair<string, object?>("operatingChain", "OCNOELK"));
+
       var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(id));
       return await cartGrain.GetCart(Guid.Parse(id));
     });
