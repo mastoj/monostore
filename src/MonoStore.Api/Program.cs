@@ -1,11 +1,18 @@
-using System.Diagnostics.Metrics;
-using Google.Protobuf.WellKnownTypes;
+using dotenv.net;
 using Monostore.ServiceDefaults;
 using MonoStore.Cart.Module;
+using MonoStore.Product.Module;
 using OpenTelemetry.Resources;
 [assembly: GenerateCodeForDeclaringAssembly(typeof(MonoStore.Cart.Contracts.Cart))]
 
+DotEnv.Load();
+
+var config = new ConfigurationBuilder()
+    .AddEnvironmentVariables()
+    .Build();
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Configuration.AddConfiguration(config);
 var serviceName = "monostore-api";
 
 builder.AddServiceDefaults(c =>
@@ -30,6 +37,7 @@ builder.AddNpgsqlDataSource("cart");
 
 #region Domains
 builder.AddCart();
+builder.AddProduct();
 #endregion
 
 var app = builder.Build();
