@@ -18,7 +18,7 @@ var postgres = builder
     {
       a.WithHostPort(8888);
     });
-builder.AddProject<Projects.MonoStore_Api>("api")
+builder.AddProject<Projects.MonoStore_Api>("monostore-api")
   .WithReference(postgres)
   .WithExternalHttpEndpoints();
 

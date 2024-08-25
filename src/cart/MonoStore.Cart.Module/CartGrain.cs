@@ -1,5 +1,6 @@
 
 using DotNext;
+using Microsoft.Extensions.Logging;
 using MonoStore.Product.Contracts;
 using static MonoStore.Cart.Module.CartService;
 
@@ -72,27 +73,28 @@ public sealed class CartGrain
 {
   private IEventStore eventStore;
   private readonly IProductService productService;
+  private readonly ILogger<CartGrain> logger;
   private Cart currentCart;
 
-  public CartGrain(IEventStore eventStore, IProductService productService)
+  public CartGrain(IEventStore eventStore, IProductService productService, ILogger<CartGrain> logger)
   {
     this.eventStore = eventStore;
     this.productService = productService;
+    this.logger = logger;
   }
 
   public override async Task OnActivateAsync(CancellationToken cancellationToken)
   {
     //    DelayDeactivation(TimeSpan.FromMinutes(10));
-    Console.WriteLine($"Activating! {this.GetPrimaryKeyString()}");
+    logger.LogInformation("Activating {grainKey}", this.GetPrimaryKeyString());
     var id = Guid.Parse(this.GetPrimaryKeyString().Split("/")[1]);
-    Console.WriteLine($"Loading cart {id}");
     currentCart = await eventStore.GetState<Cart>(id, default);
     await base.OnActivateAsync(cancellationToken);
   }
 
   public override Task OnDeactivateAsync(DeactivationReason reason, CancellationToken cancellationToken)
   {
-    Console.WriteLine($"Deactivating! {this.GetPrimaryKeyString()}");
+    logger.LogInformation("Deactivating {grainKey}", this.GetPrimaryKeyString());
     return base.OnDeactivateAsync(reason, cancellationToken);
   }
 
@@ -133,26 +135,26 @@ public sealed class CartGrain
     return currentCart.AsContract();
   }
 
-  public Task<Contracts.Cart> IncreaseItemQuantity(Contracts.IncreaseItemQuantity increaseItemQuantity)
+  public async Task<Contracts.Cart> IncreaseItemQuantity(Contracts.IncreaseItemQuantity increaseItemQuantity)
   {
     var result = Handle(currentCart, new IncreaseItemQuantity(Guid.Parse(increaseItemQuantity.CartId), increaseItemQuantity.ProductId));
     if (result.IsSuccessful)
     {
-      currentCart = currentCart.Apply(result.Value);
+      currentCart = await eventStore.AppendToStream(Guid.Parse(increaseItemQuantity.CartId), result.Value, 2, currentCart.Apply, default);
     }
-    Console.WriteLine($"Increased item {increaseItemQuantity.ProductId} quantity in cart {increaseItemQuantity.CartId}: " + currentCart);
-    return Task.FromResult(currentCart.AsContract());
+    logger.LogInformation("Increased item {productId} quantity in cart {cartId}", increaseItemQuantity.ProductId, increaseItemQuantity.CartId);
+    return currentCart.AsContract();
   }
 
-  public Task<Contracts.Cart> DecreaseItemQuantity(Contracts.DecreaseItemQuantity decreaseItemQuantity)
+  public async Task<Contracts.Cart> DecreaseItemQuantity(Contracts.DecreaseItemQuantity decreaseItemQuantity)
   {
     var result = Handle(currentCart, new DecreaseItemQuantity(Guid.Parse(decreaseItemQuantity.CartId), decreaseItemQuantity.ProductId));
     if (result.IsSuccessful)
     {
-      currentCart = currentCart.Apply(result.Value);
+      currentCart = await eventStore.AppendToStream(Guid.Parse(decreaseItemQuantity.CartId), result.Value, 2, currentCart.Apply, default);
     }
     Console.WriteLine($"Decreased item {decreaseItemQuantity.ProductId} quantity in cart {decreaseItemQuantity.CartId}: " + currentCart);
-    return Task.FromResult(currentCart.AsContract());
+    return currentCart.AsContract();
   }
 
   public Task<Contracts.Cart> GetCart(Guid id)

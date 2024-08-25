@@ -1,38 +1,37 @@
+@cartId=2E64A8B2-91BD-44F7-98FC-C67FE8B6F0FF
+@productId=764591
 ### Create cart
 
 POST http://localhost:5170/cart
 Content-Type: application/json
 
 {
-  "cartId": "2E64A8B2-91BD-44F7-98FC-C67FE8B6F0DD"
+  "cartId": "{{cartId}}"
 }
 
 ### Add item to cart
-POST http://localhost:5170/cart/7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C8/items
+POST http://localhost:5170/cart/{{cartId}}/items
 Content-Type: application/json
 
 {
-  "CartId": "7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C8",
-  "ProductId": "764591"
+  "CartId": "{{cartId}}",
+  "ProductId": "{{productId}}",
 }
 
 ### Remove item from cart
-DELETE http://localhost:5170/cart/7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C8/items/7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C8
+DELETE http://localhost:5170/cart/{{cartId}}/items/7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C8
 
 ### Get cart
-GET http://localhost:5170/cart/7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C7
+GET http://localhost:5170/cart/{{cartId}}
 
 ### Get logged in user cart
 GET http://localhost:5170/cart
 
-### Get cart by id
-GET http://localhost:5170/cart/4
-
 ### Get cart 
-GET http://localhost:5170/cart/7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C8
+GET http://localhost:5170/cart/{{cartId}}
 
 ### Increase quantity of item in cart
-POST http://localhost:5170/cart/7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C8/items/764591/increase
+POST http://localhost:5170/cart/{{cartId}}/items/{{productId}}/increase
 
 ### Decrease quantity of item in cart
-POST http://localhost:5170/cart/7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C8/items/7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C9/decrease
+POST http://localhost:5170/cart/{{cartId}}/items/{{productId}}/decrease
