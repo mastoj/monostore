@@ -16,18 +16,18 @@ An actor should have a finite lifetime and also a timeout associated to it. If i
 
 ## Features
 
-[ ] - Get product item - need a product db and product actors for fast lookups in the cluster
-[ ] - Add item to cart
-[ ] - Increase quantity
-[ ] - Decrease quantity
-[ ] - Remove item from cart
-[ ] - Create purchase order, going to checkout, referencing a cart - cart can still be changed
-[ ] - Calculate prices based on items in cart
-[ ] - Add contact information to purchase order
-[ ] - Add payment - should lock referenced cart
-[ ] - Authorize payment
-[ ] - Create fulfillment order
-[ ] - Simple admin UI showing active carts and purchase orders and where admins can modify the cart and orders.
+ - [ ] Get product item - need a product db and product actors for fast lookups in the cluster
+ - [ ] Add item to cart
+ - [ ] Increase quantity
+ - [ ] Decrease quantity
+ - [ ] Remove item from cart
+ - [ ] Create purchase order, going to checkout, referencing a cart - cart can still be changed
+ - [ ] Calculate prices based on items in cart
+ - [ ] Add contact information to purchase order
+ - [ ] Add payment - should lock referenced cart
+ - [ ] Authorize payment
+ - [ ] Create fulfillment order
+ - [ ] Simple admin UI showing active carts and purchase orders and where admins can modify the cart and orders.
 
 ## High-level tech stack
 
