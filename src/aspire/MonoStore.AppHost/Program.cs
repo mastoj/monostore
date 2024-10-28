@@ -27,7 +27,8 @@ var orleans = builder.AddOrleans("default")
   .WithGrainStorage("default", grainStorage);
 
 builder.AddProject<Projects.MonoStore_Orelans_Dashboard>("orleans-dashboard")
-  .WithReference(orleans);
+  .WithReference(orleans)
+  .WithExternalHttpEndpoints();
 
 builder.AddProject<Projects.MonoStore_Api>("monostore-api")
   .WithReference(postgres)

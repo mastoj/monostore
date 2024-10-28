@@ -86,9 +86,6 @@ try
     builder.Host.UseOrleans(static siloBuilder =>
     {
         siloBuilder
-            .AddAzureBlobGrainStorage("carts")
-            // .UseLocalhostClustering()
-            // .AddMemoryGrainStorage("carts")
             .AddActivityPropagation();
     });
 

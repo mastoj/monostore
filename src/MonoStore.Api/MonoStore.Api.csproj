@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Aspire.Npgsql" Version="8.1.0" />
     <PackageReference Include="dotenv.net" Version="3.2.0" />
-    <PackageReference Include="Marten" Version="7.26.2" />
+    <PackageReference Include="Marten" Version="7.31.0" />
     <PackageReference Include="Microsoft.Orleans.Server" Version="8.2.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
     <PackageReference Include="Serilog.Expressions" Version="5.0.0" />
