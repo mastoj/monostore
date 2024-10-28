@@ -39,7 +39,7 @@ try
         c.AddService(serviceName, serviceInstanceId: serviceInstanceId);
     }, cm =>
     {
-        cm.AddMeter(DiagnosticConfig.meter.Name);
+        cm.AddMeter(DiagnosticConfig.GetMeter(serviceName).Name);
     });
 
     builder.Services.AddSerilog((services, lc) =>
@@ -80,11 +80,15 @@ try
 
     // Add services to the container.
     // builder.Services.AddRazorPages();
+    builder.AddKeyedAzureTableClient("clustering");
+    builder.AddKeyedAzureBlobClient("grain-state");
+
     builder.Host.UseOrleans(static siloBuilder =>
     {
         siloBuilder
-            .UseLocalhostClustering()
-            .AddMemoryGrainStorage("carts")
+            .AddAzureBlobGrainStorage("carts")
+            // .UseLocalhostClustering()
+            // .AddMemoryGrainStorage("carts")
             .AddActivityPropagation();
     });
 

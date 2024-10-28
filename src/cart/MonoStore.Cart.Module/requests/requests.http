@@ -1,4 +1,4 @@
-@cartId=2E64A8B2-91BD-44F7-98FC-C67FE8B6F0FF
+@cartId=2E64A8B2-91BD-44F7-98FC-C67FE8B6F000
 @productId=764591
 ### Create cart
 
@@ -15,7 +15,7 @@ Content-Type: application/json
 
 {
   "CartId": "{{cartId}}",
-  "ProductId": "{{productId}}",
+  "ProductId": "{{productId}}"
 }
 
 ### Remove item from cart

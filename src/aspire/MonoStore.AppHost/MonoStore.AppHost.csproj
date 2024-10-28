@@ -10,12 +10,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.0.1" />
-    <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="8.1.0" />
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.2.2" />
+    <PackageReference Include="Aspire.Hosting.Azure.Storage" Version="8.2.2" />
+    <PackageReference Include="Aspire.Hosting.Orleans" Version="8.2.2" />
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="8.2.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\MonoStore.Api\MonoStore.Api.csproj" />
+    <ProjectReference Include="..\..\orleans\MonoStore.Orelans.Dashboard\MonoStore.Orelans.Dashboard.csproj" />
   </ItemGroup>
 
 </Project>
