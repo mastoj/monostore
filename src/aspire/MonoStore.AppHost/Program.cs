@@ -10,7 +10,6 @@ builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
 var username = builder.AddParameter("postgres-username");
 var password = builder.AddParameter("postgres-password");
 var port = 5433;
-Console.WriteLine($"Postgres: {username.Resource.Value}:{password.Resource.Value}@localhost:{port}");
 var postgres = builder
   .AddPostgres("cart", username, password, port)
   // .WithDataVolume()
