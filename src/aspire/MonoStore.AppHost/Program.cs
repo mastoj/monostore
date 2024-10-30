@@ -35,4 +35,8 @@ builder.AddProject<Projects.MonoStore_Api>("monostore-api")
   .WithReference(orleans)
   .WithExternalHttpEndpoints();
 
+builder.AddProject<Projects.MonoStore_Cart_Host>("monostore-cart-host")
+  .WithReference(postgres)
+  .WithReference(orleans);
+
 builder.Build().Run();

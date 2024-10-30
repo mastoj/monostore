@@ -37,6 +37,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "orleans", "orleans", "{3EE5
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoStore.Orelans.Dashboard", "src\orleans\MonoStore.Orelans.Dashboard\MonoStore.Orelans.Dashboard.csproj", "{BCA5BA73-5240-4931-9A6B-3FB1B57D10FE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoStore.Cart.Host", "src\cart\MonoStore.Cart.Host\MonoStore.Cart.Host.csproj", "{4BC5FE84-3B0F-4C94-8DB3-338E3A8B39AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -90,6 +92,10 @@ Global
 		{BCA5BA73-5240-4931-9A6B-3FB1B57D10FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BCA5BA73-5240-4931-9A6B-3FB1B57D10FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BCA5BA73-5240-4931-9A6B-3FB1B57D10FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BC5FE84-3B0F-4C94-8DB3-338E3A8B39AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BC5FE84-3B0F-4C94-8DB3-338E3A8B39AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BC5FE84-3B0F-4C94-8DB3-338E3A8B39AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BC5FE84-3B0F-4C94-8DB3-338E3A8B39AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DA454B91-38C1-43F3-B0E3-A637A771DE73} = {3A654C76-9569-4E99-85BE-1FC3221077CE}
@@ -108,5 +114,6 @@ Global
 		{5CB0BD81-AE8B-4317-8E3C-B79C57666931} = {0F9AA03B-CC94-478A-8B34-59851DF2563E}
 		{3EE50FB5-30E3-4537-97B2-FDBCF9EB3CF0} = {3A654C76-9569-4E99-85BE-1FC3221077CE}
 		{BCA5BA73-5240-4931-9A6B-3FB1B57D10FE} = {3EE50FB5-30E3-4537-97B2-FDBCF9EB3CF0}
+		{4BC5FE84-3B0F-4C94-8DB3-338E3A8B39AA} = {E7C332E8-9DF0-4A98-8498-A3CB226EA9AD}
 	EndGlobalSection
 EndGlobal

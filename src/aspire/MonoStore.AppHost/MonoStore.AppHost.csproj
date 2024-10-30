@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\MonoStore.Api\MonoStore.Api.csproj" />
     <ProjectReference Include="..\..\orleans\MonoStore.Orelans.Dashboard\MonoStore.Orelans.Dashboard.csproj" />
+    <ProjectReference Include="..\..\cart\MonoStore.Cart.Host\MonoStore.Cart.Host.csproj" />
   </ItemGroup>
 
 </Project>

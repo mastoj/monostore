@@ -1,21 +1,10 @@
 
-using DotNext;
 using Microsoft.Extensions.Logging;
+using MonoStore.Cart.Contracts.Grains;
 using MonoStore.Product.Contracts;
 using static MonoStore.Cart.Module.CartService;
 
 namespace MonoStore.Cart.Module;
-
-public interface ICartGrain : IGrainWithStringKey
-{
-  Task<Contracts.Cart> CreateCart(Guid id);
-  Task<Contracts.Cart> GetCart(Guid id);
-  Task<Contracts.Cart> AddItem(Contracts.AddItem addItem);
-  Task<Contracts.Cart> RemoveItem(Contracts.RemoveItem removeItem);
-  Task<Contracts.Cart> IncreaseItemQuantity(Contracts.IncreaseItemQuantity increaseItemQuantity);
-  Task<Contracts.Cart> DecreaseItemQuantity(Contracts.DecreaseItemQuantity decreaseItemQuantity);
-}
-
 
 public interface IEventStore
 {

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using Monostore.ServiceDefaults;
+using MonoStore.Cart.Contracts.Grains;
 using Orleans;
 
 public static class TodoEndpoints

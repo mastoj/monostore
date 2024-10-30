@@ -6,7 +6,7 @@ using OpenTelemetry.Resources;
 using Serilog;
 using Serilog.Templates;
 using Serilog.Templates.Themes;
-[assembly: GenerateCodeForDeclaringAssembly(typeof(MonoStore.Cart.Contracts.Cart))]
+// [assembly: GenerateCodeForDeclaringAssembly(typeof(MonoStore.Cart.Contracts.Cart))]
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -85,8 +85,7 @@ try
 
     builder.Host.UseOrleans(static siloBuilder =>
     {
-        siloBuilder
-            .AddActivityPropagation();
+        siloBuilder.UseDashboard().AddActivityPropagation();
     });
 
     builder.AddNpgsqlDataSource("cart");
