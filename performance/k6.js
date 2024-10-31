@@ -1,7 +1,7 @@
 import http from 'k6/http';
 export const options = {
   vus: 100,
-  duration: '20s',
+  duration: '60s',
 };
 
 const getRandomInt = (min, max) => {
@@ -16,12 +16,13 @@ const getRandomUUID = () => {
   });
 }
 
-const randomUUIDS = Array.from({length: 1000}, () => getRandomUUID());
+const randomUUIDS = Array.from({length: 5}, () => getRandomUUID());
 
 const createdCarts = {};
 
 export default function () {
   const id = randomUUIDS[getRandomInt(0, randomUUIDS.length - 1)];
+  // Console log the count of created carts
   if(!createdCarts[id]) {
     http.post('http://localhost:5170/cart', JSON.stringify({
       cartId: id,
