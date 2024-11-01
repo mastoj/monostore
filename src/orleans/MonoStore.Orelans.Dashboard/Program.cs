@@ -1,9 +1,13 @@
 using System.Net;
-using Microsoft.Extensions.Hosting;
 using Monostore.ServiceDefaults;
 using OpenTelemetry.Resources;
 
 var builder = WebApplication.CreateBuilder(args);
+var orleansServiceId = builder.Configuration["ORLEANS_SERVICE_ID"] ?? "monostore-orleans";
+var orleansClusterId = builder.Configuration["ORLEANS_CLUSTER_ID"] ?? "monostore-orleans";
+var orleansSiloPort = int.Parse(builder.Configuration["ORLEANS_SILO_PORT"]!);
+var orleansGatewayPort = int.Parse(builder.Configuration["ORLEANS_GATEWAY_PORT"]!);
+var orleansPrimarySiloPort = int.Parse(builder.Configuration["ORLEANS_PRIMARY_SILO_PORT"]!);
 var serviceName = builder.Configuration["OTEL_RESOURCE_NAME"] ?? "orleans-dashboard";
 var serviceInstanceId = builder.Configuration["OTEL_RESOURCE_ATTRIBUTES"]?.Split('=') switch
 {
@@ -23,7 +27,7 @@ builder.AddKeyedAzureBlobClient("grain-state");
 builder.Host.UseOrleans(siloBuilder =>
 {
   siloBuilder.UseDashboard();
-  siloBuilder.UseLocalhostClustering(siloPort: 11111, gatewayPort: 30000, primarySiloEndpoint: new IPEndPoint(IPAddress.Loopback, 11111), serviceId: "monostore-dashboard", clusterId: "monostore-orleans");
+  siloBuilder.UseLocalhostClustering(siloPort: orleansSiloPort, gatewayPort: orleansGatewayPort, primarySiloEndpoint: new IPEndPoint(IPAddress.Loopback, orleansPrimarySiloPort), serviceId: orleansServiceId, clusterId: orleansClusterId);
   // siloBuilder.UseAzureStorageClustering(o =>
   // {
   //   o.

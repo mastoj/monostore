@@ -27,6 +27,10 @@ try
 
     var builder = WebApplication.CreateBuilder(args);
     builder.Configuration.AddConfiguration(config);
+    var orleansServiceId = builder.Configuration["ORLEANS_SERVICE_ID"] ?? "monostore-orleans";
+    var orleansClusterId = builder.Configuration["ORLEANS_CLUSTER_ID"] ?? "monostore-orleans";
+    var orleansGatewayPorts = builder.Configuration["ORLEANS_GATEWAY_PORTS"]?.Split(',').Select(int.Parse).ToArray();
+
     var serviceName = builder.Configuration["OTEL_RESOURCE_NAME"] ?? "monostore-api";
 
     var serviceInstanceId = builder.Configuration["OTEL_RESOURCE_ATTRIBUTES"]?.Split('=') switch
@@ -84,9 +88,9 @@ try
     builder.AddKeyedAzureTableClient("clustering");
     builder.AddKeyedAzureBlobClient("grain-state");
 
-    builder.Host.UseOrleansClient(static siloBuilder =>
+    builder.Host.UseOrleansClient(siloBuilder =>
     {
-        siloBuilder.UseLocalhostClustering(new int[] { 30000, 30003, 30002 }, serviceId: "monostore-orleans", clusterId: "monostore-orleans");
+        siloBuilder.UseLocalhostClustering(orleansGatewayPorts, serviceId: "monostore-orleans", clusterId: "monostore-orleans");
         // siloBuilder.UseLocalhostClustering(siloPort: 11113, gatewayPort: 30002, primarySiloEndpoint: new IPEndPoint(IPAddress.Loopback, 11112), serviceId: "monostore-dashboard", clusterId: "monostore-orleans");
 
         siloBuilder.AddActivityPropagation();
