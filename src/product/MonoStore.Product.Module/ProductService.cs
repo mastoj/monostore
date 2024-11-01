@@ -42,6 +42,13 @@ public class ProductService : IProductService
     var result = await container.ReadItemAsync<ProductCosmosDto>(key, new PartitionKey(key));
     logger.LogInformation($"GetProductAsync: {key}");
     logger.LogInformation($"GetProductAsync: {result.Resource.value}");
-    return new ProductDto(sku, operatingChain, "Hello", 123, 133);
+    return new ProductDto
+    {
+      Sku = sku,
+      OperatingChain = operatingChain,
+      Name = result.Resource.value,
+      Price = 123,
+      PriceExclVat = 133
+    };
   }
 }

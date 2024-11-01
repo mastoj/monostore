@@ -1,3 +1,4 @@
+using System.Net;
 using Microsoft.Extensions.Hosting;
 using Monostore.ServiceDefaults;
 using OpenTelemetry.Resources;
@@ -21,11 +22,13 @@ builder.AddKeyedAzureTableClient("clustering");
 builder.AddKeyedAzureBlobClient("grain-state");
 builder.Host.UseOrleans(siloBuilder =>
 {
+  siloBuilder.UseDashboard();
+  siloBuilder.UseLocalhostClustering(siloPort: 11112, gatewayPort: 30001, primarySiloEndpoint: new IPEndPoint(IPAddress.Loopback, 11112), serviceId: "monostore-dashboard", clusterId: "monostore-orleans");
   // siloBuilder.UseAzureStorageClustering(o =>
   // {
   //   o.
   // })
-  siloBuilder.UseDashboard(x => x.HostSelf = true);
+  // siloBuilder.UseDashboard(x => x.HostSelf = true);
 });
 
 var app = builder.Build();

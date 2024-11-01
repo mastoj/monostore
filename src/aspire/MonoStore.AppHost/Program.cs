@@ -27,16 +27,21 @@ var orleans = builder.AddOrleans("default")
   .WithGrainStorage("default", grainStorage);
 
 builder.AddProject<Projects.MonoStore_Orelans_Dashboard>("orleans-dashboard")
-  .WithReference(orleans)
+  .WithReference(orleans.AsClient())
   .WithExternalHttpEndpoints();
 
 builder.AddProject<Projects.MonoStore_Api>("monostore-api")
   .WithReference(postgres)
-  .WithReference(orleans)
+  .WithReference(orleans.AsClient())
   .WithExternalHttpEndpoints();
 
 builder.AddProject<Projects.MonoStore_Cart_Host>("monostore-cart-host")
   .WithReference(postgres)
   .WithReference(orleans);
+
+builder.AddProject<Projects.MonoStore_Product_Host>("monostore-product-host")
+  .WithReference(postgres)
+  .WithReference(orleans);
+// .WithReplicas(3);
 
 builder.Build().Run();

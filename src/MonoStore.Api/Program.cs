@@ -1,7 +1,8 @@
+using System.Net;
 using dotenv.net;
 using Monostore.ServiceDefaults;
 using MonoStore.Cart.Module;
-using MonoStore.Product.Module;
+using MonoStore.Product.Api;
 using OpenTelemetry.Resources;
 using Serilog;
 using Serilog.Templates;
@@ -85,14 +86,16 @@ try
 
     builder.Host.UseOrleans(static siloBuilder =>
     {
-        siloBuilder.UseDashboard().AddActivityPropagation();
+        siloBuilder.UseLocalhostClustering(siloPort: 11113, gatewayPort: 30002, primarySiloEndpoint: new IPEndPoint(IPAddress.Loopback, 11112), serviceId: "monostore-dashboard", clusterId: "monostore-orleans");
+
+        siloBuilder.AddActivityPropagation();
     });
 
     builder.AddNpgsqlDataSource("cart");
 
     #region Domains
-    builder.AddCart();
-    builder.AddProduct();
+    // builder.AddCart();
+    // builder.AddProduct();
     #endregion
 
     var app = builder.Build();
@@ -101,6 +104,7 @@ try
 
     #region Endpoints
     app.UseCart("cart");
+    app.UseProduct("product");
     #endregion
 
     app.MapDefaultEndpoints();

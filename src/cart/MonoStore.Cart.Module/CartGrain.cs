@@ -65,10 +65,10 @@ public sealed class CartGrain
   private readonly ILogger<CartGrain> logger;
   private Cart currentCart;
 
-  public CartGrain(IEventStore eventStore, IProductService productService, ILogger<CartGrain> logger)
+  public CartGrain(IEventStore eventStore, ILogger<CartGrain> logger)
   {
     this.eventStore = eventStore;
-    this.productService = productService;
+    //    this.productService = productService;
     this.logger = logger;
   }
 
@@ -101,16 +101,17 @@ public sealed class CartGrain
 
   public async Task<Contracts.Cart> AddItem(Contracts.AddItem addItem)
   {
-    var productDto = await productService.GetProductAsync(addItem.ProductId, "OCNOELK");
-    // Should get product from product facade
-    var product = new Product(addItem.ProductId, "Name: " + addItem.ProductId, 100, 100);
-    var result = Handle(currentCart, new AddItem(Guid.Parse(addItem.CartId), product));
-    if (result.IsSuccessful)
-    {
-      currentCart = await eventStore.AppendToStream(Guid.Parse(addItem.CartId), result.Value, 1, currentCart.Apply, default);
-    }
-    Console.WriteLine($"Added item {addItem.ProductId} to cart {addItem.CartId}: " + currentCart);
-    return currentCart.AsContract();
+    throw new NotImplementedException();
+    // var productDto = await productService.GetProductAsync(addItem.ProductId, "OCNOELK");
+    // // Should get product from product facade
+    // var product = new Product(addItem.ProductId, "Name: " + addItem.ProductId, 100, 100);
+    // var result = Handle(currentCart, new AddItem(Guid.Parse(addItem.CartId), product));
+    // if (result.IsSuccessful)
+    // {
+    //   currentCart = await eventStore.AppendToStream(Guid.Parse(addItem.CartId), result.Value, 1, currentCart.Apply, default);
+    // }
+    // Console.WriteLine($"Added item {addItem.ProductId} to cart {addItem.CartId}: " + currentCart);
+    // return currentCart.AsContract();
   }
 
   public async Task<Contracts.Cart> RemoveItem(Contracts.RemoveItem removeItem)

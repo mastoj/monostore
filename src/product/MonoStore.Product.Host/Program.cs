@@ -4,16 +4,13 @@ using OpenTelemetry.Resources;
 using Orleans.Configuration;
 
 var builder = Host.CreateApplicationBuilder(args);
-builder.AddCart();
 
-var serviceName = builder.Configuration["OTEL_RESOURCE_NAME"] ?? "monostore-cart-host";
+var serviceName = builder.Configuration["OTEL_RESOURCE_NAME"] ?? "monostore-product-host";
 var serviceInstanceId = builder.Configuration["OTEL_RESOURCE_ATTRIBUTES"]?.Split('=') switch
 {
 [string k, string v] => v,
   _ => throw new Exception($"Invalid header format {builder.Configuration["OTEL_RESOURCE_ATTRIBUTES"]}")
 };
-
-
 
 builder.AddServiceDefaults(c =>
     {
@@ -28,7 +25,7 @@ builder.AddKeyedAzureBlobClient("grain-state");
 builder.UseOrleans(static siloBuilder =>
 {
   siloBuilder
-          .UseLocalhostClustering(siloPort: 11111, gatewayPort: 30000, primarySiloEndpoint: new IPEndPoint(IPAddress.Loopback, 11112), serviceId: "monostore-orleans", clusterId: "monostore-orleans")
+          .UseLocalhostClustering(siloPort: 11113, gatewayPort: 30002, primarySiloEndpoint: new IPEndPoint(IPAddress.Loopback, 11112), serviceId: "monostore-orleans", clusterId: "monostore-orleans")
           .UseDashboard()
           .AddActivityPropagation()
           .Configure<GrainCollectionOptions>(options =>

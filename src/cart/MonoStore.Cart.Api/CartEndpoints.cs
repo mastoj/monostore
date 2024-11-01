@@ -3,6 +3,7 @@ namespace MonoStore.Cart.Module;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Monostore.ServiceDefaults;
+using MonoStore.Cart.Contracts;
 using MonoStore.Cart.Contracts.Grains;
 using Orleans;
 
@@ -17,7 +18,7 @@ public static class CartEndpoints
 
       Console.WriteLine("CreateCart");
       var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(createCart.CartId.ToString()));
-      return await cartGrain.CreateCart(createCart.CartId);
+      return await cartGrain.CreateCart(Guid.Parse(createCart.CartId));
     });
 
     routes.MapPost("/{id}/items", async (IGrainFactory grains, Contracts.AddItem addItem) =>
@@ -82,6 +83,12 @@ public static class CartEndpoints
     //   var cart = await cartGrain.GetCart(addItem.CartId);
     //   return cart;
     // });
+    // dotnet add package Microsoft.AspNetCore.App
   }
-  // dotnet add package Microsoft.AspNetCore.App
+
+  public static WebApplication UseCart(this WebApplication app, string groupPath)
+  {
+    app.MapGroup(groupPath).MapCartEndpoints();
+    return app;
+  }
 }
