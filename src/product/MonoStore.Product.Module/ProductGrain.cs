@@ -5,16 +5,28 @@ namespace MonoStore.Product.Module;
 
 public class ProductGrain : Grain, IProductGrain
 {
-  public Task<ProductDto> GetProductAsync(string sku, string operatingChain)
+  private ProductDto? state;
+  public override async Task OnActivateAsync(CancellationToken cancellationToken)
   {
-    return Task.FromResult(new ProductDto
+    //    DelayDeactivation(TimeSpan.FromMinutes(10));
+    var id = this.GetPrimaryKeyString().Split("/")[1];
+    var parts = this.GetPrimaryKeyString().Split("_");
+    var operatingChain = parts[0];
+    var sku = parts[1];
+    state = new ProductDto
     {
       Sku = sku,
       OperatingChain = operatingChain,
       Name = "Hello",
       Price = 123,
       PriceExclVat = 133
-    });
+    };
+    await base.OnActivateAsync(cancellationToken);
+  }
+
+  public Task<ProductDto> GetProductAsync()
+  {
+    return Task.FromResult(state!);
   }
 
   public Task<ProductDto> UpdateProductAsync(ProductDto product)

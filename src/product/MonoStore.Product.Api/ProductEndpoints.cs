@@ -7,12 +7,16 @@ namespace MonoStore.Product.Api;
 
 public static class ProductEndpoints
 {
+  private static string ProductGrainId(string operatingChain, string id) => $"product/{operatingChain.ToLower()}_{id.ToLower()}";
+
   public static void MapProductEndpoints(this IEndpointRouteBuilder routes)
   {
-    routes.MapGet("/{id}", async (IGrainFactory grains, string id) =>
+    routes.MapGet("/{operatingChain}/{id}", async (IGrainFactory grains, string operatingChain, string id) =>
     {
-      var productGrain = grains.GetGrain<IProductGrain>(id);
-      return await productGrain.GetProductAsync(id, "OCNOELK");
+      var productGrainId = ProductGrainId(operatingChain, id);
+      Console.WriteLine($"==> ProductGrainId: {productGrainId}");
+      var productGrain = grains.GetGrain<IProductGrain>(productGrainId);
+      return await productGrain.GetProductAsync();
     });
     routes.MapPost("/", async (IGrainFactory grains, ProductDto product) =>
     {
@@ -23,6 +27,7 @@ public static class ProductEndpoints
 
   public static WebApplication UseProduct(this WebApplication app, string groupPath)
   {
+    Console.WriteLine("Adding UseProduct");
     app.MapGroup(groupPath).MapProductEndpoints();
     return app;
   }

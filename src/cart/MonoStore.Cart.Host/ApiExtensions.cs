@@ -103,11 +103,4 @@ public static class ApiExtensions
     }
     return builder;
   }
-
-
-  public static WebApplication UseCart(this WebApplication app, string groupPath)
-  {
-    app.MapGroup(groupPath).MapCartEndpoints();
-    return app;
-  }
 }

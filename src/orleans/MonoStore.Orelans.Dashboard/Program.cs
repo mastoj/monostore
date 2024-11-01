@@ -23,7 +23,7 @@ builder.AddKeyedAzureBlobClient("grain-state");
 builder.Host.UseOrleans(siloBuilder =>
 {
   siloBuilder.UseDashboard();
-  siloBuilder.UseLocalhostClustering(siloPort: 11112, gatewayPort: 30001, primarySiloEndpoint: new IPEndPoint(IPAddress.Loopback, 11112), serviceId: "monostore-dashboard", clusterId: "monostore-orleans");
+  siloBuilder.UseLocalhostClustering(siloPort: 11111, gatewayPort: 30000, primarySiloEndpoint: new IPEndPoint(IPAddress.Loopback, 11111), serviceId: "monostore-dashboard", clusterId: "monostore-orleans");
   // siloBuilder.UseAzureStorageClustering(o =>
   // {
   //   o.

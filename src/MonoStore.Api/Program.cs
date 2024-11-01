@@ -84,9 +84,10 @@ try
     builder.AddKeyedAzureTableClient("clustering");
     builder.AddKeyedAzureBlobClient("grain-state");
 
-    builder.Host.UseOrleans(static siloBuilder =>
+    builder.Host.UseOrleansClient(static siloBuilder =>
     {
-        siloBuilder.UseLocalhostClustering(siloPort: 11113, gatewayPort: 30002, primarySiloEndpoint: new IPEndPoint(IPAddress.Loopback, 11112), serviceId: "monostore-dashboard", clusterId: "monostore-orleans");
+        siloBuilder.UseLocalhostClustering(new int[] { 30000, 30003, 30002 }, serviceId: "monostore-orleans", clusterId: "monostore-orleans");
+        // siloBuilder.UseLocalhostClustering(siloPort: 11113, gatewayPort: 30002, primarySiloEndpoint: new IPEndPoint(IPAddress.Loopback, 11112), serviceId: "monostore-dashboard", clusterId: "monostore-orleans");
 
         siloBuilder.AddActivityPropagation();
     });

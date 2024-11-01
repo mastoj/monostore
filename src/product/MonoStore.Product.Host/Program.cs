@@ -25,7 +25,7 @@ builder.AddKeyedAzureBlobClient("grain-state");
 builder.UseOrleans(static siloBuilder =>
 {
   siloBuilder
-          .UseLocalhostClustering(siloPort: 11113, gatewayPort: 30002, primarySiloEndpoint: new IPEndPoint(IPAddress.Loopback, 11112), serviceId: "monostore-orleans", clusterId: "monostore-orleans")
+          .UseLocalhostClustering(siloPort: 11113, gatewayPort: 30003, primarySiloEndpoint: new IPEndPoint(IPAddress.Loopback, 11111), serviceId: "monostore-orleans", clusterId: "monostore-orleans")
           .UseDashboard()
           .AddActivityPropagation()
           .Configure<GrainCollectionOptions>(options =>
