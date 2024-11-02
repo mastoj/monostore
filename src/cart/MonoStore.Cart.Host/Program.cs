@@ -5,11 +5,6 @@ using Orleans.Configuration;
 
 var builder = Host.CreateApplicationBuilder(args);
 builder.AddCart();
-var orleansServiceId = builder.Configuration["ORLEANS_SERVICE_ID"] ?? "monostore-orleans";
-var orleansClusterId = builder.Configuration["ORLEANS_CLUSTER_ID"] ?? "monostore-orleans";
-var orleansSiloPort = int.Parse(builder.Configuration["ORLEANS_SILO_PORT"]!);
-var orleansGatewayPort = int.Parse(builder.Configuration["ORLEANS_GATEWAY_PORT"]!);
-var orleansPrimarySiloPort = int.Parse(builder.Configuration["ORLEANS_PRIMARY_SILO_PORT"]!);
 
 var serviceName = builder.Configuration["OTEL_RESOURCE_NAME"] ?? "monostore-cart-host";
 var serviceInstanceId = builder.Configuration["OTEL_RESOURCE_ATTRIBUTES"]?.Split('=') switch
@@ -32,10 +27,7 @@ builder.AddKeyedAzureBlobClient("grain-state");
 
 builder.UseOrleans(siloBuilder =>
 {
-  siloBuilder.UseLocalhostClustering(siloPort: orleansSiloPort, gatewayPort: orleansGatewayPort, primarySiloEndpoint: new IPEndPoint(IPAddress.Loopback, orleansPrimarySiloPort), serviceId: orleansServiceId, clusterId: orleansClusterId)
-  // siloBuilder
-  //         .UseLocalhostClustering(siloPort: 11112, gatewayPort: 30002, primarySiloEndpoint: new IPEndPoint(IPAddress.Loopback, 11111), serviceId: "monostore-orleans", clusterId: "monostore-orleans")
-          .UseDashboard()
+  siloBuilder
           .AddActivityPropagation()
           .Configure<GrainCollectionOptions>(options =>
                 {

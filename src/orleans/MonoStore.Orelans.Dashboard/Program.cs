@@ -22,7 +22,7 @@ builder.AddServiceDefaults(c =>
     {
       cm.AddMeter(DiagnosticConfig.GetMeter(serviceName).Name);
     });
-builder.AddKeyedAzureTableClient("clustering");
+//builder.AddKeyedAzureTableClient("clustering");
 builder.AddKeyedAzureBlobClient("grain-state");
 builder.Host.UseOrleans(siloBuilder =>
 {

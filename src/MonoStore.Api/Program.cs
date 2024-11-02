@@ -17,8 +17,6 @@ Log.Information("Starting up!");
 
 try
 {
-
-
     DotEnv.Load();
 
     var config = new ConfigurationBuilder()
@@ -27,9 +25,6 @@ try
 
     var builder = WebApplication.CreateBuilder(args);
     builder.Configuration.AddConfiguration(config);
-    var orleansServiceId = builder.Configuration["ORLEANS_SERVICE_ID"] ?? "monostore-orleans";
-    var orleansClusterId = builder.Configuration["ORLEANS_CLUSTER_ID"] ?? "monostore-orleans";
-    var orleansGatewayPorts = builder.Configuration["ORLEANS_GATEWAY_PORTS"]?.Split(',').Select(int.Parse).ToArray();
 
     var serviceName = builder.Configuration["OTEL_RESOURCE_NAME"] ?? "monostore-api";
 
@@ -88,23 +83,13 @@ try
     builder.AddKeyedAzureTableClient("clustering");
     builder.AddKeyedAzureBlobClient("grain-state");
 
-    builder.Host.UseOrleansClient(siloBuilder =>
+    builder.Host.UseOrleansClient((ctx, builder) =>
     {
-        siloBuilder.UseLocalhostClustering(orleansGatewayPorts, serviceId: "monostore-orleans", clusterId: "monostore-orleans");
-        // siloBuilder.UseLocalhostClustering(siloPort: 11113, gatewayPort: 30002, primarySiloEndpoint: new IPEndPoint(IPAddress.Loopback, 11112), serviceId: "monostore-dashboard", clusterId: "monostore-orleans");
-
-        siloBuilder.AddActivityPropagation();
+        builder.AddActivityPropagation();
     });
 
-    builder.AddNpgsqlDataSource("cart");
-
-    #region Domains
-    // builder.AddCart();
-    // builder.AddProduct();
-    #endregion
-
+    // builder.AddNpgsqlDataSource("cart");
     var app = builder.Build();
-
     app.UseSerilogRequestLogging();
 
     #region Endpoints
@@ -113,26 +98,6 @@ try
     #endregion
 
     app.MapDefaultEndpoints();
-
-    // app.MapGroup("cart").MapCartEndpoints();
-
-    // // Configure the HTTP request pipeline.
-    // // if (!app.Environment.IsDevelopment())
-    // // {
-    // //     app.UseExceptionHandler("/Error");
-    // //     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    // //     app.UseHsts();
-    // // }
-
-    // // app.UseHttpsRedirection();
-    // // // app.UseStaticFiles();
-
-    // // app.UseRouting();
-
-    //app.UseAuthorization();
-
-    // // // app.MapRazorPages();
-
     await app.RunAsync();
     Log.Information("Stopped");
     return 0;
