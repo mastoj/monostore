@@ -16,7 +16,7 @@ const getRandomUUID = () => {
   });
 }
 
-const randomUUIDS = Array.from({length: 5}, () => getRandomUUID());
+const randomUUIDS = Array.from({length: 5000}, () => getRandomUUID());
 
 const createdCarts = {};
 
