@@ -33,7 +33,8 @@ builder.AddProject<Projects.MonoStore_Api>("monostore-api")
 
 builder.AddProject<Projects.MonoStore_Cart_Host>("monostore-cart-host")
   .WithReference(postgres)
-  .WithReference(orleans);
+  .WithReference(orleans)
+  .WithReplicas(3);
 
 builder.AddProject<Projects.MonoStore_Product_Host>("monostore-product-host")
   .WithReference(postgres)
