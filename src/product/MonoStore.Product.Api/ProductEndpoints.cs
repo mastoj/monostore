@@ -18,10 +18,11 @@ public static class ProductEndpoints
       var productGrain = grains.GetGrain<IProductGrain>(productGrainId);
       return await productGrain.GetProductAsync();
     });
-    routes.MapPost("/", async (IGrainFactory grains, ProductDto product) =>
+    routes.MapPost("/", async (IGrainFactory grains, ProductDetail product) =>
     {
-      var productGrain = grains.GetGrain<IProductGrain>(product.Sku);
-      return await productGrain.UpdateProductAsync(product);
+      throw new NotImplementedException();
+      // var productGrain = grains.GetGrain<IProductGrain>(product.Sku);
+      // return await productGrain.UpdateProductAsync(product);
     });
   }
 
