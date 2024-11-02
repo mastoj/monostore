@@ -4,6 +4,8 @@
     <ProjectReference Include="..\aspire\MonoStore.ServiceDefaults\MonoStore.ServiceDefaults.csproj" />
     <ProjectReference Include="..\cart\MonoStore.Cart.Api\MonoStore.Cart.Api.csproj" />
     <ProjectReference Include="..\product\MonoStore.Product.Api\MonoStore.Product.Api.csproj" />
+    <ProjectReference Include="..\cart\MonoStore.Cart.Contracts\MonoStore.Cart.Contracts.csproj" />
+    <ProjectReference Include="..\product\MonoStore.Product.Contracts\MonoStore.Product.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>
