@@ -26,6 +26,7 @@ builder.UseOrleans(siloBuilder =>
 {
   siloBuilder
           .AddActivityPropagation()
+          .UseDashboard(x => x.HostSelf = true)
           .Configure<GrainCollectionOptions>(options =>
                 {
                   options.CollectionAge = TimeSpan.FromMinutes(10);
