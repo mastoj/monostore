@@ -1,1 +1,7 @@
 GET http://localhost:5170/product/OCNOELK/1235
+
+### Sample sync request
+POST http://localhost:5170/product/sync
+Content-Type: application/json
+
+< ../../../../../matst80/bun-slask-sync/data/products_110.json

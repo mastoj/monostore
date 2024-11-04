@@ -1,5 +1,6 @@
 
 using Microsoft.Extensions.Logging;
+using Monostore.ServiceDefaults;
 using MonoStore.Cart.Contracts.Grains;
 using MonoStore.Product.Contracts;
 using static MonoStore.Cart.Module.CartService;
@@ -75,6 +76,7 @@ public sealed class CartGrain
   public override async Task OnActivateAsync(CancellationToken cancellationToken)
   {
     //    DelayDeactivation(TimeSpan.FromMinutes(10));
+    DiagnosticConfig.CartHost.ActiveCartCounter.Add(1, new KeyValuePair<string, object?>("operatingChain", "OCNOELK"));
     logger.LogInformation("Activating {grainKey}", this.GetPrimaryKeyString());
     var id = Guid.Parse(this.GetPrimaryKeyString().Split("/")[1]);
     currentCart = await eventStore.GetState<Cart>(id, default);
@@ -84,6 +86,8 @@ public sealed class CartGrain
   public override Task OnDeactivateAsync(DeactivationReason reason, CancellationToken cancellationToken)
   {
     logger.LogInformation("Deactivating {grainKey}", this.GetPrimaryKeyString());
+    DiagnosticConfig.CartHost.ActiveCartCounter.Add(-1, new KeyValuePair<string, object?>("operatingChain", "OCNOELK"));
+
     return base.OnDeactivateAsync(reason, cancellationToken);
   }
 

@@ -1,4 +1,6 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using MonoStore.Product.Contracts;
 using MonoStore.Product.Contracts.Grains;
@@ -23,6 +25,25 @@ public static class ProductEndpoints
       throw new NotImplementedException();
       // var productGrain = grains.GetGrain<IProductGrain>(product.Sku);
       // return await productGrain.UpdateProductAsync(product);
+    });
+    // routes.MapPost("/sync", async (IGrainFactory grains, ProductDto[] products) =>
+    routes.MapPost("/sync", async (IGrainFactory grains, HttpRequest request) =>
+    {
+      string body = "";
+      using (StreamReader stream = new StreamReader(request.Body))
+      {
+        body = await stream.ReadToEndAsync();
+      }
+      Console.WriteLine("==> Syncing products", body);
+      var productDtos = JsonSerializer.Deserialize<ProductDto[]>(body);
+      Console.WriteLine("==> Syncing products", productDtos);
+      return Results.Json(body); ;
+      // foreach (var product in products)
+      // {
+      //   var productGrain = grains.GetGrain<IProductGrain>(product.Sku);
+      //   await productGrain.UpdateProductAsync(product);
+      // }
+      // return products;
     });
   }
 

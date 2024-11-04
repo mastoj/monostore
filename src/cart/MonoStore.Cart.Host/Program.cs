@@ -32,8 +32,8 @@ builder.UseOrleans(siloBuilder =>
           .UseDashboard(x => x.HostSelf = true)
           .Configure<GrainCollectionOptions>(options =>
                 {
-                  options.CollectionAge = TimeSpan.FromMinutes(10);
-                  options.CollectionQuantum = TimeSpan.FromMinutes(5);
+                  options.CollectionAge = TimeSpan.FromSeconds(20);
+                  options.CollectionQuantum = TimeSpan.FromSeconds(10);
                 });
 });
 

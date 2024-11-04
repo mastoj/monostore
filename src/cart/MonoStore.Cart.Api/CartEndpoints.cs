@@ -1,5 +1,8 @@
 namespace MonoStore.Cart.Module;
 
+using System.Diagnostics;
+using System.Diagnostics.Metrics;
+using OpenTelemetry.Metrics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Monostore.ServiceDefaults;
@@ -9,16 +12,41 @@ using Orleans;
 
 public static class CartEndpoints
 {
+  public static Meter Meter => new Meter("MonoStore.Cart.Api");
+  public static Counter<long> OperationsCounter => Meter.CreateCounter<long>("operations");
+
+  // public static Counter<long> CartItemsCount => Meter.CreateCounter<long>("cart.items.add");
+  // public static Histogram<long> CartValue => GetMeter(apiServiceName).CreateHistogram<long>("cart.value");
+
+
   public static string CartGrainId(string cartId) => $"cart/{cartId.ToLower()}";
   public static void MapCartEndpoints(this IEndpointRouteBuilder routes)
   {
     routes.MapPost("/", async (IGrainFactory grains, CreateCart createCart) =>
     {
-      DiagnosticConfig.CreateCartCounter.Add(1, new KeyValuePair<string, object?>("operatingChain", "OCNOELK"));
-
-      Console.WriteLine("CreateCart");
-      var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(createCart.CartId.ToString()));
-      return await cartGrain.CreateCart(Guid.Parse(createCart.CartId));
+      // DiagnosticConfig.CreateCartCounter.Add(1, new KeyValuePair<string, object?>("operatingChain", "OCNOELK"));
+      try
+      {
+        Console.WriteLine("CreateCart");
+        var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(createCart.CartId.ToString()));
+        var result = await cartGrain.CreateCart(Guid.Parse(createCart.CartId));
+        OperationsCounter.Add(1, new TagList() {
+          { "operation", "create" },
+          { "status", "success" },
+        });
+        Console.WriteLine($"Cart created: {result.Id}");
+        return result;
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine("Error creating cart");
+        Console.WriteLine(ex.Message);
+        OperationsCounter.Add(1, new TagList() {
+          { "operation", "create" },
+          { "status", "error" },
+        });
+        throw;
+      }
     });
 
     routes.MapPost("/{id}/items", async (IGrainFactory grains, Contracts.AddItem addItem) =>
@@ -59,10 +87,26 @@ public static class CartEndpoints
 
     routes.MapGet("/{id}", async (IGrainFactory grains, string id) =>
     {
-      DiagnosticConfig.CreateCartCounter.Add(1, new KeyValuePair<string, object?>("operatingChain", "OCNOELK"));
+      try
+      {
+        OperationsCounter.Add(1, new TagList() {
+          { "operation", "get" },
+          { "status", "success" },
+        });
 
-      var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(id));
-      return await cartGrain.GetCart(Guid.Parse(id));
+        var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(id));
+        return await cartGrain.GetCart(Guid.Parse(id));
+      }
+      catch (Exception ex)
+      {
+        OperationsCounter.Add(1, new TagList() {
+          { "operation", "get" },
+          { "status", "success" },
+        });
+
+        Console.WriteLine(ex.Message);
+        throw;
+      }
     });
 
     // routes.MapGet("/", async (IGrainFactory grains) =>
