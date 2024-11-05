@@ -194,18 +194,13 @@ static ProductDetail MapProductDto(ProductDto productDto)
   }
 }
 
-static async Task WriteProducts(IEnumerable<ProductDetail> products)
+static async Task WriteProducts(Container container, IEnumerable<ProductDetail> products)
 {
   try
   {
-    Console.WriteLine("==> Writing products?");
-    var container = await GetCosmosContainer("ecom-data", "monostore-products", "/OperatingChain");
-    Console.WriteLine($"==> Container: {container.Id}");
     var groups = products.GroupBy(i => i.OperatingChain);
-    Console.WriteLine($"==> Groups: {groups.Count()}");
     var batchOperations = groups.SelectMany(group =>
     {
-      Console.WriteLine($"==> Group: {group.Key}");
       var chunks = group.Chunk(100);
       var chunkOperations = chunks.Select(async chunk =>
       {
@@ -214,20 +209,14 @@ static async Task WriteProducts(IEnumerable<ProductDetail> products)
         {
           batch.UpsertItem(product);
         }
-        Console.WriteLine($"==> Executing batch operations {group.Key} {chunk.Count()}");
         var result = await batch.ExecuteAsync();
         if (!result.IsSuccessStatusCode)
         {
           Console.WriteLine("==> Failed to execute batch operations: " + result.StatusCode);
         }
-        else
-        {
-          Console.WriteLine("==> Batch operations completed");
-        }
       });
       return chunkOperations;
     });
-    Console.WriteLine($"==> Waiting for batch operations {batchOperations.Count()}");
     await Task.WhenAll(batchOperations);
   }
   catch (Exception e)
@@ -244,25 +233,117 @@ static async Task<ProductDetail> GetProductAsync(Container container, string sku
   return product.Resource;
 }
 
-var timer = new System.Diagnostics.Stopwatch();
-var container = await GetCosmosContainer("ecom-data", "monostore-products", "/OperatingChain");
-timer.Start();
-for (int i = 0; i < 100; i++)
-{
-  var item = await GetProductAsync(container, "209138", "OCSEELG");
-}
-timer.Stop();
-Console.WriteLine($"==> Time: {timer.ElapsedMilliseconds}ms");
+// var timer = new System.Diagnostics.Stopwatch();
+// var container = await GetCosmosContainer("ecom-data", "monostore-products", "/OperatingChain");
+// timer.Start();
+// for (int i = 0; i < 100; i++)
+// {
+//   var item = await GetProductAsync(container, "209138", "OCSEELG");
+// }
+// timer.Stop();
+// Console.WriteLine($"==> Time: {timer.ElapsedMilliseconds}ms");
 
 // Read the file in this location ../../../../../matst80/bun-slask-sync/data/products_110.json
 // And print the result to the console
-// string path = "/Users/tomas/git/matst80/bun-slask-sync/data/products_110.json";
-// string json = File.ReadAllText(path);
 
-// //Console.WriteLine(json);
-// var productDtos = JsonSerializer.Deserialize<ProductDto[]>(json);
+// #region Upload
+// var dataFolderPath = "/Users/tomas/git/matst80/bun-slask-sync/data/";
+// var files = Directory.GetFiles(dataFolderPath);
+// var recordings = new Dictionary<string, long>();
+// var container = await GetCosmosContainer("ecom-data", "monostore-products", "/OperatingChain");
+// var counter = 0;
 
-// var products = productDtos.Select(MapProductDto).ToArray();
-// Console.WriteLine($"==> Products: {products.Length} {products[0].OperatingChain} {products[0].ArticleNumber} {products[0].id}");
-// // Update the line below to pretty print json
-// await WriteProducts(products);
+// foreach (var file in files)
+// {
+//   var stopwatch = new System.Diagnostics.Stopwatch();
+//   stopwatch.Start();
+//   Console.WriteLine(file);
+//   string path = "/Users/tomas/git/matst80/bun-slask-sync/data/products_110.json";
+//   string json = File.ReadAllText(path);
+
+//   //Console.WriteLine(json);
+//   var productDtos = JsonSerializer.Deserialize<ProductDto[]>(json);
+
+//   var products = productDtos.Select(MapProductDto).ToArray();
+//   // Update the line below to pretty print json
+//   await WriteProducts(container, products);
+//   stopwatch.Stop();
+//   Console.WriteLine($"==> Time: {stopwatch.ElapsedMilliseconds}ms for file {file} ({counter++})");
+//   recordings.Add(file, stopwatch.ElapsedMilliseconds);
+// }
+// Console.WriteLine("==> Recordings");
+// foreach (var recording in recordings)
+// {
+//   Console.WriteLine($"==> {recording.Key} {recording.Value}");
+// }
+// Console.WriteLine($"==> Average {recordings.Values.Average()}");
+// #endregion
+
+var cosmosConnectionString = Environment.GetEnvironmentVariable("COSMOS_CONNECTION_STRING");
+var cosmosClient = new CosmosClient(cosmosConnectionString);
+
+var repository = new ProductRepository(cosmosClient);
+var product = await repository.GetProductAsync("209138", "OCSEELG");
+Console.WriteLine(product);
+
+public class ProductRepository
+{
+  private readonly CosmosClient _cosmosClient;
+  public ProductRepository(CosmosClient client)
+  {
+    _cosmosClient = client;
+  }
+
+  private Database _database;
+  private async Task<Database> GetDatabase()
+  {
+    if (_database == null)
+    {
+      _database = await _cosmosClient.CreateDatabaseIfNotExistsAsync("ecom-data");
+    }
+    return _database;
+  }
+
+  private Container _container;
+  private async Task<Container> GetContainer()
+  {
+    if (_container == null)
+    {
+      var database = await GetDatabase();
+      _container = await database.CreateContainerIfNotExistsAsync("monostore-products", "/OperatingChain");
+    }
+    return _container;
+  }
+
+  public async Task<ProductDetail> GetProductAsync(string sku, string operatingChain)
+  {
+    var container = await GetContainer();
+    var product = await container.ReadItemAsync<ProductDetail>($"{operatingChain}_{sku}", new PartitionKey(operatingChain));
+    return product.Resource;
+  }
+
+  public async Task WriteProducts(IEnumerable<ProductDetail> products)
+  {
+    var container = await GetContainer();
+    var groups = products.GroupBy(i => i.OperatingChain);
+    var batchOperations = groups.SelectMany(group =>
+    {
+      var chunks = group.Chunk(100);
+      var chunkOperations = chunks.Select(async chunk =>
+      {
+        var batch = container.CreateTransactionalBatch(new PartitionKey(group.Key));
+        foreach (var product in chunk)
+        {
+          batch.UpsertItem(product);
+        }
+        var result = await batch.ExecuteAsync();
+        if (!result.IsSuccessStatusCode)
+        {
+          Console.WriteLine("==> Failed to execute batch operations: " + result.StatusCode);
+        }
+      });
+      return chunkOperations;
+    });
+    await Task.WhenAll(batchOperations);
+  }
+}
