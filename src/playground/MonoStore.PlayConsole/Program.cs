@@ -1,7 +1,23 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using System.Data;
 using System.Text.Json;
+using dotenv.net;
+using Microsoft.Azure.Cosmos;
 using MonoStore.Product.Contracts;
+
+DotEnv.Load();
+
+
+static async Task<Container> GetCosmosContainer(string databaseName, string containerName, string partitionKey = "/id")
+{
+  Console.WriteLine("==> Getting Cosmos container");
+  var cosmosConnectionString = Environment.GetEnvironmentVariable("COSMOS_CONNECTION_STRING");
+  var cosmosClient = new CosmosClient(cosmosConnectionString);
+  Console.WriteLine($"==> Container: ");
+  var database = await cosmosClient.CreateDatabaseIfNotExistsAsync(databaseName);
+  var container = await database.Database.CreateContainerIfNotExistsAsync(containerName, partitionKey);
+  return container;
+}
 
 static ProductAttribute MapAssignmentDto(AttributeDto attributeDto)
 {
@@ -75,10 +91,9 @@ static ProductDetail MapProductDto(ProductDto productDto)
 {
   try
   {
-
-    Console.WriteLine("==> Mapping product: ", productDto.ArticleNumber);
     return new ProductDetail
     {
+      id = $"{productDto.OperatingChain}_{productDto.ArticleNumber}",
       AItem = productDto.AItem != null && productDto.AItem.APrice != null ? new ProductShortItem
       {
         ArticleNumber = productDto.AItem.AArticleNumber,
@@ -179,6 +194,45 @@ static ProductDetail MapProductDto(ProductDto productDto)
   }
 }
 
+static async Task WriteProducts(IEnumerable<ProductDetail> products)
+{
+  try
+  {
+    Console.WriteLine("==> Writing products?");
+    var container = await GetCosmosContainer("ecom-data", "monostore-products", "/OperatingChain");
+    Console.WriteLine($"==> Container: {container.Id}");
+    var groups = products.GroupBy(i => i.OperatingChain);
+    Console.WriteLine($"==> Groups: {groups.Count()}");
+    var batchOperations = groups.Select(async group =>
+    {
+      Console.WriteLine($"==> Group: {group.Key}");
+      var batch = container.CreateTransactionalBatch(new PartitionKey(group.Key));
+      foreach (var product in group)
+      {
+        Console.WriteLine($"==> Upserting product: {product.id}");
+        batch.UpsertItem(product);
+      }
+      Console.WriteLine($"==> Executing batch operations {group.Key} {group.Count()}");
+      var result = await batch.ExecuteAsync();
+      if (!result.IsSuccessStatusCode)
+      {
+        Console.WriteLine("==> Failed to execute batch operations", result.StatusCode);
+      }
+      else
+      {
+        Console.WriteLine("==> Batch operations completed");
+      }
+    }).ToList();
+    Console.WriteLine($"==> Waiting for batch operations {batchOperations.Count}");
+    await Task.WhenAll(batchOperations);
+  }
+  catch (Exception e)
+  {
+    Console.WriteLine("==> Failed to write products", e);
+  }
+  // var batch = container.CreateTransactionalBatch()
+  // await File.WriteAllTextAsync("/Users/tomas/git/matst80/bun-slask-sync/data/products_110_mapped.json", json);
+}
 
 // Read the file in this location ../../../../../matst80/bun-slask-sync/data/products_110.json
 // And print the result to the console
@@ -188,5 +242,7 @@ string json = File.ReadAllText(path);
 //Console.WriteLine(json);
 var productDtos = JsonSerializer.Deserialize<ProductDto[]>(json);
 
+var products = productDtos.Select(MapProductDto).ToArray();
+Console.WriteLine($"==> Products: {products.Length} {products[0].OperatingChain} {products[0].ArticleNumber} {products[0].id}");
 // Update the line below to pretty print json
-Console.WriteLine(JsonSerializer.Serialize(productDtos.Select(MapProductDto), new JsonSerializerOptions { WriteIndented = true }));
+await WriteProducts(products.Take(100));

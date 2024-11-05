@@ -241,6 +241,8 @@ public record class ProductDetail
   public string VendorArticleNumber { get; set; } = "";
   [Id(43)]
   public string VendorGroup { get; set; } = "";
+  [Id(44)]
+  public string id { get; set; } = "";
 }
 
 
