@@ -238,15 +238,31 @@ static async Task WriteProducts(IEnumerable<ProductDetail> products)
   // await File.WriteAllTextAsync("/Users/tomas/git/matst80/bun-slask-sync/data/products_110_mapped.json", json);
 }
 
+static async Task<ProductDetail> GetProductAsync(Container container, string sku, string operatingChain)
+{
+  var product = await container.ReadItemAsync<ProductDetail>($"{operatingChain}_{sku}", new PartitionKey(operatingChain));
+  return product.Resource;
+}
+
+var timer = new System.Diagnostics.Stopwatch();
+var container = await GetCosmosContainer("ecom-data", "monostore-products", "/OperatingChain");
+timer.Start();
+for (int i = 0; i < 100; i++)
+{
+  var item = await GetProductAsync(container, "209138", "OCSEELG");
+}
+timer.Stop();
+Console.WriteLine($"==> Time: {timer.ElapsedMilliseconds}ms");
+
 // Read the file in this location ../../../../../matst80/bun-slask-sync/data/products_110.json
 // And print the result to the console
-string path = "/Users/tomas/git/matst80/bun-slask-sync/data/products_110.json";
-string json = File.ReadAllText(path);
+// string path = "/Users/tomas/git/matst80/bun-slask-sync/data/products_110.json";
+// string json = File.ReadAllText(path);
 
-//Console.WriteLine(json);
-var productDtos = JsonSerializer.Deserialize<ProductDto[]>(json);
+// //Console.WriteLine(json);
+// var productDtos = JsonSerializer.Deserialize<ProductDto[]>(json);
 
-var products = productDtos.Select(MapProductDto).ToArray();
-Console.WriteLine($"==> Products: {products.Length} {products[0].OperatingChain} {products[0].ArticleNumber} {products[0].id}");
-// Update the line below to pretty print json
-await WriteProducts(products);
+// var products = productDtos.Select(MapProductDto).ToArray();
+// Console.WriteLine($"==> Products: {products.Length} {products[0].OperatingChain} {products[0].ArticleNumber} {products[0].id}");
+// // Update the line below to pretty print json
+// await WriteProducts(products);
