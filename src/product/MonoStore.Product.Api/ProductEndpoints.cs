@@ -9,7 +9,7 @@ namespace MonoStore.Product.Api;
 
 public static class ProductEndpoints
 {
-  private static string ProductGrainId(string operatingChain, string id) => $"product/{operatingChain.ToLower()}_{id.ToLower()}";
+  private static string ProductGrainId(string operatingChain, string id) => $"product/{operatingChain.ToUpper()}_{id.ToLower()}";
 
   public static void MapProductEndpoints(this IEndpointRouteBuilder routes)
   {

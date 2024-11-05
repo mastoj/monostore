@@ -11,6 +11,7 @@
     <!-- <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" /> -->
     <PackageReference Include="Aspire.Azure.Data.Tables" Version="8.2.2" />
     <PackageReference Include="Aspire.Azure.Storage.Blobs" Version="8.2.2" />
+    <PackageReference Include="dotenv.net" Version="3.2.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
     <PackageReference Include="Microsoft.Orleans.Clustering.AzureStorage" Version="8.2.0" />
     <PackageReference Include="Microsoft.Orleans.Persistence.AzureStorage" Version="8.2.0" />

@@ -6,32 +6,23 @@ namespace MonoStore.Product.Module;
 public class ProductGrain : Grain, IProductGrain
 {
   private ProductDetail? state;
+  private readonly ProductRepository repository;
+
+  public ProductGrain(ProductRepository repository)
+  {
+    this.repository = repository;
+  }
   public override async Task OnActivateAsync(CancellationToken cancellationToken)
   {
-    throw new NotImplementedException();
-    // //    DelayDeactivation(TimeSpan.FromMinutes(10));
-    // var id = this.GetPrimaryKeyString().Split("/")[1];
-    // var parts = this.GetPrimaryKeyString().Split("_");
-    // var operatingChain = parts[0];
-    // var sku = parts[1];
-    // state = new ProductDetail
-    // {
-    //   Sku = sku,
-    //   OperatingChain = operatingChain,
-    //   Name = "Hello",
-    //   Price = 123,
-    //   PriceExclVat = 133
-    // };
-    //    await base.OnActivateAsync(cancellationToken);
+    Console.WriteLine("==> Product: OnActivateAsync");
+    var id = this.GetPrimaryKeyString().Split("/")[1];
+    var parts = id.Split("_");
+    state = await repository.GetProductAsync(parts[0], parts[1]);
   }
 
   public Task<ProductDetail> GetProductAsync()
   {
+    Console.WriteLine("==> GetProductAsync");
     return Task.FromResult(state!);
-  }
-
-  public Task<ProductDetail> UpdateProductAsync(ProductDetail product)
-  {
-    return Task.FromResult(product);
   }
 }

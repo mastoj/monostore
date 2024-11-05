@@ -1,8 +1,13 @@
 using System.Net;
+using dotenv.net;
+using Microsoft.Azure.Cosmos;
 using Monostore.ServiceDefaults;
+using MonoStore.Product.Module;
 using OpenTelemetry.Resources;
 using Orleans.Configuration;
 
+DotEnv.Load();
+var connectionString = Environment.GetEnvironmentVariable("COSMOS_CONNECTION_STRING");
 var builder = Host.CreateApplicationBuilder(args);
 
 var serviceName = builder.Configuration["OTEL_RESOURCE_NAME"] ?? "monostore-product-host";
@@ -19,6 +24,8 @@ builder.AddServiceDefaults(c =>
     {
       cm.AddMeter(DiagnosticConfig.GetMeter(serviceName).Name);
     });
+builder.Services.AddSingleton(new CosmosClient(connectionString));
+builder.Services.AddSingleton<ProductRepository>();
 builder.AddKeyedAzureTableClient("clustering");
 builder.AddKeyedAzureBlobClient("grain-state");
 
@@ -29,8 +36,8 @@ builder.UseOrleans(siloBuilder =>
           .UseDashboard(x => x.HostSelf = true)
           .Configure<GrainCollectionOptions>(options =>
                 {
-                  options.CollectionAge = TimeSpan.FromMinutes(10);
-                  options.CollectionQuantum = TimeSpan.FromMinutes(5);
+                  options.CollectionAge = TimeSpan.FromSeconds(10);
+                  options.CollectionQuantum = TimeSpan.FromSeconds(5);
                 });
 });
 

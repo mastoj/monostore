@@ -1,6 +1,11 @@
+using dotenv.net;
 using Microsoft.Extensions.Configuration;
 
+DotEnv.Load();
+
 var builder = DistributedApplication.CreateBuilder(args);
+
+builder.Configuration.AddEnvironmentVariables();
 
 builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
 {
@@ -34,7 +39,7 @@ builder.AddProject<Projects.MonoStore_Api>("monostore-api")
 builder.AddProject<Projects.MonoStore_Cart_Host>("monostore-cart-host")
   .WithReference(postgres)
   .WithReference(orleans)
-  .WithReplicas(3);
+  .WithReplicas(1);
 
 builder.AddProject<Projects.MonoStore_Product_Host>("monostore-product-host")
   .WithReference(orleans)

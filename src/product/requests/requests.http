@@ -1,4 +1,5 @@
-GET http://localhost:5170/product/OCNOELK/1235
+### Get a product
+GET http://localhost:5170/product/OCSEELG/209100
 
 ### Sample sync request
 POST http://localhost:5170/product/sync
