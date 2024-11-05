@@ -203,27 +203,31 @@ static async Task WriteProducts(IEnumerable<ProductDetail> products)
     Console.WriteLine($"==> Container: {container.Id}");
     var groups = products.GroupBy(i => i.OperatingChain);
     Console.WriteLine($"==> Groups: {groups.Count()}");
-    var batchOperations = groups.Select(async group =>
+    var batchOperations = groups.SelectMany(group =>
     {
       Console.WriteLine($"==> Group: {group.Key}");
-      var batch = container.CreateTransactionalBatch(new PartitionKey(group.Key));
-      foreach (var product in group)
+      var chunks = group.Chunk(100);
+      var chunkOperations = chunks.Select(async chunk =>
       {
-        Console.WriteLine($"==> Upserting product: {product.id}");
-        batch.UpsertItem(product);
-      }
-      Console.WriteLine($"==> Executing batch operations {group.Key} {group.Count()}");
-      var result = await batch.ExecuteAsync();
-      if (!result.IsSuccessStatusCode)
-      {
-        Console.WriteLine("==> Failed to execute batch operations", result.StatusCode);
-      }
-      else
-      {
-        Console.WriteLine("==> Batch operations completed");
-      }
-    }).ToList();
-    Console.WriteLine($"==> Waiting for batch operations {batchOperations.Count}");
+        var batch = container.CreateTransactionalBatch(new PartitionKey(group.Key));
+        foreach (var product in chunk)
+        {
+          batch.UpsertItem(product);
+        }
+        Console.WriteLine($"==> Executing batch operations {group.Key} {chunk.Count()}");
+        var result = await batch.ExecuteAsync();
+        if (!result.IsSuccessStatusCode)
+        {
+          Console.WriteLine("==> Failed to execute batch operations: " + result.StatusCode);
+        }
+        else
+        {
+          Console.WriteLine("==> Batch operations completed");
+        }
+      });
+      return chunkOperations;
+    });
+    Console.WriteLine($"==> Waiting for batch operations {batchOperations.Count()}");
     await Task.WhenAll(batchOperations);
   }
   catch (Exception e)
@@ -245,4 +249,4 @@ var productDtos = JsonSerializer.Deserialize<ProductDto[]>(json);
 var products = productDtos.Select(MapProductDto).ToArray();
 Console.WriteLine($"==> Products: {products.Length} {products[0].OperatingChain} {products[0].ArticleNumber} {products[0].id}");
 // Update the line below to pretty print json
-await WriteProducts(products.Take(100));
+await WriteProducts(products);
