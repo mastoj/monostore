@@ -10,12 +10,12 @@ build: ## Build the docker image
 	dotnet build
 
 dockerize-api: ## Build the docker image for the api, use with LABEL=<tag> to specify the tag
-	docker build . -t monostore-api:${LABEL} -f ./src/product/MonoStore.Product.Host/Dockerfile
+	docker build . -t tomascontainers.azurecr.io/monostore-api:${LABEL} -f ./src/product/MonoStore.Product.Host/Dockerfile
 
 dockerize-cart: ## Build the docker image for cart, use with LABEL=<tag> to specify the tag
-	docker build . -t monostore-cart-host:${LABEL} -f ./src/cart/MonoStore.Cart.Host/Dockerfile
+	docker build . -t tomascontainers.azurecr.io/monostore-cart-host:${LABEL} -f ./src/cart/MonoStore.Cart.Host/Dockerfile
 
 dockerize-product: ## Build the docker image for product, use with LABEL=<tag> to specify the tag
-	docker build . -t monostore-product-host:${LABEL} -f ./src/product/MonoStore.Product.Host/Dockerfile
+	docker build . -t tomascontainers.azurecr.io/monostore-product-host:${LABEL} -f ./src/product/MonoStore.Product.Host/Dockerfile
 
 dockerize-all: dockerize-api dockerize-cart dockerize-product ## Build all the docker images use with LABEL=<tag> to specify the tag
