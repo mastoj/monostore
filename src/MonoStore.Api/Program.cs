@@ -49,7 +49,7 @@ try
             .Enrich.FromLogContext()
             .WriteTo.OpenTelemetry(options =>
             {
-                options.Endpoint = builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"];
+                options.Endpoint = builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"] ?? "http://monostore-jaeger:4317";
                 var headers = builder.Configuration["OTEL_EXPORTER_OTLP_HEADERS"]?.Split(',') ?? [];
                 foreach (var header in headers)
                 {
@@ -80,19 +80,20 @@ try
 
     // Add services to the container.
     // builder.Services.AddRazorPages();
-    builder.AddKeyedAzureTableClient("clustering");
-    builder.AddKeyedAzureBlobClient("grain-state");
+    // builder.AddKeyedAzureTableClient("clustering");
+    // builder.AddKeyedAzureBlobClient("grain-state");
 
-    builder.Host.UseOrleansClient((ctx, builder) =>
-    {
-        builder.AddActivityPropagation();
-    });
+    // builder.Host.UseOrleansClient((ctx, builder) =>
+    // {
+    //     builder.AddActivityPropagation();
+    // });
 
     // builder.AddNpgsqlDataSource("cart");
     var app = builder.Build();
     app.UseSerilogRequestLogging();
 
     #region Endpoints
+    app.MapGet("/", () => "Hello World!");
     app.UseCart("cart");
     app.UseProduct("product");
     #endregion
