@@ -28,12 +28,8 @@ try
 
     var serviceName = builder.Configuration["OTEL_RESOURCE_NAME"] ?? "monostore-api";
 
-    var serviceInstanceId = builder.Configuration["OTEL_RESOURCE_ATTRIBUTES"]?.Split('=') switch
-    {
-    [string k, string v] => v,
-        _ => throw new Exception($"Invalid header format {builder.Configuration["OTEL_RESOURCE_ATTRIBUTES"]}")
-    };
-
+    var attributes = builder.Configuration["OTEL_RESOURCE_ATTRIBUTES"]?.Split('.').Select(s => s.Split("=")) ?? [];
+    var serviceInstanceId = attributes.FirstOrDefault(y => y[0].Contains("service.instance.id"))?[1].Split("=")[1] ?? throw new Exception("Service instance id not found");
     builder.AddServiceDefaults(c =>
     {
         c.AddService(serviceName, serviceInstanceId: serviceInstanceId);
@@ -64,13 +60,11 @@ try
                 options.ResourceAttributes.Add("service.name", serviceName);
                 // options.ResourceAttributes.Add("service.name", serviceName);
                 //To remove the duplicate issue, we can use the below code to get the key and value from the configuration
-                var (otelResourceAttribute, otelResourceAttributeValue) = builder.Configuration["OTEL_RESOURCE_ATTRIBUTES"]?.Split('=') switch
+                var attributes = builder.Configuration["OTEL_RESOURCE_ATTRIBUTES"]?.Split('.').Select(s => s.Split("=")) ?? [];
+                foreach (var attribute in attributes)
                 {
-                [string k, string v] => (k, v),
-                    _ => throw new Exception($"Invalid header format {builder.Configuration["OTEL_RESOURCE_ATTRIBUTES"]}")
-                };
-                Console.WriteLine($"Resource Attribute: {otelResourceAttribute}, Resource Attribute Value: {otelResourceAttributeValue}");
-                options.ResourceAttributes.Add(otelResourceAttribute, otelResourceAttributeValue);
+                    options.ResourceAttributes.Add(attribute[0], attribute[1]);
+                }
             })
             .WriteTo.Console(new ExpressionTemplate(
                 // Include trace and span ids when present.

@@ -17,6 +17,5 @@ echo "Deploying image monostore-api:$LABEL to resource group $AZ_RESOURCE_GROUP 
 # Update the container ap with a new image
 az containerapp update \
   --name monostore-api \
-  --target-port 8080 \
   --resource-group $AZ_RESOURCE_GROUP \
   --image $DOCKER_SERVER/monostore-api:$LABEL
