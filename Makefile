@@ -10,7 +10,7 @@ build: ## Build the docker image
 	dotnet build
 
 dockerize-api: ## Build the docker image for the api, use with LABEL=<tag> to specify the tag
-	DOCKER_DEFAULT_PLATFORM=linux/amd64 docker build . -t tomascontainers.azurecr.io/monostore-api:${LABEL} -f ./src/product/MonoStore.Product.Host/Dockerfile
+	DOCKER_DEFAULT_PLATFORM=linux/amd64 docker build . -t tomascontainers.azurecr.io/monostore-api:${LABEL} -f ./src/MonoStore.Api/Dockerfile
 
 dockerize-cart: ## Build the docker image for cart, use with LABEL=<tag> to specify the tag
 	DOCKER_DEFAULT_PLATFORM=linux/amd64 docker build . -t tomascontainers.azurecr.io/monostore-cart-host:${LABEL} -f ./src/cart/MonoStore.Cart.Host/Dockerfile
