@@ -42,6 +42,9 @@ deploy-product: ## Deploy the product to the azure container instance, use with 
 
 deploy-all: deploy-api deploy-cart deploy-product ## Deploy all the images to the azure container instance, use with LABEL=<tag> to specify the tag
 
+build-publish-deploy-all: ## Deploys and builds everything
+	./build.sh && ./publish.sh && make deploy-all
+
 # az containerapp create \
 #   --name $API_NAME \
 #   --resource-group $RESOURCE_GROUP \

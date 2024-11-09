@@ -15,6 +15,6 @@ az containerapp create \
 
   # Update the container ap with a new image
 az containerapp update \
-  --name monostore-api \
+  --name $WORKER_NAME \
   --resource-group $AZ_RESOURCE_GROUP \
   --image $DOCKER_SERVER/$WORKER_NAME:$LABEL
