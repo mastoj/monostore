@@ -94,8 +94,8 @@ try
 
     #region Endpoints
     app.MapGet("/", () => "Hello World!");
-    app.UseCart("cart");
-    app.UseProduct("product");
+    // app.UseCart("cart");
+    // app.UseProduct("product");
     #endregion
 
     app.MapDefaultEndpoints();

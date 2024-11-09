@@ -9,7 +9,7 @@ echo "Deploying image monostore-api:$LABEL to resource group $AZ_RESOURCE_GROUP 
 #   --resource-group $AZ_RESOURCE_GROUP \
 #   --environment $AZ_CONTAINER_APP_ENV \
 #   --image $DOCKER_SERVER/monostore-api:$LABEL \
-#   --target-port 80 \
+#   --target-port 8080 \
 #   --ingress external \
 #   --registry-server $DOCKER_SERVER \
 #   --query properties.configuration.ingress.fqdn
@@ -17,5 +17,6 @@ echo "Deploying image monostore-api:$LABEL to resource group $AZ_RESOURCE_GROUP 
 # Update the container ap with a new image
 az containerapp update \
   --name monostore-api \
+  --target-port 8080 \
   --resource-group $AZ_RESOURCE_GROUP \
   --image $DOCKER_SERVER/monostore-api:$LABEL
