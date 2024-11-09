@@ -45,6 +45,9 @@ deploy-all: deploy-api deploy-cart deploy-product ## Deploy all the images to th
 build-publish-deploy-all: ## Deploys and builds everything
 	./build.sh && ./publish.sh && make deploy-all
 
+build-publish-deploy-api: ## Deploys and builds the api
+	./build-api.sh && ./publish-api.sh && make deploy-api
+
 # az containerapp create \
 #   --name $API_NAME \
 #   --resource-group $RESOURCE_GROUP \
