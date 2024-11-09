@@ -28,8 +28,8 @@ try
 
     var serviceName = builder.Configuration["OTEL_RESOURCE_NAME"] ?? "monostore-api";
 
-    var attributes = builder.Configuration["OTEL_RESOURCE_ATTRIBUTES"]?.Split('.').Select(s => s.Split("=")) ?? [];
-    var serviceInstanceId = attributes.FirstOrDefault(y => y[0].Contains("service.instance.id"))?[1].Split("=")[1] ?? throw new Exception("Service instance id not found");
+    var attributes = builder.Configuration["OTEL_RESOURCE_ATTRIBUTES"]?.Split(',').Select(s => s.Split("=")) ?? [];
+    var serviceInstanceId = attributes.FirstOrDefault(y => y[0].Contains("service.instance.id"))?[1] ?? throw new Exception("Service instance id not found");
     builder.AddServiceDefaults(c =>
     {
         c.AddService(serviceName, serviceInstanceId: serviceInstanceId);
@@ -60,7 +60,6 @@ try
                 options.ResourceAttributes.Add("service.name", serviceName);
                 // options.ResourceAttributes.Add("service.name", serviceName);
                 //To remove the duplicate issue, we can use the below code to get the key and value from the configuration
-                var attributes = builder.Configuration["OTEL_RESOURCE_ATTRIBUTES"]?.Split('.').Select(s => s.Split("=")) ?? [];
                 foreach (var attribute in attributes)
                 {
                     options.ResourceAttributes.Add(attribute[0], attribute[1]);
