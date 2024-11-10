@@ -48,10 +48,10 @@ deploy-worker: ## Deploys a worker to container apps
 	./deploy-worker.sh
 
 deploy-cart: ## Deploy the cart to the azure container instance
-	APP=monostore-cart-host make ./deploy-worker.sh
+	APP=monostore-cart-host make deploy-worker
 
 deploy-product: ## Deploy the product to the azure container instance
-	APP=monostore-product-host make ./deploy-worker.sh
+	APP=monostore-product-host make deploy-worker
 
 deploy-all: deploy-api deploy-cart deploy-product ## Deploy all the images to the azure container instance
 

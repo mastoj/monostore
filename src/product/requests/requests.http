@@ -1,7 +1,7 @@
 @BASE_URL_LOCAL = http://localhost:5170
 @BASE_URL_AZURE = https://monostore-api.whiteground-32f83688.northeurope.azurecontainerapps.io
-@BASE_URL = {{BASE_URL_AZURE}}
-#@BASE_URL = {{BASE_URL_LOCAL}}
+#@BASE_URL = {{BASE_URL_AZURE}}
+@BASE_URL = {{BASE_URL_LOCAL}}
 
 ### Get a product
 GET {{BASE_URL}}/product/OCSEELG/209100
