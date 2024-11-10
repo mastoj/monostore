@@ -1,8 +1,13 @@
+@BASE_URL_LOCAL = http://localhost:5170
+@BASE_URL_AZURE = https://monostore-api.whiteground-32f83688.northeurope.azurecontainerapps.io
+@BASE_URL = {{BASE_URL_AZURE}}
+#@BASE_URL = {{BASE_URL_LOCAL}}
+
 ### Get a product
-GET http://localhost:5170/product/OCSEELG/209100
+GET {{BASE_URL}}/product/OCSEELG/209100
 
 ### Sample sync request
-POST http://localhost:5170/product/sync
+POST {{BASE_URL}}/product/sync
 Content-Type: application/json
 
 < ../../../../../matst80/bun-slask-sync/data/products_110.json
