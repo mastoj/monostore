@@ -38,9 +38,6 @@ try
         cm.AddMeter(DiagnosticConfig.GetMeter(serviceName).Name);
     });
 
-    Console.WriteLine($"OTLP ENDPOINT: {builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]}");
-    Console.WriteLine($"OTLP PROTOCOL: {builder.Configuration["OTEL_EXPORTER_OTLP_PROTOCOL"]}");
-
     builder.Services.AddSerilog((services, lc) =>
     {
         lc.ReadFrom.Configuration(config)
@@ -77,23 +74,22 @@ try
     });
 
     // Add services to the container.
-    // builder.Services.AddRazorPages();
-    // builder.AddKeyedAzureTableClient("clustering");
-    // builder.AddKeyedAzureBlobClient("grain-state");
+    builder.Services.AddRazorPages();
+    builder.AddKeyedAzureTableClient("clustering");
+    builder.AddKeyedAzureBlobClient("grain-state");
 
-    // builder.Host.UseOrleansClient((ctx, builder) =>
-    // {
-    //     builder.AddActivityPropagation();
-    // });
+    builder.Host.UseOrleansClient((ctx, builder) =>
+    {
+        builder.AddActivityPropagation();
+    });
 
-    // builder.AddNpgsqlDataSource("cart");
     var app = builder.Build();
     app.UseSerilogRequestLogging();
 
     #region Endpoints
     app.MapGet("/", () => "Hello World!");
-    // app.UseCart("cart");
-    // app.UseProduct("product");
+    app.UseCart("cart");
+    app.UseProduct("product");
     #endregion
 
     app.MapDefaultEndpoints();
