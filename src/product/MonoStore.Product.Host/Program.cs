@@ -11,11 +11,9 @@ var connectionString = Environment.GetEnvironmentVariable("COSMOS_CONNECTION_STR
 var builder = Host.CreateApplicationBuilder(args);
 
 var serviceName = builder.Configuration["OTEL_RESOURCE_NAME"] ?? "monostore-product-host";
-var serviceInstanceId = builder.Configuration["OTEL_RESOURCE_ATTRIBUTES"]?.Split('=') switch
-{
-[string k, string v] => v,
-  _ => throw new Exception($"Invalid header format {builder.Configuration["OTEL_RESOURCE_ATTRIBUTES"]}")
-};
+var attributes = builder.Configuration["OTEL_RESOURCE_ATTRIBUTES"]?.Split(',').Select(s => s.Split("=")) ?? [];
+var serviceInstanceId = attributes.FirstOrDefault(y => y[0].Contains("service.instance.id"))?[1] ?? throw new Exception("Service instance id not found");
+
 
 builder.AddServiceDefaults(c =>
     {
