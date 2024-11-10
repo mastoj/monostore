@@ -45,8 +45,8 @@ try
             .Enrich.FromLogContext()
             .WriteTo.OpenTelemetry(options =>
             {
-                options.Endpoint = "http://monostore-jaeger:4317";
-                // options.Endpoint = builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"] ?? "http://monostore-jaeger:4317";
+                //options.Endpoint = "http://monostore-jaeger:4318";
+                options.Endpoint = builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"] ?? "http://monostore-jaeger:4317";
                 Console.WriteLine($"OTLP Endpoint: {options.Endpoint}");
                 var headers = builder.Configuration["OTEL_EXPORTER_OTLP_HEADERS"]?.Split(',') ?? [];
                 foreach (var header in headers)
