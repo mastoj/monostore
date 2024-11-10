@@ -38,6 +38,9 @@ try
         cm.AddMeter(DiagnosticConfig.GetMeter(serviceName).Name);
     });
 
+    Console.WriteLine($"OTLP ENDPOINT: {builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]}");
+    Console.WriteLine($"OTLP PROTOCOL: {builder.Configuration["OTEL_EXPORTER_OTLP_PROTOCOL"]}");
+
     builder.Services.AddSerilog((services, lc) =>
     {
         lc.ReadFrom.Configuration(config)

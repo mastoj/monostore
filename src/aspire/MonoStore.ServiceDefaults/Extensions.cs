@@ -51,7 +51,6 @@ public static class Extensions
         });
 
         builder.Services.AddOpenTelemetry()
-            .UseOtlpExporter(OpenTelemetry.Exporter.OtlpExportProtocol.HttpProtobuf, new Uri("http://monostore-jaeger:4318"))
             .ConfigureResource(configureOtelResource)
             .WithMetrics(metrics =>
             {
