@@ -7,6 +7,7 @@ using OpenTelemetry.Resources;
 using Orleans.Configuration;
 
 DotEnv.Load();
+Console.WriteLine("==> Product Host: Starting up!");
 var connectionString = Environment.GetEnvironmentVariable("COSMOS_CONNECTION_STRING");
 var builder = Host.CreateApplicationBuilder(args);
 
