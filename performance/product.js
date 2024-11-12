@@ -9,13 +9,15 @@ const getRandomArticleNumber = () => {
   return articleNumbers[Math.floor(Math.random() * articleNumbers.length)];
 }
 
+const isLocal = true;
+const baseUrl = isLocal ? "http://localhost:5170" : "https://monostore-api.whiteground-32f83688.northeurope.azurecontainerapps.io";
 
 export default function () {
   // Console log the count of created carts
   const id = getRandomArticleNumber();
   const parts = id.split('_');
   const [operatingChain, articleNumber] = parts;
-  http.get(`http://localhost:5170/product/${operatingChain}/${articleNumber}`);
+  http.get(`${baseUrl}/product/${operatingChain}/${articleNumber}`);
 }
 
 const articleNumbers = ["OCSEELG_209096",
