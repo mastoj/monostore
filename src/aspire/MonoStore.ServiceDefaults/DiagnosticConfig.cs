@@ -14,4 +14,10 @@ public static class DiagnosticConfig
     public static Meter Meter = new Meter("MonoStore.Cart.Module");
     public static Counter<long> ActiveCartCounter = Meter.CreateCounter<long>("cart.active");
   }
+
+  public static class ProductHost
+  {
+    public static Meter Meter = new Meter("MonoStore.Product.Module");
+    public static Counter<long> ActiveProductCounter = Meter.CreateCounter<long>("product.active");
+  }
 }

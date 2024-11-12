@@ -1,3 +1,4 @@
+using Monostore.ServiceDefaults;
 using MonoStore.Product.Contracts;
 using MonoStore.Product.Contracts.Grains;
 
@@ -15,11 +16,19 @@ public class ProductGrain : Grain, IProductGrain
   public override async Task OnActivateAsync(CancellationToken cancellationToken)
   {
     Console.WriteLine("==> Product: OnActivateAsync");
+
     var id = this.GetPrimaryKeyString().Split("/")[1];
     var parts = id.Split("_");
     state = await repository.GetProductAsync(parts[0], parts[1]);
+    DiagnosticConfig.ProductHost.ActiveProductCounter.Add(1, new KeyValuePair<string, object?>("operatingChain", state.OperatingChain));
   }
 
+  public override Task OnDeactivateAsync(DeactivationReason reason, CancellationToken cancellationToken)
+  {
+    DiagnosticConfig.ProductHost.ActiveProductCounter.Add(1, new KeyValuePair<string, object?>("operatingChain", state?.OperatingChain));
+
+    return base.OnDeactivateAsync(reason, cancellationToken);
+  }
   public Task<ProductDetail> GetProductAsync()
   {
     Console.WriteLine("==> GetProductAsync");
