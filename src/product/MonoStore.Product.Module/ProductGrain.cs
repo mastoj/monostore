@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Monostore.ServiceDefaults;
 using MonoStore.Product.Contracts;
 using MonoStore.Product.Contracts.Grains;
@@ -26,7 +27,7 @@ public class ProductGrain : Grain, IProductGrain
       state = await repository.GetProductAsync(parts[0], parts[1]);
       DiagnosticConfig.ProductHost.ActiveProductCounter.Add(1, new KeyValuePair<string, object?>("operatingChain", state.OperatingChain ?? ""));
     }
-    catch (Exception)
+    catch (Exception ex)
     {
       Console.WriteLine("==> Product: OnActivateAsync: " + primaryKeyString);
       throw;

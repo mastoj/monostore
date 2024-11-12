@@ -34,5 +34,4 @@ echo "Deploying image $DOCKER_SERVER/$APP:$LABEL to resource group $AZ_RESOURCE_
 az containerapp update \
   --name $APP \
   --resource-group $AZ_RESOURCE_GROUP \
-  --image $DOCKER_SERVER/$APP:$LABEL \
-  --debug
+  --image $DOCKER_SERVER/$APP:$LABEL 
