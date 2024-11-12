@@ -26,7 +26,7 @@ builder.AddServiceDefaults(c =>
 builder.Services.AddSingleton(new CosmosClient(connectionString));
 builder.Services.AddSingleton<ProductRepository>();
 builder.AddKeyedAzureTableClient("clustering");
-builder.AddKeyedAzureBlobClient("grain-state");
+builder.AddKeyedAzureBlobClient("grainstate");
 
 builder.UseOrleans(siloBuilder =>
 {

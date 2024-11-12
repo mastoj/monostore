@@ -76,7 +76,7 @@ try
     // Add services to the container.
     builder.Services.AddRazorPages();
     builder.AddKeyedAzureTableClient("clustering");
-    builder.AddKeyedAzureBlobClient("grain-state");
+    builder.AddKeyedAzureBlobClient("grainstate");
 
     builder.Host.UseOrleansClient((ctx, builder) =>
     {

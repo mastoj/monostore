@@ -25,7 +25,7 @@ var postgres = builder
 
 var storage = builder.AddAzureStorage("storage").RunAsEmulator();
 var clusteringTable = storage.AddTables("clustering");
-var grainStorage = storage.AddBlobs("grain-state");
+var grainStorage = storage.AddBlobs("grainstate");
 
 var orleans = builder.AddOrleans("default")
   .WithClustering(clusteringTable)

@@ -18,7 +18,7 @@ builder.AddServiceDefaults(c =>
       cm.AddMeter(DiagnosticConfig.GetMeter(serviceName).Name);
     });
 builder.AddKeyedAzureTableClient("clustering");
-builder.AddKeyedAzureBlobClient("grain-state");
+builder.AddKeyedAzureBlobClient("grainstate");
 builder.Host.UseOrleans(siloBuilder =>
 {
   siloBuilder.UseDashboard(x => x.HostSelf = true);
