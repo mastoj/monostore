@@ -4,6 +4,7 @@ using Monostore.ServiceDefaults;
 using MonoStore.Cart.Module;
 using MonoStore.Product.Api;
 using OpenTelemetry.Resources;
+using Scalar.AspNetCore;
 using Serilog;
 using Serilog.Templates;
 using Serilog.Templates.Themes;
@@ -37,6 +38,9 @@ try
     {
         cm.AddMeter(DiagnosticConfig.GetMeter(serviceName).Name);
     });
+
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
 
     builder.Services.AddSerilog((services, lc) =>
     {
@@ -91,6 +95,15 @@ try
     // app.UseCart("cart");
     app.UseProduct("product");
     #endregion
+
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger(options =>
+        {
+            options.RouteTemplate = "/openapi/{documentName}.json";
+        });
+        app.MapScalarApiReference();
+    }
 
     app.MapDefaultEndpoints();
     await app.RunAsync();
