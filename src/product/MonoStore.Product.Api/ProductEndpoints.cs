@@ -31,9 +31,9 @@ public static class ProductEndpoints
     routes.MapPost("/sync", async (IGrainFactory grains, [FromBody] ProductDto[] productDtos) =>
     {
       // var productDtos = await request.ReadFromJsonAsync<ProductDto[]>();
-      Console.WriteLine("==> ProductDtos: ", productDtos.Length);
+      Console.WriteLine("==> ProductDtos: " + productDtos.Length);
       var productDetails = productDtos.Select(Mappers.MapProductDto).ToList();
-      Console.WriteLine("==> Syncing products: ", productDetails.Count);
+      Console.WriteLine("==> Syncing products: " + productDetails.Count);
       return Results.Json(productDetails);
       // foreach (var product in products)
       // {

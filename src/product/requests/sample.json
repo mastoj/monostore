@@ -1,24 +1,3 @@
-@BASE_URL_LOCAL = http://localhost:5170
-@BASE_URL_AZURE = https://monostore-api.whiteground-32f83688.northeurope.azurecontainerapps.io
-#@BASE_URL = {{BASE_URL_AZURE}}
-@BASE_URL = {{BASE_URL_LOCAL}}
-
-## Get hello
-GET {{BASE_URL}}
-
-### Get a product
-GET {{BASE_URL}}/product/OCSEELG/209100
-
-### Sample sync request
-POST {{BASE_URL}}/product/sync
-Content-Type: application/json
-
-< ./products_110.json
-
-### Sample sync request
-POST {{BASE_URL}}/product/sync
-Content-Type: application/json
-
 [
   {
     "OperatingChain": "OCSEELG",
@@ -254,6 +233,5 @@ Content-Type: application/json
     "SellerName": "Elgiganten",
     "CheapestBItem": null,
     "AItem": null
-  }]
-
-###< ../../../../../matst80/bun-slask-sync/data/products_110.json
+  }
+]
