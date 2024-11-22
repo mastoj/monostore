@@ -245,6 +245,12 @@ public record class ProductDetail
   public string id { get; set; } = "";
 }
 
+[GenerateSerializer, Alias(nameof(ProductSyncEvent))]
+public class ProductSyncEvent
+{
+  [Id(0)]
+  public List<string> ProductGrainIds { get; set; }
+}
 
 public interface IProductService
 {

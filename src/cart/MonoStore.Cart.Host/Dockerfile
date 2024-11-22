@@ -1,12 +1,12 @@
-# Create a layer docker image starting with base from the aspnet:8.0 image
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+# Create a layer docker image starting with base from the aspnet:9.0 image
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 11111
 EXPOSE 30000
 
-# Create a build layer on the sdk:8.0 image
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+# Create a build layer on the sdk:9.0 image
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 COPY ["src/cart/MonoStore.Cart.Host/MonoStore.Cart.Host.csproj", "cart/MonoStore.Cart.Host/"]
 COPY ["src/cart/MonoStore.Cart.Module/MonoStore.Cart.Module.csproj", "cart/MonoStore.Cart.Module/"]

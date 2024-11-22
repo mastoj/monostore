@@ -23,7 +23,7 @@ var postgres = builder
       a.WithHostPort(8888);
     });
 
-var storage = builder.AddAzureStorage("storage").RunAsEmulator();
+var storage = builder.AddAzureStorage("storage").RunAsEmulator(x => x.WithImageTag("latest"));
 var clusteringTable = storage.AddTables("clustering");
 var grainStorage = storage.AddBlobs("grainstate");
 
@@ -38,6 +38,7 @@ builder.AddProject<Projects.MonoStore_Api>("monostore-api")
 builder.AddProject<Projects.MonoStore_Cart_Host>("monostore-cart-host")
   .WithReference(postgres)
   .WithReference(orleans)
+  .WaitFor(postgres)
   .WithReplicas(1);
 
 builder.AddProject<Projects.MonoStore_Product_Host>("monostore-product-host")
@@ -47,5 +48,7 @@ builder.AddProject<Projects.MonoStore_Product_Host>("monostore-product-host")
 builder.AddProject<Projects.MonoStore_Orelans_Dashboard>("orleans-dashboard")
   .WithReference(orleans)
   .WithExternalHttpEndpoints();
+
+builder.AddProject<Projects.Dummy>("dummy");
 
 builder.Build().Run();

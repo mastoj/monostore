@@ -9,24 +9,23 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Npgsql" Version="8.1.0" />
+    <PackageReference Include="Aspire.Npgsql" Version="9.0.0" />
     <PackageReference Include="dotenv.net" Version="3.2.0" />
-    <PackageReference Include="Marten" Version="7.31.0" />
-    <PackageReference Include="Microsoft.Orleans.Client" Version="8.2.0" />
+    <PackageReference Include="Marten" Version="7.33.0" />
+    <PackageReference Include="Microsoft.Orleans.Client" Version="9.0.0" />
     <PackageReference Include="OrleansDashboard" Version="8.2.0" />
-    <PackageReference Include="Scalar.AspNetCore" Version="1.2.39" />
-    <PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
+    <PackageReference Include="Scalar.AspNetCore" Version="1.2.42" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
     <PackageReference Include="Serilog.Expressions" Version="5.0.0" />
     <PackageReference Include="Serilog.Sinks.OpenTelemetry" Version="4.0.0" />
-    <PackageReference Include="Aspire.Azure.Data.Tables" Version="8.2.2" />
-    <PackageReference Include="Aspire.Azure.Storage.Blobs" Version="8.2.2" />
-    <PackageReference Include="Microsoft.Orleans.Clustering.AzureStorage" Version="8.2.0" />
-    <PackageReference Include="Microsoft.Orleans.Persistence.AzureStorage" Version="8.2.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.0.0" />
+    <PackageReference Include="Aspire.Azure.Data.Tables" Version="9.0.0" />
+    <PackageReference Include="Aspire.Azure.Storage.Blobs" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Orleans.Clustering.AzureStorage" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Orleans.Persistence.AzureStorage" Version="9.0.0" />
   </ItemGroup>
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>

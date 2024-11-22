@@ -40,7 +40,6 @@ try
     });
 
     builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen();
 
     builder.Services.AddSerilog((services, lc) =>
     {
@@ -98,11 +97,7 @@ try
 
     if (app.Environment.IsDevelopment())
     {
-        app.UseSwagger(options =>
-        {
-            options.RouteTemplate = "/openapi/{documentName}.json";
-        });
-        app.MapScalarApiReference();
+        // app.MapScalarApiReference();
     }
 
     app.MapDefaultEndpoints();

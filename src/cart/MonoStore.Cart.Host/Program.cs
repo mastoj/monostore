@@ -28,6 +28,8 @@ builder.UseOrleans(siloBuilder =>
   siloBuilder
           .AddActivityPropagation()
           .UseDashboard(x => x.HostSelf = true)
+          .AddMemoryStreams("ProductStreamProvider")
+          .AddMemoryGrainStorage("PubSubStore")
           .Configure<GrainCollectionOptions>(options =>
                 {
                   options.CollectionAge = TimeSpan.FromSeconds(20);
