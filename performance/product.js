@@ -1,6 +1,6 @@
 import http from 'k6/http';
 export const options = {
-  vus: 800,
+  vus: 50,
   duration: '120s',
 };
 
@@ -9,7 +9,7 @@ const getRandomArticleNumber = () => {
   return articleNumbers[Math.floor(Math.random() * articleNumbers.length)];
 }
 
-const isLocal = false;
+const isLocal = true;
 const baseUrl = isLocal ? "http://localhost:5170" : "https://monostore-api.whiteground-32f83688.northeurope.azurecontainerapps.io";
 
 export default function () {

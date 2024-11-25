@@ -68,7 +68,7 @@ Content-Type: application/json
     "BadgeUrl": "",
     "BadgeUrlB2B": "",
     "SavePrice": "false",
-    "AdvertisingText": "Hello2",
+    "AdvertisingText": "This is more advertising text2",
     "AdvertisingTextB2B": "",
     "BeforePrice": null,
     "BeforePriceExVat": null,
