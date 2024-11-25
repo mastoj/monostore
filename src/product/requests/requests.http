@@ -7,7 +7,7 @@
 GET {{BASE_URL}}
 
 ### Get a product
-GET {{BASE_URL}}/product/OCSEELG/209096
+GET {{BASE_URL}}/product/OCSEELG/209984
 
 ### Sample sync request
 POST {{BASE_URL}}/product/sync

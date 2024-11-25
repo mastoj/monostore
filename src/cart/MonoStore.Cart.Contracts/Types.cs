@@ -1,6 +1,8 @@
-﻿using Orleans;
+﻿namespace MonoStore.Cart.Contracts;
 
-namespace MonoStore.Cart.Contracts;
+#region requests if contracts does not match
+public record AddItemRequest(Guid CartId, string OperatingChain, string ProductId);
+#endregion
 
 public enum CartStatus
 {
@@ -13,21 +15,31 @@ public enum CartStatus
 public record class CreateCart
 {
   [Id(0)]
-  public string CartId { get; set; } = "";
+  public Guid CartId { get; set; } = Guid.Empty;
+  [Id(1)]
+  public string OperatingChain { get; set; } = "";
 }
+
+[GenerateSerializer, Alias(nameof(GetCart))]
+public record class GetCart
+{
+  [Id(0)]
+  public Guid CartId { get; set; } = Guid.Empty;
+}
+
 [GenerateSerializer, Alias(nameof(AddItem))]
 public record class AddItem
 {
   [Id(0)]
-  public string CartId { get; set; } = "";
+  public Guid CartId { get; set; } = Guid.Empty;
   [Id(1)]
-  public string ProductId { get; set; } = "";
+  public CartItem Item { get; set; } = new CartItem();
 }
 [GenerateSerializer, Alias(nameof(RemoveItem))]
 public record class RemoveItem
 {
   [Id(0)]
-  public string CartId { get; set; } = "";
+  public Guid CartId { get; set; } = Guid.Empty;
   [Id(1)]
   public string ProductId { get; set; } = "";
 }
@@ -35,7 +47,7 @@ public record class RemoveItem
 public record class IncreaseItemQuantity
 {
   [Id(0)]
-  public string CartId { get; set; } = "";
+  public Guid CartId { get; set; } = Guid.Empty;
   [Id(1)]
   public string ProductId { get; set; } = "";
 }
@@ -43,7 +55,7 @@ public record class IncreaseItemQuantity
 public record class DecreaseItemQuantity
 {
   [Id(0)]
-  public string CartId { get; set; } = "";
+  public Guid CartId { get; set; } = Guid.Empty;
   [Id(1)]
   public string ProductId { get; set; } = "";
 }
@@ -59,6 +71,10 @@ public record class Product
   public decimal Price { get; set; } = 0;
   [Id(3)]
   public decimal PriceExVat { get; set; } = 0;
+  [Id(4)]
+  public string Url { get; set; } = "";
+  [Id(5)]
+  public string PrimaryImageUrl { get; set; } = "";
 }
 [GenerateSerializer, Alias(nameof(CartItem))]
 public record class CartItem
@@ -73,9 +89,11 @@ public record class CartItem
 public record class Cart
 {
   [Id(0)]
-  public string Id { get; set; } = "";
+  public Guid Id { get; set; } = Guid.Empty;
   [Id(1)]
-  public CartStatus Status { get; set; } = CartStatus.Open;
+  public string OperatingChain { get; set; } = "";
   [Id(2)]
-  public IEnumerable<CartItem> Items { get; set; } = new List<CartItem>();
+  public CartStatus Status { get; set; } = CartStatus.Open;
+  [Id(3)]
+  public List<CartItem> Items { get; set; } = new List<CartItem>();
 }

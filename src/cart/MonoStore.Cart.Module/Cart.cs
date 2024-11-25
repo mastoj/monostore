@@ -1,22 +1,22 @@
-using MonoStore.Cart.Module.Facades;
+using MonoStore.Cart.Contracts;
 
 namespace MonoStore.Cart.Module;
 
 #region Types
-public record Product(string ProductId, string Name, decimal Price, decimal PriceExVat);
-public record CartItem(Product Product, int Quantity);
+// public record Product(string ProductId, string Name, decimal Price, decimal PriceExVat);
+// public record CartItem(Product Product, int Quantity);
 
-public record CartCreated(Guid CartId);
-public enum CartStatus
-{
-  Open,
-  TimedOut,
-  Paid,
-}
+public record CartCreated(Guid CartId, string OperatingChain);
+// public enum CartStatus
+// {
+//   Open,
+//   TimedOut,
+//   Paid,
+// }
 #endregion
 
 #region Events
-public record ItemAddedToCart(Guid CartId, Product Product);
+public record ItemAddedToCart(Guid CartId, CartItem Item);
 public record ItemRemovedFromCart(Guid CartId, string ProductId);
 public record ItemQuantityIncreased(Guid CartId, string ProductId);
 public record ItemQuantityDecreased(Guid CartId, string ProductId);
@@ -24,6 +24,7 @@ public record ItemQuantityDecreased(Guid CartId, string ProductId);
 
 public record Cart(
     Guid Id,
+    string OperatingChain,
     CartStatus Status,
     IEnumerable<CartItem> Items,
     int Version = 1
@@ -31,22 +32,22 @@ public record Cart(
 
 {
   public static Cart Create(CartCreated action) =>
-      new(action.CartId, CartStatus.Open, new List<CartItem>());
+      new(action.CartId, action.OperatingChain, CartStatus.Open, new List<CartItem>());
 
   public Cart Apply(ItemAddedToCart action) =>
       this with
       {
-        Items = Items.Append(new CartItem(action.Product, 1)),
+        Items = Items.Append(action.Item),
       };
 
   public Cart Apply(ItemRemovedFromCart action) =>
       this with
       {
-        Items = Items.Where(i => i.Product.ProductId != action.ProductId),
+        Items = Items.Where(i => i.Product.Id != action.ProductId),
       };
 
   private static IEnumerable<CartItem> UpdateCartItemsQuantity(IEnumerable<CartItem> items, string productId, int change) =>
-      items.Select(item => item.Product.ProductId == productId ? item with { Quantity = item.Quantity + change } : item);
+      items.Select(item => item.Product.Id == productId ? item with { Quantity = item.Quantity + change } : item);
   public Cart Apply(ItemQuantityIncreased action) =>
       this with
       {

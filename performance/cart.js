@@ -1,7 +1,7 @@
 import http from 'k6/http';
 export const options = {
-  vus: 50,
-  duration: '30s',
+  vus: 30,
+  duration: '60s',
 };
 
 const getRandomInt = (min, max) => {
@@ -31,7 +31,22 @@ export default function () {
         'Content-Type': 'application/json',
       },
     });
+    http.post('http://localhost:5170/cart/' + id + '/items', JSON.stringify({
+      cartId: id,
+      operatingChain: "OCSEELG",
+      productId: "209984"
+    }), {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     createdCarts[id] = true
   }
+  http.post('http://localhost:5170/cart/' + id + '/items/' + "209984" + "/increase", JSON.stringify({
+  }), {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
   http.get('http://localhost:5170/cart/' + id);
 }
