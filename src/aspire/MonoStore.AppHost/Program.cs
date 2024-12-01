@@ -39,16 +39,16 @@ builder.AddProject<Projects.MonoStore_Cart_Host>("monostore-cart-host")
   .WithReference(postgres)
   .WithReference(orleans)
   .WaitFor(postgres)
-  .WithReplicas(1);
+  .WithReplicas(3);
 
 builder.AddProject<Projects.MonoStore_Product_Host>("monostore-product-host")
   .WithReference(orleans)
-  .WithReplicas(3);
+  .WithReplicas(5);
 
 builder.AddProject<Projects.MonoStore_Orelans_Dashboard>("orleans-dashboard")
   .WithReference(orleans)
   .WithExternalHttpEndpoints();
 
-builder.AddProject<Projects.Dummy>("dummy");
+// builder.AddProject<Projects.Dummy>("dummy");
 
 builder.Build().Run();

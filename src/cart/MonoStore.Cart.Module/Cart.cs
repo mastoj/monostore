@@ -2,20 +2,8 @@ using MonoStore.Cart.Contracts;
 
 namespace MonoStore.Cart.Module;
 
-#region Types
-// public record Product(string ProductId, string Name, decimal Price, decimal PriceExVat);
-// public record CartItem(Product Product, int Quantity);
-
-public record CartCreated(Guid CartId, string OperatingChain);
-// public enum CartStatus
-// {
-//   Open,
-//   TimedOut,
-//   Paid,
-// }
-#endregion
-
 #region Events
+public record CartCreated(Guid CartId, string OperatingChain);
 public record ItemAddedToCart(Guid CartId, CartItem Item);
 public record ItemRemovedFromCart(Guid CartId, string ProductId);
 public record ItemQuantityIncreased(Guid CartId, string ProductId);

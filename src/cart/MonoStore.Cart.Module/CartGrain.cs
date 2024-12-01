@@ -17,45 +17,14 @@ public interface IEventStore
 
 internal static class Mappers
 {
-  // internal static Contracts.CartStatus AsContract(this CartStatus status)
-  // {
-  //   return status switch
-  //   {
-  //     CartStatus.Open => Contracts.CartStatus.Open,
-  //     CartStatus.TimedOut => Contracts.CartStatus.TimedOut,
-  //     CartStatus.Paid => Contracts.CartStatus.Paid,
-  //     _ => throw new ArgumentOutOfRangeException(nameof(status), status, null)
-  //   };
-  // }
-
-  // internal static Contracts.Product AsContract(this Product product)
-  // {
-  //   return new Contracts.Product
-  //   {
-  //     Id = product.ProductId,
-  //     Name = product.Name,
-  //     Price = product.Price,
-  //     PriceExVat = product.PriceExVat
-  //   };
-  // }
-
-  // internal static CartItem AsContract(this CartItem item)
-  // {
-  //   return new CartItem
-  //   {
-  //     Product = item.Product.AsContract(),
-  //     Quantity = item.Quantity
-  //   };
-  // }
-
   internal static Contracts.Cart AsContract(this Cart cart)
   {
     return new Contracts.Cart
     {
       Id = cart.Id,
       OperatingChain = cart.OperatingChain,
-      Status = cart.Status, //cart.Status.AsContract(),
-      Items = cart.Items.ToList(), // cart.Items.Select(i => i.AsContract()).ToList()
+      Status = cart.Status,
+      Items = cart.Items.ToList(),
     };
   }
 }
@@ -64,22 +33,17 @@ public sealed class CartGrain
   : Grain, ICartGrain
 {
   private IEventStore eventStore;
-  // private readonly IProductService productService;
   private readonly ILogger<CartGrain> logger;
   private Cart currentCart;
-  // private IGrainFactory grainFactory;
 
   public CartGrain(IEventStore eventStore, ILogger<CartGrain> logger)
   {
     this.eventStore = eventStore;
-    //    this.productService = productService;
     this.logger = logger;
-    // this.grainFactory = grainFactory;
   }
 
   public override async Task OnActivateAsync(CancellationToken cancellationToken)
   {
-    //    DelayDeactivation(TimeSpan.FromMinutes(10));
     DiagnosticConfig.CartHost.ActiveCartCounter.Add(1, new KeyValuePair<string, object?>("operatingChain", "OCNOELK"));
     logger.LogInformation("Activating {grainKey}", this.GetPrimaryKeyString());
     var id = Guid.Parse(this.GetPrimaryKeyString().Split("/")[1]);

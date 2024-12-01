@@ -1,7 +1,10 @@
 using System.Net;
+using dotenv.net;
 using Monostore.ServiceDefaults;
 using OpenTelemetry.Resources;
 using Orleans.Configuration;
+
+DotEnv.Load();
 
 var builder = Host.CreateApplicationBuilder(args);
 builder.AddCart();

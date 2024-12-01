@@ -3,30 +3,6 @@ using MonoStore.Cart.Contracts;
 
 namespace MonoStore.Cart.Module;
 
-// internal record CreateCart(
-//     Guid CartId
-// );
-
-// internal record AddItem(
-//     Guid CartId,
-//     Product Product
-// );
-
-// internal record RemoveItem(
-//     Guid CartId,
-//     string ProductId
-// );
-
-// internal record IncreaseItemQuantity(
-//     Guid CartId,
-//     string ProductId
-// );
-
-// internal record DecreaseItemQuantity(
-//     Guid CartId,
-//     string ProductId
-// );
-
 internal static class CartService
 {
   private static bool IsItemInCart(Cart cart, string productId) =>

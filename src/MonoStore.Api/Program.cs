@@ -97,7 +97,7 @@ try
 
     if (app.Environment.IsDevelopment())
     {
-        // app.MapScalarApiReference();
+        app.MapScalarApiReference();
     }
 
     app.MapDefaultEndpoints();

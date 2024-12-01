@@ -1,9 +1,6 @@
 using Marten;
 using Marten.Services;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using MonoStore.Marten;
 
 namespace MonoStore.Cart.Module;
 
@@ -51,56 +48,8 @@ public static class ApiExtensions
   public static WebApplicationBuilder AddCart(this WebApplicationBuilder builder)
   {
     // Try three times
-    Action doStuff = () =>
-    {
 
-      var connectionString = $"{builder.Configuration.GetConnectionString("cart")};sslmode=prefer;CommandTimeout=300";
-      // var connectionString = "Host=localhost;Port=65356;Username=postgres;Password=Rvb+Zm5sR4kCUDHTvJZ8!V;sslmode=prefer"; //builder.Configuration.GetConnectionString("cart");
-      // Thread.Sleep(4000);
-      Console.WriteLine($"Cart ConnectionString: {connectionString}, schema: {Environment.GetEnvironmentVariable("SchemaName")}");
-      builder.Services
-        .AddTransient<IEventStore, MartenEventStore>();
-      builder.Services.AddMarten(s =>
-        {
-          var options = new StoreOptions();
-          options.Events.MetadataConfig.CorrelationIdEnabled = true;
-          options.Events.MetadataConfig.CausationIdEnabled = true;
-          // var schemaName = Environment.GetEnvironmentVariable("SchemaName") ?? "public";
-          // options.Events.DatabaseSchemaName = schemaName;
-          // options.DatabaseSchemaName = schemaName;
-          options.Connection(connectionString ?? throw new InvalidOperationException());
-          options.OpenTelemetry.TrackConnections = TrackLevel.Verbose;
-          options.OpenTelemetry.TrackEventCounters();
-          return options;
-        })
-        // .UseNpgsqlDataSource(s => {
-        //   s.
-        // })
-        .UseLightweightSessions()
-        .ApplyAllDatabaseChangesOnStartup();
-    };
-    var attempts = 0;
-    var maxAttempts = 3;
-    while (attempts < maxAttempts)
-    {
-      try
-      {
-        Console.WriteLine("==> Attempting to add cart");
-        doStuff();
-        break;
-      }
-      catch (Exception ex)
-      {
-        Console.WriteLine($"Attempt {attempts + 1} failed: {ex.Message}");
-        attempts++;
-        // Sleep 1 second
-        Thread.Sleep(1000);
-        if (attempts == maxAttempts)
-        {
-          throw;
-        }
-      }
-    }
+
     return builder;
   }
 }

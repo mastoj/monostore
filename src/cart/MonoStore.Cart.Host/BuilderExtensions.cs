@@ -9,10 +9,12 @@ public static class BuilderExtensions
     Action doStuff = () =>
     {
 
-      var connectionString = $"{builder.Configuration.GetConnectionString("cart")};sslmode=prefer;CommandTimeout=300";
+      //var connectionString = $"{builder.Configuration.GetConnectionString("cart")};sslmode=prefer;CommandTimeout=300";
+      // Connection string with maximum pool size of 30
+      var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
       Console.WriteLine($"Cart ConnectionString: {connectionString}, schema: {Environment.GetEnvironmentVariable("SchemaName")}");
       builder.Services
-        .AddTransient<IEventStore, MartenEventStore>();
+        .AddSingleton<IEventStore, MartenEventStore>();
       builder.Services.AddMarten(s =>
         {
           var options = new StoreOptions();
@@ -21,6 +23,7 @@ public static class BuilderExtensions
           // var schemaName = Environment.GetEnvironmentVariable("SchemaName") ?? "public";
           // options.Events.DatabaseSchemaName = schemaName;
           // options.DatabaseSchemaName = schemaName;
+          options.DatabaseSchemaName = "monostore";
           options.Connection(connectionString ?? throw new InvalidOperationException());
           options.OpenTelemetry.TrackConnections = TrackLevel.Verbose;
           options.OpenTelemetry.TrackEventCounters();
