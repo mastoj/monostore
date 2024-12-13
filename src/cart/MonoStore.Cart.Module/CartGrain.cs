@@ -69,7 +69,14 @@ public sealed class CartGrain
     Console.WriteLine($"Created cart {createCart.CartId}: " + currentCart);
     return currentCart.AsContract();
   }
+  /*
 
+    [
+      {cartCreated},
+      {itemAdded},
+      {quantityIncreased}
+    ]
+  */
   public async Task<Contracts.Cart> AddItem(AddItem addItem)
   {
     Console.WriteLine($"Adding item {addItem.Item.Product.Id} to cart {addItem.CartId}");

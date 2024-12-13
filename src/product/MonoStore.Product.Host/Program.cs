@@ -37,8 +37,8 @@ builder.UseOrleans(siloBuilder =>
           .AddMemoryGrainStorage("PubSubStore")
           .Configure<GrainCollectionOptions>(options =>
                 {
-                  options.CollectionAge = TimeSpan.FromMinutes(10);
-                  options.CollectionQuantum = TimeSpan.FromMinutes(5);
+                  options.CollectionAge = TimeSpan.FromSeconds(10);
+                  options.CollectionQuantum = TimeSpan.FromSeconds(5);
                 });
 });
 

@@ -13,4 +13,6 @@ DotEnv.Load();
 //var product = await repository.GetProductAsync("209138", "OCSEELG");
 //Console.WriteLine(product);
 //PostgresStuff.DoStuff();
-PostgresStuff.DoStuffParallel();
+//PostgresStuff.DoStuffParallel();
+//TableStorageStuff.DoStuffParallel();
+TableStorageStuff.InsertEntitiesAsync().Wait();

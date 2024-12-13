@@ -3,6 +3,7 @@
     <ProjectReference Include="..\..\product\MonoStore.Product.Contracts\MonoStore.Product.Contracts.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Azure.Data.Tables" Version="12.9.1" />
     <PackageReference Include="Dapper" Version="2.1.35" />
     <PackageReference Include="dotenv.net" Version="3.2.1" />
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.46.0" />
