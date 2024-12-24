@@ -9,9 +9,9 @@ public static class BuilderExtensions
     Action doStuff = () =>
     {
 
-      //var connectionString = $"{builder.Configuration.GetConnectionString("cart")};sslmode=prefer;CommandTimeout=300";
+      var connectionString = $"{builder.Configuration.GetConnectionString("cart")};sslmode=prefer;CommandTimeout=300";
       // Connection string with maximum pool size of 30
-      var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+      //var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
       Console.WriteLine($"Cart ConnectionString: {connectionString}, schema: {Environment.GetEnvironmentVariable("SchemaName")}");
       builder.Services
         .AddSingleton<IEventStore, MartenEventStore>();

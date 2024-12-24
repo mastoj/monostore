@@ -69,14 +69,7 @@ public sealed class CartGrain
     Console.WriteLine($"Created cart {createCart.CartId}: " + currentCart);
     return currentCart.AsContract();
   }
-  /*
 
-    [
-      {cartCreated},
-      {itemAdded},
-      {quantityIncreased}
-    ]
-  */
   public async Task<Contracts.Cart> AddItem(AddItem addItem)
   {
     Console.WriteLine($"Adding item {addItem.Item.Product.Id} to cart {addItem.CartId}");
@@ -134,6 +127,50 @@ public sealed class CartGrain
       throw new InvalidOperationException("Cart not found");
     }
     return Task.FromResult(currentCart.AsContract());
+  }
+
+  public async Task<Contracts.Cart> ClearCart(ClearCart clearCart)
+  {
+    var result = Handle(currentCart, clearCart);
+    if (result.IsSuccessful)
+    {
+      currentCart = await eventStore.AppendToStream(clearCart.CartId, result.Value, 2, currentCart.Apply, default);
+    }
+    Console.WriteLine($"Cleared cart {clearCart.CartId}: " + currentCart);
+    return currentCart.AsContract();
+  }
+
+  public async Task<Contracts.Cart> AbandonCart(AbandonCart abandonCart)
+  {
+    var result = Handle(currentCart, abandonCart);
+    if (result.IsSuccessful)
+    {
+      currentCart = await eventStore.AppendToStream(abandonCart.CartId, result.Value, 2, currentCart.Apply, default);
+    }
+    Console.WriteLine($"Abandoned cart {abandonCart.CartId}: " + currentCart);
+    return currentCart.AsContract();
+  }
+
+  public async Task<Contracts.Cart> RecoverCart(RecoverCart recoverCart)
+  {
+    var result = Handle(currentCart, recoverCart);
+    if (result.IsSuccessful)
+    {
+      currentCart = await eventStore.AppendToStream(recoverCart.CartId, result.Value, 2, currentCart.Apply, default);
+    }
+    Console.WriteLine($"Recovered cart {recoverCart.CartId}: " + currentCart);
+    return currentCart.AsContract();
+  }
+
+  public async Task<Contracts.Cart> ArchiveCart(ArchiveCart archiveCart)
+  {
+    var result = Handle(currentCart, archiveCart);
+    if (result.IsSuccessful)
+    {
+      currentCart = await eventStore.AppendToStream(archiveCart.CartId, result.Value, 2, currentCart.Apply, default);
+    }
+    Console.WriteLine($"Archived cart {archiveCart.CartId}: " + currentCart);
+    return currentCart.AsContract();
   }
   #endregion
 }

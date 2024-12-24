@@ -23,7 +23,7 @@ Content-Type: application/json
 }
 
 ### Remove item from cart
-DELETE http://localhost:5170/cart/{{cartId}}/items/7E64A8B2-91BD-44F7-98FC-C67FE8B6F0C8
+DELETE http://localhost:5170/cart/{{cartId}}/items/{{productId}}
 
 ### Get cart
 GET http://localhost:5170/cart/{{cartId}}
@@ -39,3 +39,12 @@ POST http://localhost:5170/cart/{{cartId}}/items/{{productId}}/increase
 
 ### Decrease quantity of item in cart
 POST http://localhost:5170/cart/{{cartId}}/items/{{productId}}/decrease
+
+### Abandon cart
+POST http://localhost:5170/cart/{{cartId}}/abandon
+
+### Clear cart
+POST http://localhost:5170/cart/{{cartId}}/clear
+
+### Recover cart
+POST http://localhost:5170/cart/{{cartId}}/recover

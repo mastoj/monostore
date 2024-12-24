@@ -139,6 +139,31 @@ public static class CartEndpoints
       }
     });
 
+    routes.MapPost("/{id}/abandon", async (IGrainFactory grains, Guid id) =>
+    {
+      var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(id));
+      return await cartGrain.AbandonCart(new AbandonCart { CartId = id });
+    });
+
+    routes.MapPost("/{id}/clear", async (IGrainFactory grains, Guid id) =>
+    {
+      var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(id));
+      return await cartGrain.ClearCart(new ClearCart { CartId = id });
+    });
+
+    routes.MapPost("/{id}/recover", async (IGrainFactory grains, Guid id) =>
+    {
+      var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(id));
+      return await cartGrain.RecoverCart(new RecoverCart { CartId = id });
+    });
+
+    routes.MapPost("/{id}/archive", async (IGrainFactory grains, Guid id) =>
+    {
+      var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(id));
+      return await cartGrain.ArchiveCart(new ArchiveCart { CartId = id });
+    });
+
+
     // routes.MapGet("/", async (IGrainFactory grains) =>
     // {
     //   var cartGrain = grains.GetGrain<ICartGrain>("cart");

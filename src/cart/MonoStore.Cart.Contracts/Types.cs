@@ -8,7 +8,8 @@ public enum CartStatus
 {
   Open,
   TimedOut,
-  Paid,
+  Abandoned,
+  Archived,
 }
 
 [GenerateSerializer, Alias(nameof(CreateCart))]
@@ -58,6 +59,33 @@ public record class DecreaseItemQuantity
   public Guid CartId { get; set; } = Guid.Empty;
   [Id(1)]
   public string ProductId { get; set; } = "";
+}
+
+[GenerateSerializer, Alias(nameof(AbandonCart))]
+public record class AbandonCart
+{
+  [Id(0)]
+  public Guid CartId { get; set; } = Guid.Empty;
+}
+
+[GenerateSerializer, Alias(nameof(RecoverCart))]
+public record class RecoverCart
+{
+  [Id(0)]
+  public Guid CartId { get; set; } = Guid.Empty;
+}
+[GenerateSerializer, Alias(nameof(ArchiveCart))]
+public record class ArchiveCart
+{
+  [Id(0)]
+  public Guid CartId { get; set; } = Guid.Empty;
+}
+
+[GenerateSerializer, Alias(nameof(ClearCart))]
+public record class ClearCart
+{
+  [Id(0)]
+  public Guid CartId { get; set; } = Guid.Empty;
 }
 
 [GenerateSerializer, Alias(nameof(Product))]

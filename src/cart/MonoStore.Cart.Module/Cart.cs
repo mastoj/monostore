@@ -8,6 +8,10 @@ public record ItemAddedToCart(Guid CartId, CartItem Item);
 public record ItemRemovedFromCart(Guid CartId, string ProductId);
 public record ItemQuantityIncreased(Guid CartId, string ProductId);
 public record ItemQuantityDecreased(Guid CartId, string ProductId);
+public record CartAbandoned(Guid CartId);
+public record CartRecovered(Guid CartId);
+public record CartArchived(Guid CartId);
+public record CartCleared(Guid CartId);
 #endregion
 
 public record Cart(
@@ -47,4 +51,23 @@ public record Cart(
       {
         Items = UpdateCartItemsQuantity(Items, action.ProductId, -1)
       };
+
+  public Cart Apply(CartAbandoned _) =>
+      this with
+      {
+        Status = CartStatus.Abandoned
+      };
+
+  public Cart Apply(CartRecovered _) =>
+      this with
+      {
+        Status = CartStatus.Open
+      };
+
+  public Cart Apply(CartArchived _) =>
+      this with
+      {
+        Status = CartStatus.Archived
+      };
+  public Cart Apply(CartCleared _) => this with { Items = new List<CartItem>() };
 }
