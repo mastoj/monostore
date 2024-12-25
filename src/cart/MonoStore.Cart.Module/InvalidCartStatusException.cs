@@ -1,4 +1,4 @@
-using MonoStore.Cart.Contracts;
+using MonoStore.Cart.Contracts.Dtos;
 
 namespace MonoStore.Cart.Module;
 

@@ -3,9 +3,6 @@
 #@BASE_URL = {{BASE_URL_AZURE}}
 @BASE_URL = {{BASE_URL_LOCAL}}
 
-## Get hello
-GET {{BASE_URL}}
-
 ### Get a product
 GET {{BASE_URL}}/product/OCSEELG/209984
 

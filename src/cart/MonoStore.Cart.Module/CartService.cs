@@ -1,5 +1,7 @@
 using DotNext;
-using MonoStore.Cart.Contracts;
+using MonoStore.Cart.Contracts.Commands;
+using MonoStore.Cart.Contracts.Dtos;
+using MonoStore.Cart.Contracts.Requests;
 
 namespace MonoStore.Cart.Module;
 

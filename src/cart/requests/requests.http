@@ -1,6 +1,6 @@
 #@cartId=2E64A8B2-91BD-44F7-98FC-C67FE8B6F002
 #@cartId=30347666-1749-4251-982c-6f59c029da5b
-@cartId=2c10a5a2-3a85-4a13-ba22-2fdaf9949fc4
+@cartId=2c10a5a2-3a85-4a13-ba22-2fdaf9949f03
 @productId=209984
 ### Create cart
 
@@ -17,7 +17,6 @@ POST http://localhost:5170/cart/{{cartId}}/items
 Content-Type: application/json
 
 {
-  "cartId": "{{cartId}}",
   "operatingChain": "OCSEELG",
   "productId": "{{productId}}"
 }

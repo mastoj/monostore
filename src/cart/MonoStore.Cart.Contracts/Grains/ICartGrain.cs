@@ -1,15 +1,46 @@
+using MonoStore.Cart.Contracts.Requests;
+using MonoStore.Cart.Contracts.Dtos;
+
 namespace MonoStore.Cart.Contracts.Grains;
+
+
+[GenerateSerializer, Alias("GrainResult`2")]
+public record class GrainResult<T, E>
+{
+  [Id(0)]
+  public T? Data { get; set; }
+  [Id(1)]
+  public E? Error { get; set; }
+
+  public static GrainResult<T, E> Success(T result) => new GrainResult<T, E> { Data = result };
+  public static GrainResult<T, E> Failure(E error) => new GrainResult<T, E> { Error = error };
+}
+
+
+public enum CartErrorType
+{
+  Unkown = 99
+}
+
+[GenerateSerializer, Alias(nameof(CartError))]
+public record class CartError
+{
+  [Id(0)]
+  public string Message { get; set; } = "";
+  [Id(1)]
+  public CartErrorType Type { get; set; } = CartErrorType.Unkown;
+}
 
 public interface ICartGrain : IGrainWithStringKey
 {
-  Task<Cart> CreateCart(CreateCart createCart);
-  Task<Cart> GetCart(GetCart getCart);
-  Task<Cart> AddItem(AddItem addItem);
-  Task<Cart> RemoveItem(RemoveItem removeItem);
-  Task<Cart> IncreaseItemQuantity(IncreaseItemQuantity increaseItemQuantity);
-  Task<Cart> DecreaseItemQuantity(DecreaseItemQuantity decreaseItemQuantity);
-  Task<Cart> ClearCart(ClearCart clearCart);
-  Task<Cart> AbandonCart(AbandonCart abandonCart);
-  Task<Cart> RecoverCart(RecoverCart recoverCart);
-  Task<Cart> ArchiveCart(ArchiveCart archiveCart);
+  Task<GrainResult<CartData, CartError>> CreateCart(CreateCart createCart);
+  Task<GrainResult<CartData, CartError>> GetCart(GetCart getCart);
+  Task<GrainResult<CartData, CartError>> AddItem(AddItemRequest addItem);
+  Task<GrainResult<CartData, CartError>> RemoveItem(RemoveItem removeItem);
+  Task<GrainResult<CartData, CartError>> IncreaseItemQuantity(IncreaseItemQuantity increaseItemQuantity);
+  Task<GrainResult<CartData, CartError>> DecreaseItemQuantity(DecreaseItemQuantity decreaseItemQuantity);
+  Task<GrainResult<CartData, CartError>> ClearCart(ClearCart clearCart);
+  Task<GrainResult<CartData, CartError>> AbandonCart(AbandonCart abandonCart);
+  Task<GrainResult<CartData, CartError>> RecoverCart(RecoverCart recoverCart);
+  Task<GrainResult<CartData, CartError>> ArchiveCart(ArchiveCart archiveCart);
 }
