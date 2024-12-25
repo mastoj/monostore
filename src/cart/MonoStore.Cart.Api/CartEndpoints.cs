@@ -10,6 +10,7 @@ using MonoStore.Cart.Contracts;
 using MonoStore.Cart.Contracts.Grains;
 using Orleans;
 using MonoStore.Product.Contracts.Grains;
+using Microsoft.AspNetCore.Http;
 
 public static class CartEndpoints
 {
@@ -21,7 +22,7 @@ public static class CartEndpoints
 
 
   public static string CartGrainId(Guid cartId) => $"cart/{cartId.ToString().ToLower()}";
-  public static void MapCartEndpoints(this IEndpointRouteBuilder routes)
+  public static RouteGroupBuilder MapCartEndpoints(this RouteGroupBuilder routes)
   {
     routes.MapPost("/", async (IGrainFactory grains, CreateCart createCart) =>
     {
@@ -163,31 +164,12 @@ public static class CartEndpoints
       return await cartGrain.ArchiveCart(new ArchiveCart { CartId = id });
     });
 
-
-    // routes.MapGet("/", async (IGrainFactory grains) =>
-    // {
-    //   var cartGrain = grains.GetGrain<ICartGrain>("cart");
-    //   return await cartGrain.GetCart("1");
-    // });
-
-    // routes.MapGet("/{id}", async (IGrainFactory grains, int id) =>
-    // {
-    //   var cartGrain = grains.GetGrain<ICartGrain>("cart" + id);
-    //   return await cartGrain.GetCart(id);
-    // });
-
-    // routes.MapPost("/", async (IGrainFactory grains, AddItem addItem) =>
-    // {
-    //   var cartGrain = grains.GetGrain<ICartGrain>("cart");
-    //   var cart = await cartGrain.GetCart(addItem.CartId);
-    //   return cart;
-    // });
-    // dotnet add package Microsoft.AspNetCore.App
+    return routes;
   }
 
   public static WebApplication UseCart(this WebApplication app, string groupPath)
   {
-    app.MapGroup(groupPath).MapCartEndpoints();
+    app.MapGroup(groupPath).MapCartEndpoints().WithTags("cart");
     return app;
   }
 }

@@ -78,6 +78,7 @@ try
 
     // Add services to the container.
     builder.Services.AddRazorPages();
+    builder.Services.AddOpenApi();
     builder.AddKeyedAzureTableClient("clustering");
     builder.AddKeyedAzureBlobClient("grainstate");
 
@@ -90,15 +91,15 @@ try
     app.UseSerilogRequestLogging();
 
     #region Endpoints
-    app.MapGet("/", () => "Hello World!");
     app.UseCart("cart");
     app.UseProduct("product");
     #endregion
 
-    if (app.Environment.IsDevelopment())
-    {
-        app.MapScalarApiReference();
-    }
+    app.MapOpenApi();
+    app.MapScalarApiReference();
+    // if (app.Environment.IsDevelopment())
+    // {
+    // }
 
     app.MapDefaultEndpoints();
     await app.RunAsync();

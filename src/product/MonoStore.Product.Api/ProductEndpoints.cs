@@ -10,7 +10,7 @@ namespace MonoStore.Product.Api;
 
 public static class ProductEndpoints
 {
-  public static void MapProductEndpoints(this IEndpointRouteBuilder routes)
+  public static RouteGroupBuilder MapProductEndpoints(this RouteGroupBuilder routes)
   {
     routes.MapGet("/{operatingChain}/{id}", async (IGrainFactory grains, string operatingChain, string id) =>
     {
@@ -36,12 +36,13 @@ public static class ProductEndpoints
       await productSyncGrain.SyncProductAsync(productDetails);
       return Results.Ok();
     });
+    return routes;
   }
 
   public static WebApplication UseProduct(this WebApplication app, string groupPath)
   {
     Console.WriteLine("Adding UseProduct");
-    app.MapGroup(groupPath).MapProductEndpoints();
+    app.MapGroup(groupPath).MapProductEndpoints().WithTags("product");
     return app;
   }
 }
