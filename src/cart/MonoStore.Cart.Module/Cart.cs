@@ -31,12 +31,14 @@ public record Cart(
       this with
       {
         Items = Items.Append(action.Item),
+        Version = Version + 1
       };
 
   public Cart Apply(ItemRemovedFromCart action) =>
       this with
       {
         Items = Items.Where(i => i.Product.Id != action.ProductId),
+        Version = Version + 1
       };
 
   private static IEnumerable<CartItem> UpdateCartItemsQuantity(IEnumerable<CartItem> items, string productId, int change) =>
@@ -44,31 +46,36 @@ public record Cart(
   public Cart Apply(ItemQuantityIncreased action) =>
       this with
       {
-        Items = UpdateCartItemsQuantity(Items, action.ProductId, 1)
+        Items = UpdateCartItemsQuantity(Items, action.ProductId, 1),
+        Version = Version + 1
       };
 
   public Cart Apply(ItemQuantityDecreased action) =>
       this with
       {
-        Items = UpdateCartItemsQuantity(Items, action.ProductId, -1)
+        Items = UpdateCartItemsQuantity(Items, action.ProductId, -1),
+        Version = Version + 1
       };
 
   public Cart Apply(CartAbandoned _) =>
       this with
       {
-        Status = CartStatus.Abandoned
+        Status = CartStatus.Abandoned,
+        Version = Version + 1
       };
 
   public Cart Apply(CartRecovered _) =>
       this with
       {
-        Status = CartStatus.Open
+        Status = CartStatus.Open,
+        Version = Version + 1
       };
 
   public Cart Apply(CartArchived _) =>
       this with
       {
-        Status = CartStatus.Archived
+        Status = CartStatus.Archived,
+        Version = Version + 1
       };
   public Cart Apply(CartCleared _) => this with { Items = new List<CartItem>() };
 }

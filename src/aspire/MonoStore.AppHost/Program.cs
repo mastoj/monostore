@@ -42,11 +42,11 @@ builder.AddProject<Projects.MonoStore_Cart_Host>("monostore-cart-host")
   .WithReference(postgres)
   .WithReference(orleans)
   .WaitFor(postgres)
-  .WithReplicas(3);
+  .WithReplicas(1);
 
 builder.AddProject<Projects.MonoStore_Product_Host>("monostore-product-host")
   .WithReference(orleans)
-  .WithReplicas(5);
+  .WithReplicas(1);
 
 builder.AddProject<Projects.MonoStore_Orelans_Dashboard>("orleans-dashboard")
   .WithReference(orleans)

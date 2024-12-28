@@ -18,7 +18,7 @@ public class MartenEventStore : IEventStore
     {
       var state = apply(@event);
       Console.WriteLine($"Appending event {id} to stream: " + @event);
-      session.Events.Append(id, @event);
+      session.Events.Append(id, version + 1, @event);
       await session.SaveChangesAsync(token: ct);
       return state;
     }

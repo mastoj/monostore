@@ -21,7 +21,7 @@ internal static class Mappers
 {
   internal static CartData AsContract(this Cart cart)
   {
-    return new CartData(cart.Id, cart.OperatingChain, cart.Status, cart.Items.ToList());
+    return new CartData(cart.Id, cart.Version, cart.OperatingChain, cart.Status, cart.Items.ToList());
   }
 }
 
@@ -90,7 +90,7 @@ public sealed class CartGrain
     var result = Handle(currentCart, addItem);
     if (result.IsSuccessful)
     {
-      currentCart = await eventStore.AppendToStream(currentCart.Id, result.Value, 1, currentCart.Apply, default);
+      currentCart = await eventStore.AppendToStream(currentCart.Id, result.Value, currentCart.Version, currentCart.Apply, default);
     }
     return GrainResult<CartData, CartError>.Success(currentCart.AsContract());
   }
@@ -100,7 +100,7 @@ public sealed class CartGrain
     var result = Handle(currentCart, removeItem);
     if (result.IsSuccessful)
     {
-      currentCart = await eventStore.AppendToStream(currentCart.Id, result.Value, 2, currentCart.Apply, default);
+      currentCart = await eventStore.AppendToStream(currentCart.Id, result.Value, currentCart.Version, currentCart.Apply, default);
     }
     Console.WriteLine($"Removed item {removeItem.ProductId} from cart {currentCart.Id}: " + currentCart);
     return GrainResult<CartData, CartError>.Success(currentCart.AsContract());
@@ -111,7 +111,7 @@ public sealed class CartGrain
     var result = Handle(currentCart, increaseItemQuantity);
     if (result.IsSuccessful)
     {
-      currentCart = await eventStore.AppendToStream(currentCart.Id, result.Value, 2, currentCart.Apply, default);
+      currentCart = await eventStore.AppendToStream(currentCart.Id, result.Value, currentCart.Version, currentCart.Apply, default);
     }
     logger.LogInformation("Increased item {productId} quantity in cart {cartId}", increaseItemQuantity.ProductId, currentCart.Id);
     return GrainResult<CartData, CartError>.Success(currentCart.AsContract());
@@ -122,7 +122,7 @@ public sealed class CartGrain
     var result = Handle(currentCart, decreaseItemQuantity);
     if (result.IsSuccessful)
     {
-      currentCart = await eventStore.AppendToStream(currentCart.Id, result.Value, 2, currentCart.Apply, default);
+      currentCart = await eventStore.AppendToStream(currentCart.Id, result.Value, currentCart.Version, currentCart.Apply, default);
     }
     Console.WriteLine($"Decreased item {decreaseItemQuantity.ProductId} quantity in cart {currentCart.Id}: " + currentCart);
     return GrainResult<CartData, CartError>.Success(currentCart.AsContract());
@@ -147,7 +147,7 @@ public sealed class CartGrain
     var result = Handle(currentCart, clearCart);
     if (result.IsSuccessful)
     {
-      currentCart = await eventStore.AppendToStream(currentCart.Id, result.Value, 2, currentCart.Apply, default);
+      currentCart = await eventStore.AppendToStream(currentCart.Id, result.Value, currentCart.Version, currentCart.Apply, default);
     }
     Console.WriteLine($"Cleared cart {currentCart.Id}: " + currentCart);
     return GrainResult<CartData, CartError>.Success(currentCart.AsContract());
@@ -158,7 +158,7 @@ public sealed class CartGrain
     var result = Handle(currentCart, abandonCart);
     if (result.IsSuccessful)
     {
-      currentCart = await eventStore.AppendToStream(currentCart.Id, result.Value, 2, currentCart.Apply, default);
+      currentCart = await eventStore.AppendToStream(currentCart.Id, result.Value, currentCart.Version, currentCart.Apply, default);
     }
     Console.WriteLine($"Abandoned cart {currentCart.Id}: " + currentCart);
     return GrainResult<CartData, CartError>.Success(currentCart.AsContract());
@@ -169,7 +169,7 @@ public sealed class CartGrain
     var result = Handle(currentCart, recoverCart);
     if (result.IsSuccessful)
     {
-      currentCart = await eventStore.AppendToStream(currentCart.Id, result.Value, 2, currentCart.Apply, default);
+      currentCart = await eventStore.AppendToStream(currentCart.Id, result.Value, currentCart.Version, currentCart.Apply, default);
     }
     Console.WriteLine($"Recovered cart {currentCart.Id}: " + currentCart);
     return GrainResult<CartData, CartError>.Success(currentCart.AsContract());
@@ -180,7 +180,7 @@ public sealed class CartGrain
     var result = Handle(currentCart, archiveCart);
     if (result.IsSuccessful)
     {
-      currentCart = await eventStore.AppendToStream(currentCart.Id, result.Value, 2, currentCart.Apply, default);
+      currentCart = await eventStore.AppendToStream(currentCart.Id, result.Value, currentCart.Version, currentCart.Apply, default);
     }
     Console.WriteLine($"Archived cart {currentCart.Id}: " + currentCart);
     return GrainResult<CartData, CartError>.Success(currentCart.AsContract());
