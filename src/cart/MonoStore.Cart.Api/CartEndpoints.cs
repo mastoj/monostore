@@ -63,28 +63,19 @@ public static class CartEndpoints
     routes.MapDelete("/{id}/items/{productId}", async (IGrainFactory grains, Guid id, string productId) =>
     {
       var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(id));
-      return await cartGrain.RemoveItem(new RemoveItem
-      {
-        ProductId = productId
-      });
+      return await cartGrain.RemoveItem(new RemoveItem(productId));
     });
 
     routes.MapPost("/{id}/items/{productId}/increase", async (IGrainFactory grains, Guid id, string productId) =>
     {
       var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(id));
-      return await cartGrain.IncreaseItemQuantity(new IncreaseItemQuantity
-      {
-        ProductId = productId
-      });
+      return await cartGrain.IncreaseItemQuantity(new IncreaseItemQuantity(productId));
     });
 
     routes.MapPost("/{id}/items/{productId}/decrease", async (IGrainFactory grains, Guid id, string productId) =>
     {
       var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(id));
-      return await cartGrain.DecreaseItemQuantity(new DecreaseItemQuantity
-      {
-        ProductId = productId
-      });
+      return await cartGrain.DecreaseItemQuantity(new DecreaseItemQuantity(productId));
     });
 
     routes.MapGet("/{id}", async (IGrainFactory grains, Guid id) =>

@@ -21,13 +21,7 @@ internal static class Mappers
 {
   internal static CartData AsContract(this Cart cart)
   {
-    return new CartData
-    {
-      Id = cart.Id,
-      OperatingChain = cart.OperatingChain,
-      Status = cart.Status,
-      Items = cart.Items.ToList(),
-    };
+    return new CartData(cart.Id, cart.OperatingChain, cart.Status, cart.Items.ToList());
   }
 }
 
@@ -88,19 +82,10 @@ public sealed class CartGrain
     {
       throw new Exception("Product price not found");
     }
-    var addItem = new AddItem(new CartItem
-    {
-      Product = new Contracts.Dtos.Product
-      {
-        Id = product.ArticleNumber,
-        Name = product.Name ?? "",
-        Price = product.Price.Price,
-        PriceExVat = product.Price.PriceExclVat,
-        Url = product.ProductUrl ?? "",
-        PrimaryImageUrl = product.ImageUrl ?? ""
-      },
-      Quantity = 1
-    });
+    var addItem = new AddItem(new CartItem(
+      new Contracts.Dtos.Product(product.ArticleNumber, product.Name ?? "", product.Price.Price, product.Price.PriceExclVat, product.ProductUrl ?? "", product.ImageUrl ?? ""),
+      1
+    ));
 
     var result = Handle(currentCart, addItem);
     if (result.IsSuccessful)

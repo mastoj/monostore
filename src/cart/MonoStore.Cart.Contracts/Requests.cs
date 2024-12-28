@@ -2,64 +2,32 @@ using MonoStore.Cart.Contracts.Dtos;
 
 namespace MonoStore.Cart.Contracts.Requests;
 
-[GenerateSerializer, Alias(nameof(CreateCart))]
-public record class CreateCart
-{
-  [Id(0)]
-  public Guid CartId { get; set; } = Guid.Empty;
-  [Id(1)]
-  public string OperatingChain { get; set; } = "";
-}
+[GenerateSerializer]
+public record CreateCart(Guid CartId, string OperatingChain);
 
-[GenerateSerializer, Alias(nameof(GetCart))]
-public record class GetCart
-{
-}
+[GenerateSerializer]
+public record GetCart;
 
-[GenerateSerializer, Alias(nameof(AddItemRequest))]
-public record AddItemRequest
-{
-  [Id(0)]
-  public string OperatingChain { get; set; } = "";
-  [Id(1)]
-  public string ProductId { get; set; } = "";
-}
+[GenerateSerializer]
+public record AddItemRequest(string OperatingChain, string ProductId);
 
-[GenerateSerializer, Alias(nameof(RemoveItem))]
-public record class RemoveItem
-{
-  [Id(0)]
-  public string ProductId { get; set; } = "";
-}
-[GenerateSerializer, Alias(nameof(IncreaseItemQuantity))]
-public record class IncreaseItemQuantity
-{
-  [Id(0)]
-  public string ProductId { get; set; } = "";
-}
-[GenerateSerializer, Alias(nameof(DecreaseItemQuantity))]
-public record class DecreaseItemQuantity
-{
-  [Id(0)]
-  public string ProductId { get; set; } = "";
-}
+[GenerateSerializer]
+public record RemoveItem(string ProductId);
 
-[GenerateSerializer, Alias(nameof(AbandonCart))]
-public record class AbandonCart
-{
-}
+[GenerateSerializer]
+public record IncreaseItemQuantity(string ProductId);
 
-[GenerateSerializer, Alias(nameof(RecoverCart))]
-public record class RecoverCart
-{
-}
+[GenerateSerializer]
+public record DecreaseItemQuantity(string ProductId);
 
-[GenerateSerializer, Alias(nameof(ArchiveCart))]
-public record class ArchiveCart
-{
-}
+[GenerateSerializer]
+public record AbandonCart;
 
-[GenerateSerializer, Alias(nameof(ClearCart))]
-public record class ClearCart
-{
-}
+[GenerateSerializer]
+public record RecoverCart;
+
+[GenerateSerializer]
+public record ArchiveCart;
+
+[GenerateSerializer]
+public record ClearCart;
