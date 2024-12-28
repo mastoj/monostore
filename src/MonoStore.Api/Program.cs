@@ -93,6 +93,7 @@ try
     #region Endpoints
     app.UseCart("cart");
     app.UseProduct("product");
+    app.UseCheckout("checkout");
     #endregion
 
     app.MapOpenApi();
