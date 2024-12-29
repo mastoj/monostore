@@ -2,10 +2,12 @@
 #@cartId=30347666-1749-4251-982c-6f59c029da5b
 @cartId=2c10a5a2-3a85-4a13-ba22-2fdaf9949f03
 @productId=209984
-### Create cart
-
+@userId=1234
+@sessionId=1234
+### Create cart with user-id and session-id cookie values
 POST http://localhost:5170/cart
 Content-Type: application/json
+Cookie: user-id={{userId}}; session-id={{sessionId}}
 
 {
   "cartId": "{{cartId}}",

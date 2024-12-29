@@ -33,7 +33,7 @@ public record class CartError
 
 public interface ICartGrain : IGrainWithStringKey
 {
-  Task<GrainResult<CartData, CartError>> CreateCart(CreateCart createCart);
+  Task<GrainResult<CartData, CartError>> CreateCart(CreateCartMessage createCart);
   Task<GrainResult<CartData, CartError>> GetCart(GetCart getCart);
   Task<GrainResult<CartData, CartError>> AddItem(AddItemRequest addItem);
   Task<GrainResult<CartData, CartError>> RemoveItem(RemoveItem removeItem);

@@ -21,7 +21,7 @@ internal static class Mappers
 {
   internal static CartData AsContract(this Cart cart)
   {
-    return new CartData(cart.Id, cart.Version, cart.OperatingChain, cart.Status, cart.Items.ToList());
+    return new CartData(cart.Id, cart.Version, cart.OperatingChain, cart.Status, cart.Items.ToList(), cart.sessionId, cart.userId);
   }
 }
 
@@ -31,14 +31,22 @@ public sealed class CartGrain
   private IEventStore eventStore;
   private readonly ILogger<CartGrain> logger;
   private readonly IGrainFactory grains;
-  private Cart currentCart;
+  private Cart? _currentCart;
+  private Cart CurrentCart
+  {
+    get => _currentCart ?? throw new InvalidOperationException("Cart not found");
+    set
+    {
+      _currentCart = value;
+      logger.LogInformation("Cart {cartId} updated to version {version}", value.Id, value.Version);
+    }
+  }
 
   public CartGrain(IEventStore eventStore, IGrainFactory grains, ILogger<CartGrain> logger)
   {
     this.eventStore = eventStore;
     this.logger = logger;
     this.grains = grains;
-    currentCart = new Cart(Guid.Empty, "", CartStatus.Open, new List<CartItem>());
   }
 
   public override async Task OnActivateAsync(CancellationToken cancellationToken)
@@ -46,7 +54,7 @@ public sealed class CartGrain
     DiagnosticConfig.CartHost.ActiveCartCounter.Add(1, new KeyValuePair<string, object?>("operatingChain", "OCNOELK"));
     logger.LogInformation("Activating {grainKey}", this.GetPrimaryKeyString());
     var id = Guid.Parse(this.GetPrimaryKeyString().Split("/")[1]);
-    currentCart = await eventStore.GetState<Cart>(id, default);
+    _currentCart = await eventStore.GetState<Cart>(id, default);
     await base.OnActivateAsync(cancellationToken);
   }
 
@@ -58,15 +66,14 @@ public sealed class CartGrain
     return base.OnDeactivateAsync(reason, cancellationToken);
   }
 
-  public async Task<GrainResult<CartData, CartError>> CreateCart(CreateCart createCart)
+  public async Task<GrainResult<CartData, CartError>> CreateCart(CreateCartMessage createCart)
   {
     var result = Create(createCart);
     if (result.IsSuccessful)
     {
-      currentCart = await eventStore.CreateStream(createCart.CartId, result.Value, Cart.Create, default);
+      CurrentCart = await eventStore.CreateStream(createCart.CartId, result.Value, Cart.Create, default);
     }
-    Console.WriteLine($"Created cart {currentCart.Id}: " + currentCart);
-    return GrainResult<CartData, CartError>.Success(currentCart.AsContract());
+    return GrainResult<CartData, CartError>.Success(CurrentCart.AsContract());
   }
 
   public async Task<GrainResult<CartData, CartError>> AddItem(AddItemRequest addItemRequest)
@@ -87,92 +94,92 @@ public sealed class CartGrain
       1
     ));
 
-    var result = Handle(currentCart, addItem);
+    var result = Handle(CurrentCart, addItem);
     if (result.IsSuccessful)
     {
-      currentCart = await eventStore.AppendToStream(currentCart.Id, result.Value, currentCart.Version, currentCart.Apply, default);
+      CurrentCart = await eventStore.AppendToStream(CurrentCart.Id, result.Value, CurrentCart.Version, CurrentCart.Apply, default);
     }
-    return GrainResult<CartData, CartError>.Success(currentCart.AsContract());
+    return GrainResult<CartData, CartError>.Success(CurrentCart.AsContract());
   }
 
   public async Task<GrainResult<CartData, CartError>> RemoveItem(RemoveItem removeItem)
   {
-    var result = Handle(currentCart, removeItem);
+    var result = Handle(CurrentCart, removeItem);
     if (result.IsSuccessful)
     {
-      currentCart = await eventStore.AppendToStream(currentCart.Id, result.Value, currentCart.Version, currentCart.Apply, default);
+      CurrentCart = await eventStore.AppendToStream(CurrentCart.Id, result.Value, CurrentCart.Version, CurrentCart.Apply, default);
     }
-    Console.WriteLine($"Removed item {removeItem.ProductId} from cart {currentCart.Id}: " + currentCart);
-    return GrainResult<CartData, CartError>.Success(currentCart.AsContract());
+    Console.WriteLine($"Removed item {removeItem.ProductId} from cart {CurrentCart.Id}: " + CurrentCart);
+    return GrainResult<CartData, CartError>.Success(CurrentCart.AsContract());
   }
 
   public async Task<GrainResult<CartData, CartError>> ChangeItemQuantity(ChangeItemQuantity changeItemQuantity)
   {
-    var result = Handle(currentCart, changeItemQuantity);
+    var result = Handle(CurrentCart, changeItemQuantity);
     if (result.IsSuccessful)
     {
-      currentCart = await eventStore.AppendToStream(currentCart.Id, result.Value, currentCart.Version, currentCart.Apply, default);
+      CurrentCart = await eventStore.AppendToStream(CurrentCart.Id, result.Value, CurrentCart.Version, CurrentCart.Apply, default);
     }
-    logger.LogInformation("Increased item {productId} quantity in cart {cartId}", changeItemQuantity.ProductId, currentCart.Id);
-    return GrainResult<CartData, CartError>.Success(currentCart.AsContract());
+    logger.LogInformation("Increased item {productId} quantity in cart {cartId}", changeItemQuantity.ProductId, CurrentCart.Id);
+    return GrainResult<CartData, CartError>.Success(CurrentCart.AsContract());
   }
 
   #region queries
   public Task<GrainResult<CartData, CartError>> GetCart(GetCart getCart)
   {
-    if (currentCart.Id == Guid.Empty)
+    if (CurrentCart.Id == Guid.Empty)
     {
       throw new ArgumentException("CartId cannot be empty", nameof(getCart));
     }
-    if (currentCart.Id != currentCart.Id)
+    if (CurrentCart.Id != CurrentCart.Id)
     {
       throw new InvalidOperationException("Cart not found");
     }
-    return Task.FromResult(GrainResult<CartData, CartError>.Success(currentCart.AsContract()));
+    return Task.FromResult(GrainResult<CartData, CartError>.Success(CurrentCart.AsContract()));
   }
 
   public async Task<GrainResult<CartData, CartError>> ClearCart(ClearCart clearCart)
   {
-    var result = Handle(currentCart, clearCart);
+    var result = Handle(CurrentCart, clearCart);
     if (result.IsSuccessful)
     {
-      currentCart = await eventStore.AppendToStream(currentCart.Id, result.Value, currentCart.Version, currentCart.Apply, default);
+      CurrentCart = await eventStore.AppendToStream(CurrentCart.Id, result.Value, CurrentCart.Version, CurrentCart.Apply, default);
     }
-    Console.WriteLine($"Cleared cart {currentCart.Id}: " + currentCart);
-    return GrainResult<CartData, CartError>.Success(currentCart.AsContract());
+    Console.WriteLine($"Cleared cart {CurrentCart.Id}: " + CurrentCart);
+    return GrainResult<CartData, CartError>.Success(CurrentCart.AsContract());
   }
 
   public async Task<GrainResult<CartData, CartError>> AbandonCart(AbandonCart abandonCart)
   {
-    var result = Handle(currentCart, abandonCart);
+    var result = Handle(CurrentCart, abandonCart);
     if (result.IsSuccessful)
     {
-      currentCart = await eventStore.AppendToStream(currentCart.Id, result.Value, currentCart.Version, currentCart.Apply, default);
+      CurrentCart = await eventStore.AppendToStream(CurrentCart.Id, result.Value, CurrentCart.Version, CurrentCart.Apply, default);
     }
-    Console.WriteLine($"Abandoned cart {currentCart.Id}: " + currentCart);
-    return GrainResult<CartData, CartError>.Success(currentCart.AsContract());
+    Console.WriteLine($"Abandoned cart {CurrentCart.Id}: " + CurrentCart);
+    return GrainResult<CartData, CartError>.Success(CurrentCart.AsContract());
   }
 
   public async Task<GrainResult<CartData, CartError>> RecoverCart(RecoverCart recoverCart)
   {
-    var result = Handle(currentCart, recoverCart);
+    var result = Handle(CurrentCart, recoverCart);
     if (result.IsSuccessful)
     {
-      currentCart = await eventStore.AppendToStream(currentCart.Id, result.Value, currentCart.Version, currentCart.Apply, default);
+      CurrentCart = await eventStore.AppendToStream(CurrentCart.Id, result.Value, CurrentCart.Version, CurrentCart.Apply, default);
     }
-    Console.WriteLine($"Recovered cart {currentCart.Id}: " + currentCart);
-    return GrainResult<CartData, CartError>.Success(currentCart.AsContract());
+    Console.WriteLine($"Recovered cart {CurrentCart.Id}: " + CurrentCart);
+    return GrainResult<CartData, CartError>.Success(CurrentCart.AsContract());
   }
 
   public async Task<GrainResult<CartData, CartError>> ArchiveCart(ArchiveCart archiveCart)
   {
-    var result = Handle(currentCart, archiveCart);
+    var result = Handle(CurrentCart, archiveCart);
     if (result.IsSuccessful)
     {
-      currentCart = await eventStore.AppendToStream(currentCart.Id, result.Value, currentCart.Version, currentCart.Apply, default);
+      CurrentCart = await eventStore.AppendToStream(CurrentCart.Id, result.Value, CurrentCart.Version, CurrentCart.Apply, default);
     }
-    Console.WriteLine($"Archived cart {currentCart.Id}: " + currentCart);
-    return GrainResult<CartData, CartError>.Success(currentCart.AsContract());
+    Console.WriteLine($"Archived cart {CurrentCart.Id}: " + CurrentCart);
+    return GrainResult<CartData, CartError>.Success(CurrentCart.AsContract());
   }
   #endregion
 }

@@ -4,7 +4,7 @@ using MonoStore.Cart.Contracts.Dtos;
 namespace MonoStore.Cart.Module;
 
 #region Events
-public record CartCreated(Guid CartId, string OperatingChain);
+public record CartCreated(Guid CartId, string OperatingChain, string sessionId, string? userId);
 public record ItemAddedToCart(Guid CartId, CartItem Item);
 public record ItemRemovedFromCart(Guid CartId, string ProductId);
 public record ItemQuantityChanged(Guid CartId, string ProductId, int Quantity);
@@ -19,12 +19,14 @@ public record Cart(
     string OperatingChain,
     CartStatus Status,
     IEnumerable<CartItem> Items,
+    string sessionId,
+    string? userId,
     int Version = 1
 )
 
 {
   public static Cart Create(CartCreated action) =>
-      new(action.CartId, action.OperatingChain, CartStatus.Open, new List<CartItem>());
+      new(action.CartId, action.OperatingChain, CartStatus.Open, new List<CartItem>(), action.sessionId, action.userId);
 
   public Cart Apply(ItemAddedToCart action) =>
       this with

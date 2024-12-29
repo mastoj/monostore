@@ -3,8 +3,9 @@ using MonoStore.Cart.Contracts.Dtos;
 namespace MonoStore.Cart.Contracts.Requests;
 
 [GenerateSerializer]
-public record CreateCart(Guid CartId, string OperatingChain);
-
+public record CreateCartRequest(Guid CartId, string OperatingChain);
+[GenerateSerializer]
+public record CreateCartMessage(Guid CartId, string OperatingChain, string sessionId, string? userId);
 [GenerateSerializer]
 public record GetCart;
 

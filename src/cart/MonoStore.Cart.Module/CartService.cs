@@ -19,10 +19,10 @@ internal static class CartService
   private static bool IsCartAbandoned(Cart cart) =>
       cart.Status == CartStatus.Abandoned;
 
-  internal static Result<CartCreated> Create(CreateCart command)
+  internal static Result<CartCreated> Create(CreateCartMessage command)
   {
     // Todo: check that cart does not already exist
-    return Result.FromValue(new CartCreated(command.CartId, command.OperatingChain));
+    return Result.FromValue(new CartCreated(command.CartId, command.OperatingChain, command.sessionId, command.userId));
   }
 
   internal static Result<ItemAddedToCart> Handle(Cart current, AddItem command)

@@ -24,7 +24,7 @@ public static class CheckoutEndpoints
   public static string CheckoutGrainId(Guid cartId) => $"cart/{cartId.ToString().ToLower()}";
   public static RouteGroupBuilder MapCheckoutEndpoints(this RouteGroupBuilder routes)
   {
-    routes.MapPost("/", async (IGrainFactory grains, CreateCart createCart) =>
+    routes.MapPost("/", async (IGrainFactory grains, CreateCartRequest createCart) =>
     {
       // DiagnosticConfig.CreateCartCounter.Add(1, new KeyValuePair<string, object?>("operatingChain", "OCNOELK"));
     });

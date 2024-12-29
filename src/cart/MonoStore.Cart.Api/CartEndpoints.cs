@@ -25,30 +25,34 @@ public static class CartEndpoints
   public static string CartGrainId(Guid cartId) => $"cart/{cartId.ToString().ToLower()}";
   public static RouteGroupBuilder MapCartEndpoints(this RouteGroupBuilder routes)
   {
-    routes.MapPost("/", async (IGrainFactory grains, CreateCart createCart) =>
+    routes.MapPost("/", async (HttpRequest request, IGrainFactory grains, CreateCartRequest createCart) =>
     {
+      if (!request.Cookies.TryGetValue("session-id", out var sessionId))
+      {
+        return Results.BadRequest("Missing session-id cookie");
+      }
+
+      request.Cookies.TryGetValue("user-id", out var userId);
+
       // DiagnosticConfig.CreateCartCounter.Add(1, new KeyValuePair<string, object?>("operatingChain", "OCNOELK"));
       try
       {
         Console.WriteLine("CreateCart");
         var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(createCart.CartId));
-        var result = await cartGrain.CreateCart(createCart);
+        var result = await cartGrain.CreateCart(new CreateCartMessage(createCart.CartId, createCart.OperatingChain, sessionId, userId));
         OperationsCounter.Add(1, new TagList() {
           { "operation", "create" },
           { "status", "success" },
         });
-        Console.WriteLine($"Cart created: {result?.Data?.Id}");
-        return result;
+        return Results.Ok(result);
       }
       catch (Exception ex)
       {
-        Console.WriteLine("Error creating cart");
-        Console.WriteLine(ex.Message);
         OperationsCounter.Add(1, new TagList() {
           { "operation", "create" },
-          { "status", "error" },
+          { "status", "failure" },
         });
-        throw;
+        return Results.Problem(ex.Message);
       }
     });
 
