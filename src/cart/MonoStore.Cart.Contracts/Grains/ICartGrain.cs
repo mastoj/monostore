@@ -37,8 +37,7 @@ public interface ICartGrain : IGrainWithStringKey
   Task<GrainResult<CartData, CartError>> GetCart(GetCart getCart);
   Task<GrainResult<CartData, CartError>> AddItem(AddItemRequest addItem);
   Task<GrainResult<CartData, CartError>> RemoveItem(RemoveItem removeItem);
-  Task<GrainResult<CartData, CartError>> IncreaseItemQuantity(IncreaseItemQuantity increaseItemQuantity);
-  Task<GrainResult<CartData, CartError>> DecreaseItemQuantity(DecreaseItemQuantity decreaseItemQuantity);
+  Task<GrainResult<CartData, CartError>> ChangeItemQuantity(ChangeItemQuantity changeItemQuantity);
   Task<GrainResult<CartData, CartError>> ClearCart(ClearCart clearCart);
   Task<GrainResult<CartData, CartError>> AbandonCart(AbandonCart abandonCart);
   Task<GrainResult<CartData, CartError>> RecoverCart(RecoverCart recoverCart);

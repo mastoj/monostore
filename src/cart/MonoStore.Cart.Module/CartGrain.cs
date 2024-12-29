@@ -106,25 +106,14 @@ public sealed class CartGrain
     return GrainResult<CartData, CartError>.Success(currentCart.AsContract());
   }
 
-  public async Task<GrainResult<CartData, CartError>> IncreaseItemQuantity(IncreaseItemQuantity increaseItemQuantity)
+  public async Task<GrainResult<CartData, CartError>> ChangeItemQuantity(ChangeItemQuantity changeItemQuantity)
   {
-    var result = Handle(currentCart, increaseItemQuantity);
+    var result = Handle(currentCart, changeItemQuantity);
     if (result.IsSuccessful)
     {
       currentCart = await eventStore.AppendToStream(currentCart.Id, result.Value, currentCart.Version, currentCart.Apply, default);
     }
-    logger.LogInformation("Increased item {productId} quantity in cart {cartId}", increaseItemQuantity.ProductId, currentCart.Id);
-    return GrainResult<CartData, CartError>.Success(currentCart.AsContract());
-  }
-
-  public async Task<GrainResult<CartData, CartError>> DecreaseItemQuantity(DecreaseItemQuantity decreaseItemQuantity)
-  {
-    var result = Handle(currentCart, decreaseItemQuantity);
-    if (result.IsSuccessful)
-    {
-      currentCart = await eventStore.AppendToStream(currentCart.Id, result.Value, currentCart.Version, currentCart.Apply, default);
-    }
-    Console.WriteLine($"Decreased item {decreaseItemQuantity.ProductId} quantity in cart {currentCart.Id}: " + currentCart);
+    logger.LogInformation("Increased item {productId} quantity in cart {cartId}", changeItemQuantity.ProductId, currentCart.Id);
     return GrainResult<CartData, CartError>.Success(currentCart.AsContract());
   }
 

@@ -51,31 +51,28 @@ internal static class CartService
     return Result.FromValue(new ItemRemovedFromCart(current.Id, command.ProductId));
   }
 
-  internal static Result<ItemQuantityIncreased> Handle(Cart current, IncreaseItemQuantity command)
+  internal static Result<ItemQuantityChanged> Handle(Cart current, ChangeItemQuantity command)
   {
     if (!IsCartOpen(current))
     {
-      return Result.FromException<ItemQuantityIncreased>(new InvalidCartStatusException(command.GetType().Name, CartStatus.Open, current.Status));
+      return Result.FromException<ItemQuantityChanged>(new InvalidCartStatusException(command.GetType().Name, CartStatus.Open, current.Status));
     }
     if (!IsItemInCart(current, command.ProductId))
     {
-      return Result.FromException<ItemQuantityIncreased>(new InvalidOperationException("Item not in cart"));
+      return Result.FromException<ItemQuantityChanged>(new InvalidOperationException("Item not in cart"));
     }
-    return Result.FromValue(new ItemQuantityIncreased(current.Id, command.ProductId));
+    if (command.Quantity <= 0)
+    {
+      return Result.FromException<ItemQuantityChanged>(new InvalidOperationException("Quantity must be greater than 0"));
+    }
+    var item = current.Items.First(i => i.Product.Id == command.ProductId);
+    if (item.Quantity == command.Quantity)
+    {
+      return Result.FromException<ItemQuantityChanged>(new InvalidOperationException("Quantity is the same"));
+    }
+    return Result.FromValue(new ItemQuantityChanged(current.Id, command.ProductId, command.Quantity));
   }
 
-  internal static Result<ItemQuantityDecreased> Handle(Cart current, DecreaseItemQuantity command)
-  {
-    if (!IsCartOpen(current))
-    {
-      return Result.FromException<ItemQuantityDecreased>(new InvalidCartStatusException(command.GetType().Name, CartStatus.Open, current.Status));
-    }
-    if (!IsItemInCart(current, command.ProductId))
-    {
-      return Result.FromException<ItemQuantityDecreased>(new InvalidOperationException("Item not in cart"));
-    }
-    return Result.FromValue(new ItemQuantityDecreased(current.Id, command.ProductId));
-  }
   internal static Result<CartAbandoned> Handle(Cart current, AbandonCart command)
   {
     if (!IsCartOpen(current))

@@ -15,10 +15,7 @@ public record AddItemRequest(string OperatingChain, string ProductId);
 public record RemoveItem(string ProductId);
 
 [GenerateSerializer]
-public record IncreaseItemQuantity(string ProductId);
-
-[GenerateSerializer]
-public record DecreaseItemQuantity(string ProductId);
+public record ChangeItemQuantity(string ProductId, int Quantity);
 
 [GenerateSerializer]
 public record AbandonCart;

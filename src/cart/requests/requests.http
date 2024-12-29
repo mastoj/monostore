@@ -34,10 +34,13 @@ GET http://localhost:5170/cart
 GET http://localhost:5170/cart/{{cartId}}
 
 ### Increase quantity of item in cart
-POST http://localhost:5170/cart/{{cartId}}/items/{{productId}}/increase
+PUT http://localhost:5170/cart/{{cartId}}/items/{{productId}}
+Content-Type: application/json
 
-### Decrease quantity of item in cart
-POST http://localhost:5170/cart/{{cartId}}/items/{{productId}}/decrease
+{
+  "quantity": 2,
+  "productId": "{{productId}}"
+}
 
 ### Abandon cart
 POST http://localhost:5170/cart/{{cartId}}/abandon

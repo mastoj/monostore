@@ -7,8 +7,7 @@ namespace MonoStore.Cart.Module;
 public record CartCreated(Guid CartId, string OperatingChain);
 public record ItemAddedToCart(Guid CartId, CartItem Item);
 public record ItemRemovedFromCart(Guid CartId, string ProductId);
-public record ItemQuantityIncreased(Guid CartId, string ProductId);
-public record ItemQuantityDecreased(Guid CartId, string ProductId);
+public record ItemQuantityChanged(Guid CartId, string ProductId, int Quantity);
 public record CartAbandoned(Guid CartId);
 public record CartRecovered(Guid CartId);
 public record CartArchived(Guid CartId);
@@ -41,19 +40,12 @@ public record Cart(
         Version = Version + 1
       };
 
-  private static IEnumerable<CartItem> UpdateCartItemsQuantity(IEnumerable<CartItem> items, string productId, int change) =>
-      items.Select(item => item.Product.Id == productId ? item with { Quantity = item.Quantity + change } : item);
-  public Cart Apply(ItemQuantityIncreased action) =>
+  private static IEnumerable<CartItem> UpdateCartItemsQuantity(IEnumerable<CartItem> items, string productId, int newQuantity) =>
+      items.Select(item => item.Product.Id == productId ? item with { Quantity = newQuantity } : item);
+  public Cart Apply(ItemQuantityChanged action) =>
       this with
       {
-        Items = UpdateCartItemsQuantity(Items, action.ProductId, 1),
-        Version = Version + 1
-      };
-
-  public Cart Apply(ItemQuantityDecreased action) =>
-      this with
-      {
-        Items = UpdateCartItemsQuantity(Items, action.ProductId, -1),
+        Items = UpdateCartItemsQuantity(Items, action.ProductId, action.Quantity),
         Version = Version + 1
       };
 
