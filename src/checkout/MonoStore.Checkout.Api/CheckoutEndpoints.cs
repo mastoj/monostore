@@ -11,6 +11,8 @@ using MonoStore.Cart.Contracts.Grains;
 using Orleans;
 using Microsoft.AspNetCore.Http;
 using MonoStore.Cart.Contracts.Requests;
+using MonoStore.Checkout.Contracts.Requests;
+using Monostore.Checkout.Contracts.Grains;
 
 public static class CheckoutEndpoints
 {
@@ -21,11 +23,30 @@ public static class CheckoutEndpoints
   // public static Histogram<long> CartValue => GetMeter(apiServiceName).CreateHistogram<long>("cart.value");
 
 
-  public static string CheckoutGrainId(Guid cartId) => $"cart/{cartId.ToString().ToLower()}";
   public static RouteGroupBuilder MapCheckoutEndpoints(this RouteGroupBuilder routes)
   {
-    routes.MapPost("/", async (IGrainFactory grains, CreateCartRequest createCart) =>
+    routes.MapPost("/", async (IGrainFactory grains, CreatePurchaseOrderRequest createPurchaseOrderRequest) =>
     {
+      var cartGrain = grains.GetGrain<ICartGrain>(ICartGrain.CartGrainId(createPurchaseOrderRequest.CartId));
+      var cartResult = await cartGrain.GetCart(new GetCart());
+      if (cartResult.Error != null && cartResult.Data == null)
+      {
+        return Results.BadRequest(cartResult.Error.Type);
+
+      }
+      var cart = cartResult.Data!;
+      var orderItems = cart.Items.Select(i =>
+      {
+        var product = new Product(i.Product.Id, i.Product.Name, i.Product.Price, i.Product.PriceExVat, i.Product.Url, i.Product.PrimaryImageUrl);
+        return new PurchaseOrderItem(product, i.Quantity);
+      }).ToArray();
+      var createPurchaseOrderMessage = new CreatePurchaseOrderMessage(createPurchaseOrderRequest.PurchaseOrderId, createPurchaseOrderRequest.CartId, cart.OperatingChain, cart.SessionId, cart.UserId, orderItems);
+      Console.WriteLine("CreatePurchaseOrder: " + System.Text.Json.JsonSerializer.Serialize(createPurchaseOrderMessage));
+
+      var purchaseOrderGrain = grains.GetGrain<IPurchaseOrderGrain>(IPurchaseOrderGrain.PurchaseOrderGrainId(createPurchaseOrderRequest.PurchaseOrderId));
+      var result = await purchaseOrderGrain.CreatePurchaseOrder(createPurchaseOrderMessage);
+
+      return Results.Ok(result);
       // DiagnosticConfig.CreateCartCounter.Add(1, new KeyValuePair<string, object?>("operatingChain", "OCNOELK"));
     });
 

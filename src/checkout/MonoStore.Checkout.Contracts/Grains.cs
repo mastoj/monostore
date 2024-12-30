@@ -18,11 +18,18 @@ public record class CheckoutError
 }
 
 
-public record OrderItem(string ProductId, string ProductName, decimal Price, decimal PriceExVat, int Quantity);
-public record PurchaseOrder(string OrderId, OrderItem[] Items, decimal Total, decimal VatAmount, string Currency, string OperatingChain, string SessionId, string? UserId);
-public record CreatePurchaseOrder(string OperatingChain, string SessionId, string? UserId, OrderItem[] Items);
+[GenerateSerializer]
+public record Product(string Id, string Name, decimal Price, decimal PriceExVat, string Url, string PrimaryImageUrl);
+[GenerateSerializer]
+public record PurchaseOrderItem(Product Product, int Quantity);
+[GenerateSerializer]
+public record PurchaseOrder(Guid PurchaseOrderId, PurchaseOrderItem[] Items, decimal Total, decimal VatAmount, string Currency, string OperatingChain, string SessionId, string? UserId);
+[GenerateSerializer]
+public record CreatePurchaseOrderMessage(Guid PurchaseOrderId, Guid CartId, string OperatingChain, string SessionId, string? UserId, PurchaseOrderItem[] Items);
 
-public interface ICartGrain : IGrainWithStringKey
+public interface IPurchaseOrderGrain : IGrainWithStringKey
 {
-  Task<GrainResult<PurchaseOrder, CheckoutError>> CreatePurchaseOrder(CreatePurchaseOrder createPurchaseOrder);
+  public static string PurchaseOrderGrainId(Guid purchaseOrderId) => $"purchaseorder/{purchaseOrderId.ToString().ToLower()}";
+  Task<GrainResult<PurchaseOrder, CheckoutError>> CreatePurchaseOrder(CreatePurchaseOrderMessage createPurchaseOrder);
 }
+

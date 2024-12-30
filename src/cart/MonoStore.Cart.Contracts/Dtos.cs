@@ -15,4 +15,4 @@ public record Product(string Id, string Name, decimal Price, decimal PriceExVat,
 public record CartItem(Product Product, int Quantity);
 
 [GenerateSerializer]
-public record class CartData(Guid Id, int Version, string OperatingChain, CartStatus Status, List<CartItem> Items, string sessionId, string? userId);
+public record class CartData(Guid Id, int Version, string OperatingChain, CartStatus Status, List<CartItem> Items, string SessionId, string? UserId);

@@ -20,6 +20,8 @@ public record class CartError
 
 public interface ICartGrain : IGrainWithStringKey
 {
+  public static string CartGrainId(Guid cartId) => $"cart/{cartId.ToString().ToLower()}";
+
   Task<GrainResult<CartData, CartError>> CreateCart(CreateCartMessage createCart);
   Task<GrainResult<CartData, CartError>> GetCart(GetCart getCart);
   Task<GrainResult<CartData, CartError>> AddItem(AddItemRequest addItem);

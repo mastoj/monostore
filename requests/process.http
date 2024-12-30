@@ -1,0 +1,65 @@
+#@cartId=2E64A8B2-91BD-44F7-98FC-C67FE8B6F002
+#@cartId=30347666-1749-4251-982c-6f59c029da5b
+@cartId=2c10a5a2-3a85-4a13-ba22-2fdaf9949f03
+@productId=209984
+@userId=1234
+@sessionId=1234
+@purchaseOrderId=2c10a5a2-3a85-4a13-9999-2fdaf9949f03
+
+### Create cart with user-id and session-id cookie values
+POST http://localhost:5170/cart
+Content-Type: application/json
+Cookie: user-id={{userId}}; session-id={{sessionId}}
+
+{
+  "cartId": "{{cartId}}",
+  "operatingChain": "OCSEELG"
+}
+
+### Add item to cart
+POST http://localhost:5170/cart/{{cartId}}/items
+Content-Type: application/json
+
+{
+  "operatingChain": "OCSEELG",
+  "productId": "{{productId}}"
+}
+
+### Remove item from cart
+DELETE http://localhost:5170/cart/{{cartId}}/items/{{productId}}
+
+### Get cart
+GET http://localhost:5170/cart/{{cartId}}
+
+### Get logged in user cart
+GET http://localhost:5170/cart
+
+### Get cart 
+GET http://localhost:5170/cart/{{cartId}}
+
+### Increase quantity of item in cart
+PUT http://localhost:5170/cart/{{cartId}}/items/{{productId}}
+Content-Type: application/json
+
+{
+  "quantity": 8,
+  "productId": "{{productId}}"
+}
+
+### Abandon cart
+POST http://localhost:5170/cart/{{cartId}}/abandon
+
+### Clear cart
+POST http://localhost:5170/cart/{{cartId}}/clear
+
+### Recover cart
+POST http://localhost:5170/cart/{{cartId}}/recover
+
+### Create purchase order
+POST http://localhost:5170/checkout
+Content-Type: application/json
+
+{
+  "cartId": "{{cartId}}",
+  "purchaseOrderId": "{{purchaseOrderId}}"
+}

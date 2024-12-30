@@ -2,6 +2,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\cart\MonoStore.Cart.Contracts\MonoStore.Cart.Contracts.csproj" />
     <ProjectReference Include="..\..\aspire\MonoStore.ServiceDefaults\MonoStore.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\MonoStore.Checkout.Contracts\MonoStore.Checkout.Contracts.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>

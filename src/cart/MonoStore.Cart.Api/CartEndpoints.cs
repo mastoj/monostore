@@ -21,8 +21,6 @@ public static class CartEndpoints
   // public static Counter<long> CartItemsCount => Meter.CreateCounter<long>("cart.items.add");
   // public static Histogram<long> CartValue => GetMeter(apiServiceName).CreateHistogram<long>("cart.value");
 
-
-  public static string CartGrainId(Guid cartId) => $"cart/{cartId.ToString().ToLower()}";
   public static RouteGroupBuilder MapCartEndpoints(this RouteGroupBuilder routes)
   {
     routes.MapPost("/", async (HttpRequest request, IGrainFactory grains, CreateCartRequest createCart) =>
@@ -38,7 +36,7 @@ public static class CartEndpoints
       try
       {
         Console.WriteLine("CreateCart");
-        var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(createCart.CartId));
+        var cartGrain = grains.GetGrain<ICartGrain>(ICartGrain.CartGrainId(createCart.CartId));
         var result = await cartGrain.CreateCart(new CreateCartMessage(createCart.CartId, createCart.OperatingChain, sessionId, userId));
         OperationsCounter.Add(1, new TagList() {
           { "operation", "create" },
@@ -60,19 +58,19 @@ public static class CartEndpoints
     {
       var productGrainId = IProductGrain.ProductGrainId(addItemRequest.OperatingChain, addItemRequest.ProductId);
       Console.WriteLine($"==> ProductGrainId: {productGrainId}");
-      var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(id));
+      var cartGrain = grains.GetGrain<ICartGrain>(ICartGrain.CartGrainId(id));
       return await cartGrain.AddItem(addItemRequest);
     });
 
     routes.MapDelete("/{id}/items/{productId}", async (IGrainFactory grains, Guid id, string productId) =>
     {
-      var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(id));
+      var cartGrain = grains.GetGrain<ICartGrain>(ICartGrain.CartGrainId(id));
       return await cartGrain.RemoveItem(new RemoveItem(productId));
     });
 
     routes.MapPut("/{id}/items/{productId}", async (IGrainFactory grains, Guid id, string productId, ChangeItemQuantity changeItemQuantity) =>
     {
-      var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(id));
+      var cartGrain = grains.GetGrain<ICartGrain>(ICartGrain.CartGrainId(id));
       return await cartGrain.ChangeItemQuantity(new ChangeItemQuantity(productId, changeItemQuantity.Quantity));
     });
 
@@ -85,7 +83,7 @@ public static class CartEndpoints
           { "status", "success" },
         });
 
-        var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(id));
+        var cartGrain = grains.GetGrain<ICartGrain>(ICartGrain.CartGrainId(id));
         return await cartGrain.GetCart(new GetCart());
       }
       catch (Exception ex)
@@ -102,25 +100,25 @@ public static class CartEndpoints
 
     routes.MapPost("/{id}/abandon", async (IGrainFactory grains, Guid id) =>
     {
-      var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(id));
+      var cartGrain = grains.GetGrain<ICartGrain>(ICartGrain.CartGrainId(id));
       return await cartGrain.AbandonCart(new AbandonCart());
     });
 
     routes.MapPost("/{id}/clear", async (IGrainFactory grains, Guid id) =>
     {
-      var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(id));
+      var cartGrain = grains.GetGrain<ICartGrain>(ICartGrain.CartGrainId(id));
       return await cartGrain.ClearCart(new ClearCart());
     });
 
     routes.MapPost("/{id}/recover", async (IGrainFactory grains, Guid id) =>
     {
-      var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(id));
+      var cartGrain = grains.GetGrain<ICartGrain>(ICartGrain.CartGrainId(id));
       return await cartGrain.RecoverCart(new RecoverCart());
     });
 
     routes.MapPost("/{id}/archive", async (IGrainFactory grains, Guid id) =>
     {
-      var cartGrain = grains.GetGrain<ICartGrain>(CartGrainId(id));
+      var cartGrain = grains.GetGrain<ICartGrain>(ICartGrain.CartGrainId(id));
       return await cartGrain.ArchiveCart(new ArchiveCart());
     });
 
