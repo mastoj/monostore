@@ -63,6 +63,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoStore.Checkout.Module",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoStore.Checkout.Tests", "src\checkout\MonoStore.Checkout.Tests\MonoStore.Checkout.Tests.csproj", "{EDE4EAC6-346E-4C9C-85B5-6B6BC83F054F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monostore.Orleans", "src\infrastructure\Monostore.Orleans\Monostore.Orleans.csproj", "{A4FA4F38-AFA4-4820-9C85-10942D2404E7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -160,6 +162,10 @@ Global
 		{EDE4EAC6-346E-4C9C-85B5-6B6BC83F054F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDE4EAC6-346E-4C9C-85B5-6B6BC83F054F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDE4EAC6-346E-4C9C-85B5-6B6BC83F054F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4FA4F38-AFA4-4820-9C85-10942D2404E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4FA4F38-AFA4-4820-9C85-10942D2404E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4FA4F38-AFA4-4820-9C85-10942D2404E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4FA4F38-AFA4-4820-9C85-10942D2404E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DA454B91-38C1-43F3-B0E3-A637A771DE73} = {3A654C76-9569-4E99-85BE-1FC3221077CE}
@@ -191,5 +197,6 @@ Global
 		{0003B675-9474-408E-BA25-FC42E9D66B63} = {8E6D4B8C-7F8A-441A-9402-4041529F24D7}
 		{E3689251-7CC9-432F-B679-7583B93A5921} = {8E6D4B8C-7F8A-441A-9402-4041529F24D7}
 		{EDE4EAC6-346E-4C9C-85B5-6B6BC83F054F} = {8E6D4B8C-7F8A-441A-9402-4041529F24D7}
+		{A4FA4F38-AFA4-4820-9C85-10942D2404E7} = {DA454B91-38C1-43F3-B0E3-A637A771DE73}
 	EndGlobalSection
 EndGlobal
