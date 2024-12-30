@@ -1,5 +1,6 @@
 
 using Microsoft.Extensions.Logging;
+using Monostore.Orleans.Types;
 using Monostore.ServiceDefaults;
 using MonoStore.Cart.Contracts.Commands;
 using MonoStore.Cart.Contracts.Dtos;

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
     <ProjectReference Include="..\MonoStore.Cart.Contracts\MonoStore.Cart.Contracts.csproj" />
@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Orleans.Sdk" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Orleans.Sdk" Version="9.0.1" />
   </ItemGroup>
 
   <PropertyGroup>

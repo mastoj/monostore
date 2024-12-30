@@ -7,7 +7,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.8" />
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.46.0" />
-    <PackageReference Include="Microsoft.Orleans.Streaming" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Orleans.Streaming" Version="9.0.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MonoStore.Product.Contracts\MonoStore.Product.Contracts.csproj" />
