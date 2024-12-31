@@ -1,9 +1,15 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
+  <ItemGroup>
+    <PackageReference Include="DotNext" Version="5.17.0" />
+    <PackageReference Include="Marten" Version="7.35.0" />
+    <PackageReference Include="Microsoft.Orleans.Server" Version="9.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MonoStore.Checkout.Contracts\MonoStore.Checkout.Contracts.csproj" />
+  </ItemGroup>
 </Project>

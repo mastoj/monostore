@@ -48,6 +48,10 @@ builder.AddProject<Projects.MonoStore_Product_Host>("monostore-product-host")
   .WithReference(orleans)
   .WithReplicas(1);
 
+builder.AddProject<Projects.MonoStore_Checkout_Host>("monostore-checkout-host")
+  .WithReference(orleans)
+  .WithReplicas(1);
+
 builder.AddProject<Projects.MonoStore_Orelans_Dashboard>("orleans-dashboard")
   .WithReference(orleans)
   .WithExternalHttpEndpoints();

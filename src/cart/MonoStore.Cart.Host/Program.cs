@@ -14,8 +14,6 @@ var serviceName = builder.Configuration["OTEL_RESOURCE_NAME"] ?? "monostore-cart
 var attributes = builder.Configuration["OTEL_RESOURCE_ATTRIBUTES"]?.Split(',').Select(s => s.Split("=")) ?? [];
 var serviceInstanceId = attributes.FirstOrDefault(y => y[0].Contains("service.instance.id"))?[1] ?? throw new Exception("Service instance id not found");
 
-
-
 builder.AddServiceDefaults(c =>
     {
       c.AddService(serviceName, serviceInstanceId: serviceInstanceId);

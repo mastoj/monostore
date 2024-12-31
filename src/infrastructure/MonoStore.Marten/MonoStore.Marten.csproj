@@ -5,6 +5,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Marten" Version="7.33.0" />
+    <PackageReference Include="Marten" Version="7.35.0" />
   </ItemGroup>
 </Project>

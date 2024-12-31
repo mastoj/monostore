@@ -23,13 +23,13 @@ public record Product(string Id, string Name, decimal Price, decimal PriceExVat,
 [GenerateSerializer]
 public record PurchaseOrderItem(Product Product, int Quantity);
 [GenerateSerializer]
-public record PurchaseOrder(Guid PurchaseOrderId, PurchaseOrderItem[] Items, decimal Total, decimal VatAmount, string Currency, string OperatingChain, string SessionId, string? UserId);
+public record PurchaseOrderData(Guid PurchaseOrderId, PurchaseOrderItem[] Items, decimal Total, decimal VatAmount, string Currency, string OperatingChain, string SessionId, string? UserId);
 [GenerateSerializer]
 public record CreatePurchaseOrderMessage(Guid PurchaseOrderId, Guid CartId, string OperatingChain, string SessionId, string? UserId, PurchaseOrderItem[] Items);
 
 public interface IPurchaseOrderGrain : IGrainWithStringKey
 {
   public static string PurchaseOrderGrainId(Guid purchaseOrderId) => $"purchaseorder/{purchaseOrderId.ToString().ToLower()}";
-  Task<GrainResult<PurchaseOrder, CheckoutError>> CreatePurchaseOrder(CreatePurchaseOrderMessage createPurchaseOrder);
+  Task<GrainResult<PurchaseOrderData, CheckoutError>> CreatePurchaseOrder(CreatePurchaseOrderMessage createPurchaseOrder);
 }
 

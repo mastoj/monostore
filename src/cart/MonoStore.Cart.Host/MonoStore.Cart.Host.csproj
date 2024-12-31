@@ -12,7 +12,7 @@
     <PackageReference Include="Aspire.Azure.Data.Tables" Version="9.0.0" />
     <PackageReference Include="Aspire.Azure.Storage.Blobs" Version="9.0.0" />
     <PackageReference Include="dotenv.net" Version="3.2.1" />
-    <PackageReference Include="Marten" Version="7.33.0" />
+    <PackageReference Include="Marten" Version="7.35.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
     <PackageReference Include="Microsoft.Orleans.Clustering.AzureStorage" Version="9.0.1" />
     <PackageReference Include="Microsoft.Orleans.Persistence.AzureStorage" Version="9.0.1" />
