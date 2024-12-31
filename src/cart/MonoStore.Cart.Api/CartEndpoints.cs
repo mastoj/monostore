@@ -12,6 +12,7 @@ using Orleans;
 using MonoStore.Product.Contracts.Grains;
 using Microsoft.AspNetCore.Http;
 using MonoStore.Cart.Contracts.Requests;
+using Microsoft.Extensions.Logging;
 
 public static class CartEndpoints
 {
@@ -23,8 +24,9 @@ public static class CartEndpoints
 
   public static RouteGroupBuilder MapCartEndpoints(this RouteGroupBuilder routes)
   {
-    routes.MapPost("/", async (HttpRequest request, IGrainFactory grains, CreateCartRequest createCart) =>
+    routes.MapPost("/", async (HttpRequest request, IGrainFactory grains, CreateCartRequest createCart, ILoggerFactory loggerFactory) =>
     {
+      var logger = loggerFactory.CreateLogger("CartEndpoints");
       if (!request.Cookies.TryGetValue("session-id", out var sessionId))
       {
         return Results.BadRequest("Missing session-id cookie");
@@ -50,6 +52,7 @@ public static class CartEndpoints
           { "operation", "create" },
           { "status", "failure" },
         });
+        logger.LogError(ex, "Error creating cart");
         return Results.Problem(ex.Message);
       }
     });
