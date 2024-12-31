@@ -25,6 +25,7 @@
     <ProjectReference Include="..\MonoStore.Cart.Module\MonoStore.Cart.Module.csproj" />
     <ProjectReference Include="..\..\aspire\MonoStore.ServiceDefaults\MonoStore.ServiceDefaults.csproj" />
     <ProjectReference Include="..\..\product\MonoStore.Product.Contracts\MonoStore.Product.Contracts.csproj" />
+    <ProjectReference Include="..\..\checkout\MonoStore.Checkout.Contracts\MonoStore.Checkout.Contracts.csproj" />
   </ItemGroup>
 
 </Project>
