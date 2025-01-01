@@ -9,10 +9,10 @@ EXPOSE 30000
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 # COPY ["src/cart/MonoStore.Cart.Host/MonoStore.Cart.Host.csproj", "cart/MonoStore.Cart.Host/"]
-##COPY ["src/cart/MonoStore.Cart.Module/MonoStore.Cart.Module.csproj", "cart/MonoStore.Cart.Module/"]
+# COPY ["src/cart/MonoStore.Cart.Module/MonoStore.Cart.Module.csproj", "cart/MonoStore.Cart.Module/"]
 # COPY ["src/aspire/MonoStore.ServiceDefaults/MonoStore.ServiceDefaults.csproj", "aspire/MonoStore.ServiceDefaults/"]
 # COPY ["src/product/MonoStore.Product.Contracts/MonoStore.Product.Contracts.csproj", "product/MonoStore.Product.Contracts/"]
-#RUN dotnet restore "cart/MonoStore.Cart.Module/MonoStore.Cart.Module.csproj"
+# RUN dotnet restore "cart/MonoStore.Cart.Module/MonoStore.Cart.Module.csproj"
 COPY ./src .
 WORKDIR "/src/cart/MonoStore.Cart.Module"
 RUN dotnet build "MonoStore.Cart.Module.csproj" -c Release -o /app/build

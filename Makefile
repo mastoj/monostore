@@ -18,14 +18,16 @@ dockerize-api: ## Build the docker image for the api, use with LABEL=<tag> to sp
 #	docker build . -t tomascontainers.azurecr.io/monostore-api:${LABEL} -f ./src/MonoStore.Api/Dockerfile
 
 dockerize-cart: ## Build the docker image for cart, use with LABEL=<tag> to specify the tag
-	APP=monostore-cart-host DOCKER_FILE=./src/cart/MonoStore.Cart.Host/Dockerfile make dockerize-app
-#	docker build . -t tomascontainers.azurecr.io/monostore-cart-host:${LABEL} -f ./src/cart/MonoStore.Cart.Host/Dockerfile
+	APP=monostore-cart-module DOCKER_FILE=./src/cart/MonoStore.Cart.Module/Dockerfile make dockerize-app
+
+dockerize-checkout: ## Build the docker image for checkout, use with LABEL=<tag> to specify the tag
+	APP=monostore-checkout-module DOCKER_FILE=./src/checkout/MonoStore.Checkout.Module/Dockerfile make dockerize-app
 
 dockerize-product: ## Build the docker image for product, use with LABEL=<tag> to specify the tag
-	APP=monostore-product-host DOCKER_FILE=./src/product/MonoStore.Product.Host/Dockerfile make dockerize-app
-# docker build . -t tomascontainers.azurecr.io/monostore-product-host:${LABEL} -f ./src/product/MonoStore.Product.Host/Dockerfile
+	APP=monostore-product-module DOCKER_FILE=./src/product/MonoStore.Product.Module/Dockerfile make dockerize-app
+# docker build . -t tomascontainers.azurecr.io/monostore-product-module:${LABEL} -f ./src/product/MonoStore.Product.Host/Dockerfile
 
-dockerize-all: dockerize-api dockerize-cart dockerize-product ## Build all the docker images use with LABEL=<tag> to specify the tag
+dockerize-all: dockerize-api dockerize-cart dockerize-product dockerize-checkout ## Build all the docker images use with LABEL=<tag> to specify the tag
 
 publish-app: ## Publish an app to the registry, use with APP=<app> and LABEL=<tag> to specify the app and tag
 	docker push tomascontainers.azurecr.io/${APP}:${LABEL}
@@ -34,12 +36,15 @@ publish-api: ## Publish the api image to the registry, use with LABEL=<tag> to s
 	APP=monostore-api make publish-app
 
 publish-cart: ## Publish the cart image to the registry, use with LABEL=<tag> to specify the tag
-	APP=monostore-cart-host make publish-app
+	APP=monostore-cart-module make publish-app
 
 publish-product: ## Publish the product image to the registry, use with LABEL=<tag> to specify the tag
-	APP=monostore-product-host make publish-app
+	APP=monostore-product-module make publish-app
 
-publish-all: publish-api publish-cart publish-product ## Publish all the images to the registry, use with LABEL=<tag> to specify the tag
+publish-checkout: ## Publish the checkout image to the registry, use with LABEL=<tag> to specify the tag
+	APP=monostore-checkout-module make publish-app
+
+publish-all: publish-api publish-cart publish-product publish-checkout ## Publish all the images to the registry, use with LABEL=<tag> to specify the tag
 
 deploy-api: ## Deploy the api to the azure container instance
 	./deploy-api.sh
@@ -48,12 +53,15 @@ deploy-worker: ## Deploys a worker to container apps
 	./deploy-worker.sh
 
 deploy-cart: ## Deploy the cart to the azure container instance
-	APP=monostore-cart-host make deploy-worker
+	APP=monostore-cart-module make deploy-worker
+
+deploy-checkout: ## Deploy the checkout to the azure container instance
+	APP=monostore-checkout-module make deploy-worker
 
 deploy-product: ## Deploy the product to the azure container instance
-	APP=monostore-product-host make deploy-worker
+	APP=monostore-product-module make deploy-worker
 
-deploy-all: deploy-api deploy-cart deploy-product ## Deploy all the images to the azure container instance
+deploy-all: deploy-api deploy-cart deploy-product deploy-checkout ## Deploy all the images to the azure container instance
 
 build-publish-deploy-all: ## Deploys and builds everything
 	./build.sh && ./publish.sh && make deploy-all
@@ -65,10 +73,13 @@ build-publish-deploy-app: ## Deploys a worker, use with APP=<name> to specify th
 	make dockerize-app && make publish-app && make deploy-worker
 
 build-publish-deploy-cart: ## Deploys and builds the cart
-	APP=monostore-cart-host make build-publish-deploy-app
+	APP=monostore-cart-module make build-publish-deploy-app
+
+build-publish-deploy-checkout: ## Deploys and builds the checkout
+	APP=monostore-checkout-module make build-publish-deploy-app
 
 build-publish-deploy-product: ## Deploys and builds the product
-	APP=monostore-product-host DOCKER_FILE=./src/product/MonoStore.Product.Host/Dockerfile make build-publish-deploy-app
+	APP=monostore-product-module DOCKER_FILE=./src/product/MonoStore.Product.Host/Dockerfile make build-publish-deploy-app
 
 # az containerapp create \
 #   --name $API_NAME \
