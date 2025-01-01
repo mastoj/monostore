@@ -12,5 +12,6 @@
   <ItemGroup>
     <ProjectReference Include="..\MonoStore.Checkout.Contracts\MonoStore.Checkout.Contracts.csproj" />
     <ProjectReference Include="..\..\infrastructure\Monostore.Infrastructure.Hosting\Monostore.Infrastructure.Hosting.csproj" />
+    <ProjectReference Include="..\..\infrastructure\MonoStore.Marten\MonoStore.Marten.csproj" />
   </ItemGroup>
 </Project>

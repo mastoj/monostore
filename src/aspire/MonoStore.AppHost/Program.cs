@@ -40,15 +40,17 @@ builder.AddProject<Projects.MonoStore_Api>("monostore-api")
 
 builder.AddProject<Projects.MonoStore_Cart_Module>("monostore-cart-module")
   .WithReference(postgres)
-  .WithReference(orleans)
   .WaitFor(postgres)
-  .WithReplicas(1);
-
-builder.AddProject<Projects.MonoStore_Product_Module>("monostore-product-module")
   .WithReference(orleans)
   .WithReplicas(1);
 
 builder.AddProject<Projects.MonoStore_Checkout_Module>("monostore-checkout-module")
+  .WithReference(postgres)
+  .WaitFor(postgres)
+  .WithReference(orleans)
+  .WithReplicas(1);
+
+builder.AddProject<Projects.MonoStore_Product_Module>("monostore-product-module")
   .WithReference(orleans)
   .WithReplicas(1);
 

@@ -1,4 +1,5 @@
 using Monostore.Orleans.Types;
+using MonoStore.Checkout.Contracts;
 
 namespace Monostore.Checkout.Contracts.Grains;
 
@@ -6,7 +7,6 @@ public enum CheckoutErrorType
 {
   Unkown = 99
 }
-
 
 [GenerateSerializer, Alias(nameof(CheckoutError))]
 public record class CheckoutError
@@ -17,13 +17,6 @@ public record class CheckoutError
   public CheckoutErrorType Type { get; set; } = CheckoutErrorType.Unkown;
 }
 
-
-[GenerateSerializer]
-public record Product(string Id, string Name, decimal Price, decimal PriceExVat, string Url, string PrimaryImageUrl);
-[GenerateSerializer]
-public record PurchaseOrderItem(Product Product, int Quantity);
-[GenerateSerializer]
-public record PurchaseOrderData(Guid PurchaseOrderId, PurchaseOrderItem[] Items, decimal Total, decimal VatAmount, string Currency, string OperatingChain, string SessionId, string? UserId);
 [GenerateSerializer]
 public record CreatePurchaseOrderMessage(Guid PurchaseOrderId, Guid CartId, string OperatingChain, string SessionId, string? UserId, PurchaseOrderItem[] Items);
 

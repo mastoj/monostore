@@ -1,18 +1,15 @@
 namespace MonoStore.Cart.Module;
 
-using System.Diagnostics;
 using System.Diagnostics.Metrics;
-using OpenTelemetry.Metrics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
-using Monostore.ServiceDefaults;
-using MonoStore.Cart.Contracts;
 using MonoStore.Cart.Contracts.Grains;
 using Orleans;
 using Microsoft.AspNetCore.Http;
-using MonoStore.Cart.Contracts.Requests;
 using MonoStore.Checkout.Contracts.Requests;
 using Monostore.Checkout.Contracts.Grains;
+using MonoStore.Checkout.Contracts;
+using MonoStore.Cart.Contracts.Requests;
 
 public static class CheckoutEndpoints
 {
