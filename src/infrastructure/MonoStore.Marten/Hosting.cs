@@ -1,18 +1,19 @@
 using Marten;
 using Marten.Services;
-using MonoStore.Cart.Module;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using MonoStore.Marten;
 
-public static class BuilderExtensions
+namespace Microsoft.Extensions.Hosting;
+
+public static class Hosting
 {
-  public static HostApplicationBuilder AddCart(this HostApplicationBuilder builder)
+  public static HostApplicationBuilder UseMartenEventStore(this HostApplicationBuilder builder, string connectionStringName, string databaseSchemaName)
   {
     Action doStuff = () =>
     {
 
-      var connectionString = $"{builder.Configuration.GetConnectionString("cart")};sslmode=prefer;CommandTimeout=300";
-      // Connection string with maximum pool size of 30
-      //var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
-      Console.WriteLine($"Cart ConnectionString: {connectionString}, schema: {Environment.GetEnvironmentVariable("SchemaName")}");
+      var connectionString = $"{builder.Configuration.GetConnectionString(connectionStringName)};sslmode=prefer;CommandTimeout=300";
       builder.Services
         .AddSingleton<IEventStore, MartenEventStore>();
       builder.Services.AddMarten(s =>
@@ -20,18 +21,12 @@ public static class BuilderExtensions
           var options = new StoreOptions();
           options.Events.MetadataConfig.CorrelationIdEnabled = true;
           options.Events.MetadataConfig.CausationIdEnabled = true;
-          // var schemaName = Environment.GetEnvironmentVariable("SchemaName") ?? "public";
-          // options.Events.DatabaseSchemaName = schemaName;
-          // options.DatabaseSchemaName = schemaName;
-          options.DatabaseSchemaName = "monostore";
+          options.DatabaseSchemaName = databaseSchemaName;
           options.Connection(connectionString ?? throw new InvalidOperationException());
           options.OpenTelemetry.TrackConnections = TrackLevel.Verbose;
           options.OpenTelemetry.TrackEventCounters();
           return options;
         })
-        // .UseNpgsqlDataSource(s => {
-        //   s.
-        // })
         .UseLightweightSessions()
         .ApplyAllDatabaseChangesOnStartup();
     };

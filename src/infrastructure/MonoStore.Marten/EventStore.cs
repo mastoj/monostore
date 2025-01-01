@@ -1,8 +1,12 @@
 using Marten;
-using Marten.Services;
-using Microsoft.AspNetCore.Builder;
 
-namespace MonoStore.Cart.Module;
+namespace MonoStore.Marten;
+public interface IEventStore
+{
+  Task<TState> CreateStream<T, TState>(Guid id, T @event, Func<T, TState> apply, CancellationToken ct) where T : class;
+  Task<TState> AppendToStream<T, TState>(Guid id, T @event, int version, Func<T, TState> apply, CancellationToken ct) where T : class;
+  Task<TState> GetState<TState>(Guid id, CancellationToken ct) where TState : class;
+}
 
 public class MartenEventStore : IEventStore
 {
@@ -40,16 +44,5 @@ public class MartenEventStore : IEventStore
     using var _session = _documentStore.QuerySession();
     var result = await _session.Events.AggregateStreamAsync<TState>(id, token: ct);
     return result;
-  }
-}
-
-public static class ApiExtensions
-{
-  public static WebApplicationBuilder AddCart(this WebApplicationBuilder builder)
-  {
-    // Try three times
-
-
-    return builder;
   }
 }

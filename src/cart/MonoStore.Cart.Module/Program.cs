@@ -1,5 +1,5 @@
 var builder = Host.CreateApplicationBuilder(args).UseHosting("monostore-cart-module");
-builder.AddCart();
+builder.UseMartenEventStore("monostorepg", "cart");
 
 var host = builder.Build();
 host.Run();

@@ -1,22 +1,14 @@
-
-using Microsoft.Extensions.Logging;
 using Monostore.Orleans.Types;
 using Monostore.ServiceDefaults;
 using MonoStore.Cart.Contracts.Commands;
 using MonoStore.Cart.Contracts.Dtos;
 using MonoStore.Cart.Contracts.Grains;
 using MonoStore.Cart.Contracts.Requests;
+using MonoStore.Marten;
 using MonoStore.Product.Contracts.Grains;
 using static MonoStore.Cart.Module.CartService;
 
 namespace MonoStore.Cart.Module;
-
-public interface IEventStore
-{
-  Task<TState> CreateStream<T, TState>(Guid id, T @event, Func<T, TState> apply, CancellationToken ct) where T : class;
-  Task<TState> AppendToStream<T, TState>(Guid id, T @event, int version, Func<T, TState> apply, CancellationToken ct) where T : class;
-  Task<TState> GetState<TState>(Guid id, CancellationToken ct) where TState : class;
-}
 
 internal static class Mappers
 {

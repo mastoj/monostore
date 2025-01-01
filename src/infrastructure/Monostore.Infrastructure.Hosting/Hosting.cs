@@ -7,7 +7,9 @@ namespace Microsoft.Extensions.Hosting;
 
 public static class Hosting
 {
-  public static HostApplicationBuilder UseHosting(this HostApplicationBuilder builder, string defaultServiceName)
+  private static TimeSpan DefaultCollectionInterval = TimeSpan.FromSeconds(10);
+  private static TimeSpan DefaultCollectionAge = TimeSpan.FromSeconds(20);
+  public static HostApplicationBuilder UseHosting(this HostApplicationBuilder builder, string defaultServiceName, TimeSpan? collectionInterval = null, TimeSpan? collectionAge = null)
   {
     DotEnv.Load();
 
@@ -35,8 +37,8 @@ public static class Hosting
               .AddMemoryGrainStorage("PubSubStore")
               .Configure<GrainCollectionOptions>(options =>
                     {
-                      options.CollectionAge = TimeSpan.FromSeconds(20);
-                      options.CollectionQuantum = TimeSpan.FromSeconds(10);
+                      options.CollectionAge = collectionAge ?? DefaultCollectionAge;
+                      options.CollectionQuantum = collectionInterval ?? DefaultCollectionInterval;
                     });
     });
 

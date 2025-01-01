@@ -19,7 +19,7 @@ var username = builder.AddParameter("postgres-username");
 var password = builder.AddParameter("postgres-password");
 var port = 5433;
 var postgres = builder
-  .AddPostgres("cart", username, password, port)
+  .AddPostgres("monostorepg", username, password, port)
   // .WithDataVolume()
   .WithPgAdmin(a =>
     {
