@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Worker">
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -11,5 +11,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MonoStore.Checkout.Contracts\MonoStore.Checkout.Contracts.csproj" />
+    <ProjectReference Include="..\..\infrastructure\Monostore.Infrastructure.Hosting\Monostore.Infrastructure.Hosting.csproj" />
   </ItemGroup>
 </Project>

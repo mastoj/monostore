@@ -21,10 +21,10 @@
   <ItemGroup>
     <ProjectReference Include="..\..\MonoStore.Api\MonoStore.Api.csproj" />
     <ProjectReference Include="..\..\orleans\MonoStore.Orelans.Dashboard\MonoStore.Orelans.Dashboard.csproj" />
-    <ProjectReference Include="..\..\cart\MonoStore.Cart.Host\MonoStore.Cart.Host.csproj" />
-    <ProjectReference Include="..\..\product\MonoStore.Product.Host\MonoStore.Product.Host.csproj" />
     <ProjectReference Include="..\..\Dummy\Dummy.csproj" />
-    <ProjectReference Include="..\..\checkout\MonoStore.Checkout.Host\MonoStore.Checkout.Host.csproj" />
+    <ProjectReference Include="..\..\cart\MonoStore.Cart.Module\MonoStore.Cart.Module.csproj" />
+    <ProjectReference Include="..\..\checkout\MonoStore.Checkout.Module\MonoStore.Checkout.Module.csproj" />
+    <ProjectReference Include="..\..\product\MonoStore.Product.Module\MonoStore.Product.Module.csproj" />
   </ItemGroup>
 
 </Project>
