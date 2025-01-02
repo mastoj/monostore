@@ -1,0 +1,21 @@
+config:
+  monostore.infra:resourceGroup: elkds-sandbox-tomas-rg
+  orleans:connectionStringClustering:
+    secure: AAABAIoy4/8U4tJMKpEVOumx4ZP5fsqsuBwaKGWaelJtYYvoeBvpdNJ/Ct9zJfTJLBHaxro9sZZz/0dIHsxyiTICzSNutU4zhBEtvu0gvviSp9ailFUSH/aBh6TMz5COHbCHHK6u2WYzSa4cy5vsdbctWJ22oPjBNgjPXda2nd1zUIGDwRfnBwa3NuSQR0klJEJELnd0kLTLenOex5TOjSI3Poax7tKAc55ylJa1OC3oIsVwFqRYB4iSQ7IKjaJM07ATk4fynXMqTxgODaLmY5oEjqxGCM5cZz0LnC8=
+  orleans:connectionStringGrainState:
+    secure: AAABAE8CABKZDlunjiOfVZP2JF+z+SkZL0iqtfksoTAJN+9WdPSptDXMgY1y5YewCDHM3YGKMu6DMLQSaVrEFtTgBVt2v5DsgPUawPwCX0mxxVKUgfVtQzqIp/QFNsIUD4vv+YpVdQTbtDAiIaeC8cw/HX3JCmXYezM21v0kYjTj7C2lUUupxGwjEpX3PlOh21KSt3g6xVcdLk3UxiaqWmCdmzXpFN5kg4ZQtekjgJ4iE3rBuUFvzj37IH4sIz8nFpWLNw59oHYRoIb230nILF3Rx37/vixqkHkOnfY=
+  orleans:clusterId: monostore
+  orleans:clusterProviderType: AzureTableStorage
+  orleans:clusterServiceKey: clustering
+  orleans:enableDistributedTracing: "true"
+  orleans:endpointsGatewayPort: "30000"
+  orleans:endpointsSiloPort: "11111"
+  orleans:grainStorageProviderType: AzureBlobStorage
+  orleans:grainStorageServiceKey: grainstate
+  cosmos:connectionString:
+    secure: AAABANqyio7jO1h/ET6mXb03hkNwCuKXZC3JuU914NdJL0+F/KZq7bCxklCTCsmTUMWIVYFsxr/YxhXDIcCIhIHXEWLfCdbLcMYHXmpRxV0FJIJLCHA+D/OR8R64Yn4Ms1hGZG9luqVX5yUssB9e5Fsp5UHp/kEM5KPY0Ax9VYvP63TypOixw3ZCWkQQ0LNtP513ldo5pHxsU8fb/s+DqTFMtDB6eCaNc6Mz4PZjj4M3DRB4CfXDgjLcM6drmMmD
+  monostore.infra:containerAppEnv: production
+  docker:server: tomascontainers.azurecr.io
+  docker:user: tomascontainers
+  docker:password:
+    secure: AAABAFv8NrbjS7myzuRijJ0exppLPVJd/4MBtyzLkdWsHr9y21KxW6CWqwtnJIIT8Xpygpf5LG2loLB5x0BEgpTL83Hk10HKTLx/jtOLAscA8Xhw

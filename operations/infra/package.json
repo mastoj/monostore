@@ -1,0 +1,13 @@
+{
+    "name": "monostore.infra",
+    "main": "index.ts",
+    "devDependencies": {
+        "@types/node": "^18",
+        "typescript": "^5.0.0"
+    },
+    "dependencies": {
+        "@kengachu-pulumi/azure-native-app": "^2.76.0",
+        "@kengachu-pulumi/azure-native-core": "^2.76.0",
+        "@pulumi/pulumi": "^3.113.0"
+    }
+}
