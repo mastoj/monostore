@@ -61,6 +61,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monostore.Orleans", "src\in
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monostore.Infrastructure.Hosting", "src\infrastructure\Monostore.Infrastructure.Hosting\Monostore.Infrastructure.Hosting.csproj", "{504364CE-ED1B-4B7A-9006-B3739FE197A7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monostore.Contracts", "src\infrastructure\Monostore.Contracts\Monostore.Contracts.csproj", "{03C18DC2-9287-46C9-908E-A966C8CE9F90}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -154,6 +156,10 @@ Global
 		{504364CE-ED1B-4B7A-9006-B3739FE197A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{504364CE-ED1B-4B7A-9006-B3739FE197A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{504364CE-ED1B-4B7A-9006-B3739FE197A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03C18DC2-9287-46C9-908E-A966C8CE9F90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03C18DC2-9287-46C9-908E-A966C8CE9F90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03C18DC2-9287-46C9-908E-A966C8CE9F90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03C18DC2-9287-46C9-908E-A966C8CE9F90}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DA454B91-38C1-43F3-B0E3-A637A771DE73} = {3A654C76-9569-4E99-85BE-1FC3221077CE}
@@ -184,5 +190,6 @@ Global
 		{EDE4EAC6-346E-4C9C-85B5-6B6BC83F054F} = {8E6D4B8C-7F8A-441A-9402-4041529F24D7}
 		{A4FA4F38-AFA4-4820-9C85-10942D2404E7} = {DA454B91-38C1-43F3-B0E3-A637A771DE73}
 		{504364CE-ED1B-4B7A-9006-B3739FE197A7} = {DA454B91-38C1-43F3-B0E3-A637A771DE73}
+		{03C18DC2-9287-46C9-908E-A966C8CE9F90} = {DA454B91-38C1-43F3-B0E3-A637A771DE73}
 	EndGlobalSection
 EndGlobal
