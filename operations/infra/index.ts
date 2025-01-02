@@ -1,4 +1,7 @@
-import { ContainerApp } from "@kengachu-pulumi/azure-native-app";
+import {
+  ContainerApp,
+  ManagedEnvironment,
+} from "@kengachu-pulumi/azure-native-app";
 import * as pulumi from "@pulumi/pulumi";
 
 const config = new pulumi.Config();
@@ -6,22 +9,38 @@ const orleansConfig = new pulumi.Config("orleans");
 const cosmosConfig = new pulumi.Config("cosmos");
 const dockerConfig = new pulumi.Config("docker");
 
+const stackName = pulumi.getStack();
 const systemName = "monostore";
 const workerApps = ["product", "cart", "checkout"];
+
+const resourceGroupName = config.require("resourceGroup");
+
+const containerAppEnv = new ManagedEnvironment(`containerAppEnv${stackName}`, {
+  resourceGroupName: resourceGroupName,
+  location: "North Europe",
+  // appLogsConfiguration: {
+  //   destination: "log-analytics",
+  //   logAnalyticsConfiguration: {
+  //     customerId: "<log-analytics-customer-id>",
+  //     sharedKey: "<log-analytics-shared-key>",
+  //   },
+  // },
+});
+
 const createApp = (app: string) => {
   const appName = `${systemName}-${app}-module`;
-  // const environmentId = `/providers/Microsoft.App/managedEnvironments/${config.require(
-  //   "containerAppEnv"
-  // )}`;
-
-  const environmentId = `/subscriptions/4fd6df59-480d-4b34-9818-394062e697d6/resourceGroups/elkds-sandbox-tomas-rg/providers/Microsoft.App/managedEnvironments/${config.require(
+  const environmentId = `/providers/Microsoft.App/managedEnvironments/${config.require(
     "containerAppEnv"
   )}`;
+
+  // const environmentId = `/subscriptions/4fd6df59-480d-4b34-9818-394062e697d6/resourceGroups/elkds-sandbox-tomas-rg/providers/Microsoft.App/managedEnvironments/${config.require(
+  //   "containerAppEnv"
+  // )}`;
   //"/subscriptions/4fd6df59-480d-4b34-9818-394062e697d6/resourceGroups/elkds-sandbox-tomas-rg/providers/Microsoft.App/managedEnvironments/production"
   const containerApp = new ContainerApp(appName, {
     containerAppName: appName,
     resourceGroupName: config.require("resourceGroup"),
-    environmentId: environmentId,
+    environmentId: containerAppEnv.id, //environmentId,
     template: {
       scale: {
         minReplicas: 1,

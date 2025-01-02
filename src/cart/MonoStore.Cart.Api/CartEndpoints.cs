@@ -33,13 +33,13 @@ public static class CartEndpoints
       }
 
       request.Cookies.TryGetValue("user-id", out var userId);
-
+      var cartId = Guid.NewGuid();
       // DiagnosticConfig.CreateCartCounter.Add(1, new KeyValuePair<string, object?>("operatingChain", "OCNOELK"));
       try
       {
         Console.WriteLine("CreateCart");
-        var cartGrain = grains.GetGrain<ICartGrain>(ICartGrain.CartGrainId(createCart.CartId));
-        var result = await cartGrain.CreateCart(new CreateCartMessage(createCart.CartId, createCart.OperatingChain, sessionId, userId));
+        var cartGrain = grains.GetGrain<ICartGrain>(ICartGrain.CartGrainId(cartId));
+        var result = await cartGrain.CreateCart(new CreateCartMessage(cartId, createCart.OperatingChain, sessionId, userId));
         OperationsCounter.Add(1, new TagList() {
           { "operation", "create" },
           { "status", "success" },

@@ -24,6 +24,7 @@ public static class CheckoutEndpoints
   {
     routes.MapPost("/", async (IGrainFactory grains, CreatePurchaseOrderRequest createPurchaseOrderRequest) =>
     {
+      var purchaseOrderId = Guid.NewGuid();
       var cartGrain = grains.GetGrain<ICartGrain>(ICartGrain.CartGrainId(createPurchaseOrderRequest.CartId));
       var cartResult = await cartGrain.GetCart(new GetCart());
       if (cartResult.Error != null && cartResult.Data == null)
@@ -37,10 +38,10 @@ public static class CheckoutEndpoints
         var product = new Product(i.Product.Id, i.Product.Name, i.Product.Price, i.Product.PriceExVat, i.Product.Url, i.Product.PrimaryImageUrl);
         return new PurchaseOrderItem(product, i.Quantity);
       }).ToArray();
-      var createPurchaseOrderMessage = new CreatePurchaseOrderMessage(createPurchaseOrderRequest.PurchaseOrderId, createPurchaseOrderRequest.CartId, cart.OperatingChain, cart.SessionId, cart.UserId, orderItems);
+      var createPurchaseOrderMessage = new CreatePurchaseOrderMessage(purchaseOrderId, createPurchaseOrderRequest.CartId, cart.OperatingChain, cart.SessionId, cart.UserId, orderItems);
       Console.WriteLine("CreatePurchaseOrder: " + System.Text.Json.JsonSerializer.Serialize(createPurchaseOrderMessage));
 
-      var purchaseOrderGrain = grains.GetGrain<IPurchaseOrderGrain>(IPurchaseOrderGrain.PurchaseOrderGrainId(createPurchaseOrderRequest.PurchaseOrderId));
+      var purchaseOrderGrain = grains.GetGrain<IPurchaseOrderGrain>(IPurchaseOrderGrain.PurchaseOrderGrainId(purchaseOrderId));
       var result = await purchaseOrderGrain.CreatePurchaseOrder(createPurchaseOrderMessage);
 
       return Results.Ok(result);
