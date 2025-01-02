@@ -1,11 +1,12 @@
-namespace MonoStore.Cart.Module;
+namespace MonoStore.Checkout.Api;
 
 using System.Diagnostics.Metrics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Http;
 using MonoStore.Cart.Contracts.Grains;
 using Orleans;
-using Microsoft.AspNetCore.Http;
+// using Microsoft.AspNetCore.Http;
 using MonoStore.Checkout.Contracts.Requests;
 using Monostore.Checkout.Contracts.Grains;
 using MonoStore.Checkout.Contracts;

@@ -10,10 +10,8 @@
     <PackageReference Include="Microsoft.Orleans.Server" Version="9.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MonoStore.Cart.Contracts\MonoStore.Cart.Contracts.csproj" />
     <ProjectReference Include="..\..\infrastructure\MonoStore.Marten\MonoStore.Marten.csproj" />
     <ProjectReference Include="..\..\aspire\MonoStore.ServiceDefaults\MonoStore.ServiceDefaults.csproj" />
-    <ProjectReference Include="..\..\product\MonoStore.Product.Contracts\MonoStore.Product.Contracts.csproj" />
     <ProjectReference Include="..\..\infrastructure\Monostore.Infrastructure.Hosting\Monostore.Infrastructure.Hosting.csproj" />
   </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
-using System.Net;
 using dotenv.net;
 using Monostore.ServiceDefaults;
-using MonoStore.Cart.Module;
+using MonoStore.Cart.Api;
+using MonoStore.Checkout.Api;
 using MonoStore.Product.Api;
 using OpenTelemetry.Resources;
 using Scalar.AspNetCore;

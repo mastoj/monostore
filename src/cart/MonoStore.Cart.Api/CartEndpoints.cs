@@ -1,16 +1,13 @@
-namespace MonoStore.Cart.Module;
+namespace MonoStore.Cart.Api;
 
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
-using OpenTelemetry.Metrics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
-using Monostore.ServiceDefaults;
-using MonoStore.Cart.Contracts;
+using Microsoft.AspNetCore.Http;
 using MonoStore.Cart.Contracts.Grains;
 using Orleans;
 using MonoStore.Product.Contracts.Grains;
-using Microsoft.AspNetCore.Http;
 using MonoStore.Cart.Contracts.Requests;
 using Microsoft.Extensions.Logging;
 

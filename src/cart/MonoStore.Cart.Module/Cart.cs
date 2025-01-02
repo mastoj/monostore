@@ -18,7 +18,7 @@ public record Cart(
     Guid Id,
     string OperatingChain,
     CartStatus Status,
-    IEnumerable<CartItem> Items,
+    List<CartItem> Items,
     string sessionId,
     string? userId,
     int Version = 1
@@ -31,14 +31,14 @@ public record Cart(
   public Cart Apply(ItemAddedToCart action) =>
       this with
       {
-        Items = Items.Append(action.Item),
+        Items = Items.Append(action.Item).ToList(),
         Version = Version + 1
       };
 
   public Cart Apply(ItemRemovedFromCart action) =>
       this with
       {
-        Items = Items.Where(i => i.Product.Id != action.ProductId),
+        Items = Items.Where(i => i.Product.Id != action.ProductId).ToList(),
         Version = Version + 1
       };
 
@@ -47,7 +47,7 @@ public record Cart(
   public Cart Apply(ItemQuantityChanged action) =>
       this with
       {
-        Items = UpdateCartItemsQuantity(Items, action.ProductId, action.Quantity),
+        Items = UpdateCartItemsQuantity(Items, action.ProductId, action.Quantity).ToList(),
         Version = Version + 1
       };
 

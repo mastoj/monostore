@@ -10,7 +10,6 @@
     <PackageReference Include="Microsoft.Orleans.Streaming" Version="9.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MonoStore.Product.Contracts\MonoStore.Product.Contracts.csproj" />
     <ProjectReference Include="..\..\aspire\MonoStore.ServiceDefaults\MonoStore.ServiceDefaults.csproj" />
     <ProjectReference Include="..\..\infrastructure\Monostore.Infrastructure.Hosting\Monostore.Infrastructure.Hosting.csproj" />
   </ItemGroup>

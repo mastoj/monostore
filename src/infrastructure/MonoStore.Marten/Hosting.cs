@@ -8,7 +8,7 @@ namespace Microsoft.Extensions.Hosting;
 
 public static class Hosting
 {
-  public static HostApplicationBuilder UseMartenEventStore(this HostApplicationBuilder builder, string connectionStringName, string databaseSchemaName)
+  public static HostApplicationBuilder UseMartenEventStore(this HostApplicationBuilder builder, string connectionStringName, string databaseSchemaName, Func<StoreOptions, StoreOptions>? storeOptionsConfig = null)
   {
     Action doStuff = () =>
     {
@@ -25,6 +25,10 @@ public static class Hosting
           options.Connection(connectionString ?? throw new InvalidOperationException());
           options.OpenTelemetry.TrackConnections = TrackLevel.Verbose;
           options.OpenTelemetry.TrackEventCounters();
+          if (storeOptionsConfig != null)
+          {
+            options = storeOptionsConfig(options);
+          }
           return options;
         })
         .UseLightweightSessions()
