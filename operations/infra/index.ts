@@ -10,10 +10,14 @@ const systemName = "monostore";
 const workerApps = ["product", "cart", "checkout"];
 const createApp = (app: string) => {
   const appName = `${systemName}-${app}-module`;
-  const environmentId = `/providers/Microsoft.App/managedEnvironments/${config.require(
+  // const environmentId = `/providers/Microsoft.App/managedEnvironments/${config.require(
+  //   "containerAppEnv"
+  // )}`;
+
+  const environmentId = `/subscriptions/4fd6df59-480d-4b34-9818-394062e697d6/resourceGroups/elkds-sandbox-tomas-rg/providers/Microsoft.App/managedEnvironments/${config.require(
     "containerAppEnv"
   )}`;
-
+  //"/subscriptions/4fd6df59-480d-4b34-9818-394062e697d6/resourceGroups/elkds-sandbox-tomas-rg/providers/Microsoft.App/managedEnvironments/production"
   const containerApp = new ContainerApp(appName, {
     containerAppName: appName,
     resourceGroupName: config.require("resourceGroup"),

@@ -14,7 +14,15 @@ internal static class Mappers
 {
   internal static CartData AsContract(this Cart cart)
   {
-    return new CartData(cart.Id, cart.Version, cart.OperatingChain, cart.Status, cart.Items.ToList(), cart.sessionId, cart.userId);
+    var totals = cart.Items.Aggregate((total: 0m, totalExVat: 0m, beforePrice: 0m, beforePriceExVat: 0m), (acc, item) =>
+    {
+      var price = item.Product?.Price ?? 0;
+      var priceExVat = item.Product?.PriceExVat ?? 0;
+      var beforePrice = item.Product?.BeforePrice ?? 0;
+      var beforePriceExVat = item.Product?.BeforePriceExVat ?? 0;
+      return (acc.total + price * item.Quantity, acc.totalExVat + priceExVat * item.Quantity, acc.beforePrice + beforePrice * item.Quantity, acc.beforePriceExVat + beforePriceExVat * item.Quantity);
+    });
+    return new CartData(cart.Id, cart.Version, cart.OperatingChain, cart.Status, cart.Items.ToList(), totals.total, totals.totalExVat, totals.beforePrice, totals.beforePriceExVat, cart.sessionId, cart.userId);
   }
 }
 
@@ -83,7 +91,7 @@ public sealed class CartGrain
       throw new Exception("Product price not found");
     }
     var addItem = new AddItem(new CartItem(
-      new Contracts.Dtos.Product(product.ArticleNumber, product.Name ?? "", product.Price.Price, product.Price.PriceExclVat, product.ProductUrl ?? "", product.ImageUrl ?? ""),
+      new Contracts.Dtos.Product(product.ArticleNumber, product.Name ?? "", product.Price.Price, product.Price.PriceExclVat, product.BeforePrice?.Price, product.BeforePrice?.PriceExclVat, product.ProductUrl ?? "", product.ImageUrl ?? ""),
       1
     ));
 
