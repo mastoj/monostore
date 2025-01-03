@@ -14,5 +14,8 @@
     <ProjectReference Include="..\..\infrastructure\MonoStore.Marten\MonoStore.Marten.csproj" />
     <ProjectReference Include="..\..\aspire\MonoStore.ServiceDefaults\MonoStore.ServiceDefaults.csproj" />
     <ProjectReference Include="..\..\infrastructure\Monostore.Infrastructure.Hosting\Monostore.Infrastructure.Hosting.csproj" />
+    <ProjectReference Include="..\MonoStore.Cart.Contracts\MonoStore.Cart.Contracts.csproj" />
+    <ProjectReference Include="..\..\checkout\MonoStore.Checkout.Contracts\MonoStore.Checkout.Contracts.csproj" />
+    <ProjectReference Include="..\..\product\MonoStore.Product.Contracts\MonoStore.Product.Contracts.csproj" />
   </ItemGroup>
 </Project>

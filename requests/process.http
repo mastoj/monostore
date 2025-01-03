@@ -43,7 +43,7 @@ PUT http://localhost:5170/cart/{{cartId}}/items/{{productId}}
 Content-Type: application/json
 
 {
-  "quantity": 10,
+  "quantity": 8,
   "productId": "{{productId}}"
 }
 
