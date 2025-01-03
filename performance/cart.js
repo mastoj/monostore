@@ -1,7 +1,7 @@
 import http from 'k6/http';
 export const options = {
-  vus: 30,
-  duration: '30s',
+  vus: 128,
+  duration: '60s',
 };
 
 const getRandomInt = (min, max) => {
@@ -20,17 +20,26 @@ const randomUUIDS = Array.from({length: 5000}, () => getRandomUUID());
 
 const createdCarts = {};
 
+const getRandomSessionId = () => {
+  return getRandomInt(1, 10000000).toString();
+}
+
 export default function () {
-  const id = randomUUIDS[getRandomInt(0, randomUUIDS.length - 1)];
+  // const id = randomUUIDS[getRandomInt(0, randomUUIDS.length - 1)];
   // Console log the count of created carts
-  if(!createdCarts[id]) {
-    http.post('http://localhost:5170/cart', JSON.stringify({
-      cartId: id,
+  // if(!createdCarts[id]) {
+    const response = http.post('http://localhost:5170/cart', JSON.stringify({
+      operatingChain: "OCSEELG"
     }), {
       headers: {
         'Content-Type': 'application/json',
       },
+      cookies: {
+        'session-id': getRandomSessionId(),
+      }
     });
+    const bodyJson = response.json();
+    const id = bodyJson.data.id;
     http.post('http://localhost:5170/cart/' + id + '/items', JSON.stringify({
       cartId: id,
       operatingChain: "OCSEELG",
@@ -41,12 +50,24 @@ export default function () {
       },
     });
     createdCarts[id] = true
-  }
-  http.post('http://localhost:5170/cart/' + id + '/items/' + "209984" + "/increase", JSON.stringify({
+  // }
+  http.put('http://localhost:5170/cart/' + id + '/items/' + "209984", JSON.stringify({
+    productId: "209984",
+    quantity: 3
   }), {
     headers: {
       'Content-Type': 'application/json',
     },
   });
   http.get('http://localhost:5170/cart/' + id);
+
+  // Checkout cart
+  http.post('http://localhost:5170/checkout', JSON.stringify({
+    cartId: id,
+    operatingChain: "OCSEELG"
+  }), {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
 }

@@ -6,6 +6,9 @@
     <ProjectReference Include="..\product\MonoStore.Product.Api\MonoStore.Product.Api.csproj" />
     <ProjectReference Include="..\checkout\MonoStore.Checkout.Api\MonoStore.Checkout.Api.csproj" />
     <ProjectReference Include="..\infrastructure\Monostore.Contracts\Monostore.Contracts.csproj" />
+    <ProjectReference Include="..\cart\MonoStore.Cart.Contracts\MonoStore.Cart.Contracts.csproj" />
+    <ProjectReference Include="..\checkout\MonoStore.Checkout.Contracts\MonoStore.Checkout.Contracts.csproj" />
+    <ProjectReference Include="..\product\MonoStore.Product.Contracts\MonoStore.Product.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

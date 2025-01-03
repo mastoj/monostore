@@ -5,4 +5,4 @@ public record Product(string Id, string Name, decimal Price, decimal PriceExVat,
 [GenerateSerializer]
 public record PurchaseOrderItem(Product Product, int Quantity);
 [GenerateSerializer]
-public record PurchaseOrderData(Guid PurchaseOrderId, int Version, List<PurchaseOrderItem> Items, decimal Total, decimal TotalExVat, string Currency, string OperatingChain, string SessionId, string? UserId, Guid CartId);
+public record PurchaseOrderData(Guid Id, int Version, List<PurchaseOrderItem> Items, decimal Total, decimal TotalExVat, string Currency, string OperatingChain, string SessionId, string? UserId, Guid CartId);

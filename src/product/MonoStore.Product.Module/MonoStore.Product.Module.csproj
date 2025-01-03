@@ -8,9 +8,13 @@
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.8" />
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.46.0" />
     <PackageReference Include="Microsoft.Orleans.Streaming" Version="9.0.1" />
+    <PackageReference Include="OrleansDashboard" Version="8.2.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\aspire\MonoStore.ServiceDefaults\MonoStore.ServiceDefaults.csproj" />
     <ProjectReference Include="..\..\infrastructure\Monostore.Infrastructure.Hosting\Monostore.Infrastructure.Hosting.csproj" />
+    <ProjectReference Include="..\..\cart\MonoStore.Cart.Contracts\MonoStore.Cart.Contracts.csproj" />
+    <ProjectReference Include="..\..\checkout\MonoStore.Checkout.Contracts\MonoStore.Checkout.Contracts.csproj" />
+    <ProjectReference Include="..\MonoStore.Product.Contracts\MonoStore.Product.Contracts.csproj" />
   </ItemGroup>
 </Project>

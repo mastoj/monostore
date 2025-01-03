@@ -6,7 +6,7 @@ namespace MonoStore.Checkout.Module;
 public record PurchaseOrderCreated(Guid PurchaseOrderId, PurchaseOrderItem[] Items, decimal Total, decimal totalExVat, string Currency, string OperatingChain, Guid CartId, string SessionId, string? UserId);
 #endregion
 
-public record PurchaseOrder(Guid PurchaseOrderId, PurchaseOrderItem[] Items, decimal Total, decimal TotalExVat, string Currency, string OperatingChain, Guid CartId, string SessionId, string? UserId, int Version = 1)
+public record PurchaseOrder(Guid Id, PurchaseOrderItem[] Items, decimal Total, decimal TotalExVat, string Currency, string OperatingChain, Guid CartId, string SessionId, string? UserId, int Version = 1)
 {
   public static PurchaseOrder Create(PurchaseOrderCreated purchaseOrderCreated)
   {

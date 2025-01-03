@@ -10,7 +10,7 @@ internal static class Mappers
 {
   internal static PurchaseOrderData AsContract(this PurchaseOrder purchaseOrder)
   {
-    return new PurchaseOrderData(purchaseOrder.PurchaseOrderId, purchaseOrder.Version, purchaseOrder.Items.ToList(), purchaseOrder.Total, purchaseOrder.TotalExVat, purchaseOrder.Currency, purchaseOrder.OperatingChain, purchaseOrder.SessionId, purchaseOrder.UserId, purchaseOrder.CartId);
+    return new PurchaseOrderData(purchaseOrder.Id, purchaseOrder.Version, purchaseOrder.Items.ToList(), purchaseOrder.Total, purchaseOrder.TotalExVat, purchaseOrder.Currency, purchaseOrder.OperatingChain, purchaseOrder.SessionId, purchaseOrder.UserId, purchaseOrder.CartId);
   }
 }
 
@@ -28,7 +28,7 @@ public class PurchaseOrderGrain : Grain, IPurchaseOrderGrain
     set
     {
       _currentPurchaseOrder = value;
-      logger.LogInformation("Purchase order {purchaseOrderId} updated to version {version}", value.PurchaseOrderId, value.Version);
+      logger.LogInformation("Purchase order {purchaseOrderId} updated to version {version}", value.Id, value.Version);
     }
   }
 
