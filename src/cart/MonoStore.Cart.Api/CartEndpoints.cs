@@ -10,6 +10,12 @@ using Orleans;
 using MonoStore.Product.Contracts.Grains;
 using MonoStore.Cart.Contracts.Requests;
 using Microsoft.Extensions.Logging;
+using Marten;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
+using MonoStore.Cart.Domain;
+using JasperFx.CodeGeneration.Model;
+using MonoStore.Cart.Contracts.Dtos;
 
 public static class CartEndpoints
 {
@@ -21,6 +27,28 @@ public static class CartEndpoints
 
   public static RouteGroupBuilder MapCartEndpoints(this RouteGroupBuilder routes)
   {
+
+    routes.MapGet("/", async (ICartStore cartStore, string operatingChain, string? userId, string? sessionId, string? sku, string? query) =>
+    {
+      await using var session = cartStore.LightweightSession();
+      var querySession = session.Query<Cart>().Where(c => c.OperatingChain == operatingChain);
+      if (userId != null)
+      {
+        querySession = querySession.Where(c => c.UserId == userId);
+      }
+      if (sessionId != null)
+      {
+        querySession = querySession.Where(c => c.SessionId == sessionId);
+      }
+      if (sku != null)
+      {
+        querySession = querySession.Where(c => c.Items.Any(i => i.Product.Id == sku));
+      }
+
+      var carts = await querySession.ToListAsync();
+      return Results.Ok(carts);
+    });
+
     routes.MapPost("/", async (HttpRequest request, IGrainFactory grains, CreateCartRequest createCart, ILoggerFactory loggerFactory) =>
     {
       var logger = loggerFactory.CreateLogger("CartEndpoints");
@@ -98,6 +126,14 @@ public static class CartEndpoints
       }
     });
 
+    routes.MapGet("/{id}/changes", async (ICartStore cartStore, Guid id) =>
+    {
+      await using var session = cartStore.LightweightSession();
+      var changes = await session.Events.FetchStreamAsync(id);
+      var result = changes?.Select(c => new Change(c.EventTypeName, c.Timestamp, c.Version, c.Data)).ToList();
+      return Results.Ok(result);
+    });
+
     routes.MapPost("/{id}/abandon", async (IGrainFactory grains, Guid id) =>
     {
       var cartGrain = grains.GetGrain<ICartGrain>(ICartGrain.CartGrainId(id));
@@ -125,9 +161,35 @@ public static class CartEndpoints
     return routes;
   }
 
+  public static T AddCart<T>(this T builder) where T : IHostApplicationBuilder
+  {
+    var connectionStringName = "monostorepg";
+    var databaseSchemaName = "cart";
+    var connectionString = $"{builder.Configuration.GetConnectionString(connectionStringName)};sslmode=prefer;CommandTimeout=300";
+
+    // builder.Services.AddSingleton<ICartStore, ICartStore>();
+    // builder.Services.AddSingleton<ICartGrain, CartGrain>();
+    builder.Services.AddMartenStore<ICartStore>(s =>
+    {
+      var options = new StoreOptions();
+      options.Events.MetadataConfig.CorrelationIdEnabled = true;
+      options.Events.MetadataConfig.CausationIdEnabled = true;
+      options.DatabaseSchemaName = databaseSchemaName;
+      options.Connection(connectionString ?? throw new InvalidOperationException());
+      // options.OpenTelemetry.TrackConnections = TrackLevel.Verbose;
+      options.OpenTelemetry.TrackEventCounters();
+      options.AutoCreateSchemaObjects = Weasel.Core.AutoCreate.None;
+      return options;
+    });
+
+    return builder;
+  }
+
   public static WebApplication UseCart(this WebApplication app, string groupPath)
   {
     app.MapGroup(groupPath).MapCartEndpoints().WithTags("cart");
     return app;
   }
 }
+
+public interface ICartStore : IDocumentStore { }

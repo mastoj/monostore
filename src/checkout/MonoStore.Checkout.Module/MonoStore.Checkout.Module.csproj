@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DotNext" Version="5.17.0" />
+    <PackageReference Include="DotNext" Version="5.17.2" />
     <PackageReference Include="Marten" Version="7.35.0" />
     <PackageReference Include="Microsoft.Orleans.Server" Version="9.0.1" />
     <PackageReference Include="OrleansDashboard" Version="8.2.0" />

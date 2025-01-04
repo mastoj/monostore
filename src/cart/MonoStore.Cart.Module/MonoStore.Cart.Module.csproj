@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DotNext" Version="5.12.0" />
+    <PackageReference Include="DotNext" Version="5.17.2" />
     <PackageReference Include="Marten" Version="7.35.0" />
     <PackageReference Include="Microsoft.Orleans.Server" Version="9.0.1" />
     <PackageReference Include="OrleansDashboard" Version="8.2.0" />
@@ -17,5 +17,6 @@
     <ProjectReference Include="..\MonoStore.Cart.Contracts\MonoStore.Cart.Contracts.csproj" />
     <ProjectReference Include="..\..\checkout\MonoStore.Checkout.Contracts\MonoStore.Checkout.Contracts.csproj" />
     <ProjectReference Include="..\..\product\MonoStore.Product.Contracts\MonoStore.Product.Contracts.csproj" />
+    <ProjectReference Include="..\MonoStore.Cart.Domain\MonoStore.Cart.Domain.csproj" />
   </ItemGroup>
 </Project>

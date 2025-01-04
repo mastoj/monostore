@@ -16,3 +16,5 @@ public record CartItem(Product Product, int Quantity);
 
 [GenerateSerializer]
 public record class CartData(Guid Id, int Version, string OperatingChain, CartStatus Status, List<CartItem> Items, decimal Total, decimal TotalExVat, decimal BeforePriceTotal, decimal BeforePriceExVatTotal, string SessionId, string? UserId);
+
+public record Change(string ChangeType, DateTimeOffset TimeStamp, long Version, object data);

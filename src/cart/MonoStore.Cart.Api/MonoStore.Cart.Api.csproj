@@ -5,11 +5,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Marten" Version="7.35.0" />
     <PackageReference Include="Microsoft.Orleans.Sdk" Version="9.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\infrastructure\Monostore.Contracts\Monostore.Contracts.csproj" />
+    <ProjectReference Include="..\MonoStore.Cart.Domain\MonoStore.Cart.Domain.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

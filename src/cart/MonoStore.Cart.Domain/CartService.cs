@@ -6,7 +6,7 @@ using MonoStore.Cart.Contracts.Requests;
 
 namespace MonoStore.Cart.Domain;
 
-internal static class CartService
+public static class CartService
 {
   private static bool IsItemInCart(Cart cart, string productId) =>
       cart.Items.Any(item => item.Product.Id == productId);
@@ -20,13 +20,13 @@ internal static class CartService
   private static bool IsCartAbandoned(Cart cart) =>
       cart.Status == CartStatus.Abandoned;
 
-  internal static Result<CartCreated> Create(CreateCartMessage command)
+  public static Result<CartCreated> Create(CreateCartMessage command)
   {
     // Todo: check that cart does not already exist
-    return Result.FromValue(new CartCreated(command.CartId, command.OperatingChain, command.sessionId, command.userId));
+    return Result.FromValue(new CartCreated(command.CartId, command.OperatingChain, command.SessionId, command.UserId));
   }
 
-  internal static Result<ItemAddedToCart> Handle(Cart current, AddItem command)
+  public static Result<ItemAddedToCart> Handle(Cart current, AddItem command)
   {
     if (!IsCartOpen(current))
     {
@@ -39,7 +39,7 @@ internal static class CartService
     return Result.FromValue(new ItemAddedToCart(current.Id, command.Item));
   }
 
-  internal static Result<ItemRemovedFromCart> Handle(Cart current, RemoveItem command)
+  public static Result<ItemRemovedFromCart> Handle(Cart current, RemoveItem command)
   {
     if (!IsCartOpen(current))
     {
@@ -52,7 +52,7 @@ internal static class CartService
     return Result.FromValue(new ItemRemovedFromCart(current.Id, command.ProductId));
   }
 
-  internal static Result<ItemQuantityChanged> Handle(Cart current, ChangeItemQuantity command)
+  public static Result<ItemQuantityChanged> Handle(Cart current, ChangeItemQuantity command)
   {
     if (!IsCartOpen(current))
     {
@@ -74,7 +74,7 @@ internal static class CartService
     return Result.FromValue(new ItemQuantityChanged(current.Id, command.ProductId, command.Quantity));
   }
 
-  internal static Result<CartAbandoned> Handle(Cart current, AbandonCart command)
+  public static Result<CartAbandoned> Handle(Cart current, AbandonCart command)
   {
     if (!IsCartOpen(current))
     {
@@ -83,7 +83,7 @@ internal static class CartService
     return Result.FromValue(new CartAbandoned(current.Id));
   }
 
-  internal static Result<CartRecovered> Handle(Cart current, RecoverCart command)
+  public static Result<CartRecovered> Handle(Cart current, RecoverCart command)
   {
     if (!IsCartAbandoned(current))
     {
@@ -92,7 +92,7 @@ internal static class CartService
     return Result.FromValue(new CartRecovered(current.Id));
   }
 
-  internal static Result<CartArchived> Handle(Cart current, ArchiveCart command)
+  public static Result<CartArchived> Handle(Cart current, ArchiveCart command)
   {
     if (IsCartArchived(current))
     {
@@ -101,7 +101,7 @@ internal static class CartService
     return Result.FromValue(new CartArchived(current.Id));
   }
 
-  internal static Result<CartCleared> Handle(Cart current, ClearCart command)
+  public static Result<CartCleared> Handle(Cart current, ClearCart command)
   {
     if (!IsCartOpen(current))
     {

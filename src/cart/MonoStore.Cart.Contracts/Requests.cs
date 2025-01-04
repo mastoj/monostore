@@ -5,7 +5,7 @@ namespace MonoStore.Cart.Contracts.Requests;
 [GenerateSerializer]
 public record CreateCartRequest(string OperatingChain);
 [GenerateSerializer]
-public record CreateCartMessage(Guid CartId, string OperatingChain, string sessionId, string? userId);
+public record CreateCartMessage(Guid CartId, string OperatingChain, string SessionId, string? UserId);
 [GenerateSerializer]
 public record GetCart;
 

@@ -87,6 +87,8 @@ try
         builder.AddActivityPropagation();
     });
 
+    builder.AddCart();
+
     var app = builder.Build();
     app.UseSerilogRequestLogging();
 

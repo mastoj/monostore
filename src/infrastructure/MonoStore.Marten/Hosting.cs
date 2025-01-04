@@ -23,7 +23,7 @@ public static class Hosting
           options.Events.MetadataConfig.CausationIdEnabled = true;
           options.DatabaseSchemaName = databaseSchemaName;
           options.Connection(connectionString ?? throw new InvalidOperationException());
-          options.OpenTelemetry.TrackConnections = TrackLevel.Verbose;
+          // options.OpenTelemetry.TrackConnections = TrackLevel.Verbose;
           options.OpenTelemetry.TrackEventCounters();
           if (storeOptionsConfig != null)
           {

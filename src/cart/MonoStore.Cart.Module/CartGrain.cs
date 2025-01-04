@@ -6,23 +6,24 @@ using MonoStore.Cart.Contracts.Grains;
 using MonoStore.Cart.Contracts.Requests;
 using MonoStore.Marten;
 using MonoStore.Product.Contracts.Grains;
-using static MonoStore.Cart.Module.CartService;
+using MonoStore.Cart.Domain;
+using static MonoStore.Cart.Domain.CartService;
 
 namespace MonoStore.Cart.Module;
 
 internal static class Mappers
 {
-  internal static CartData AsContract(this Cart cart)
+  internal static CartData AsContract(this Domain.Cart cart)
   {
-    var totals = cart.Items.Aggregate((total: 0m, totalExVat: 0m, beforePrice: 0m, beforePriceExVat: 0m), (acc, item) =>
-    {
-      var price = item.Product?.Price ?? 0;
-      var priceExVat = item.Product?.PriceExVat ?? 0;
-      var beforePrice = item.Product?.BeforePrice ?? 0;
-      var beforePriceExVat = item.Product?.BeforePriceExVat ?? 0;
-      return (acc.total + price * item.Quantity, acc.totalExVat + priceExVat * item.Quantity, acc.beforePrice + beforePrice * item.Quantity, acc.beforePriceExVat + beforePriceExVat * item.Quantity);
-    });
-    return new CartData(cart.Id, cart.Version, cart.OperatingChain, cart.Status, cart.Items.ToList(), totals.total, totals.totalExVat, totals.beforePrice, totals.beforePriceExVat, cart.sessionId, cart.userId);
+    // var totals = cart.Items.Aggregate((total: 0m, totalExVat: 0m, beforePrice: 0m, beforePriceExVat: 0m), (acc, item) =>
+    // {
+    //   var price = item.Product?.Price ?? 0;
+    //   var priceExVat = item.Product?.PriceExVat ?? 0;
+    //   var beforePrice = item.Product?.BeforePrice ?? 0;
+    //   var beforePriceExVat = item.Product?.BeforePriceExVat ?? 0;
+    //   return (acc.total + price * item.Quantity, acc.totalExVat + priceExVat * item.Quantity, acc.beforePrice + beforePrice * item.Quantity, acc.beforePriceExVat + beforePriceExVat * item.Quantity);
+    // });
+    return new CartData(cart.Id, cart.Version, cart.OperatingChain, cart.Status, cart.Items.ToList(), cart.Total, cart.TotalExVat, cart.BeforePriceTotal, cart.BeforePriceExVatTotal, cart.SessionId, cart.UserId);
   }
 }
 
@@ -32,8 +33,8 @@ public sealed class CartGrain
   private IEventStore eventStore;
   private readonly ILogger<CartGrain> logger;
   private readonly IGrainFactory grains;
-  private Cart? _currentCart;
-  private Cart CurrentCart
+  private Domain.Cart? _currentCart;
+  private Domain.Cart CurrentCart
   {
     get => _currentCart ?? throw new InvalidOperationException("Cart not found");
     set
@@ -55,7 +56,7 @@ public sealed class CartGrain
     DiagnosticConfig.CartHost.ActiveCartCounter.Add(1, new KeyValuePair<string, object?>("operatingChain", "OCNOELK"));
     logger.LogInformation("Activating {grainKey}", this.GetPrimaryKeyString());
     var id = Guid.Parse(this.GetPrimaryKeyString().Split("/")[1]);
-    _currentCart = await eventStore.GetState<Cart>(id, default);
+    _currentCart = await eventStore.GetState<Domain.Cart>(id, default);
     await base.OnActivateAsync(cancellationToken);
   }
 
@@ -72,7 +73,7 @@ public sealed class CartGrain
     var result = Create(createCart);
     if (result.IsSuccessful)
     {
-      CurrentCart = await eventStore.CreateStream(createCart.CartId, result.Value, Cart.Create, default);
+      CurrentCart = await eventStore.CreateStream(createCart.CartId, result.Value, Domain.Cart.Create, default);
     }
     return GrainResult<CartData, CartError>.Success(CurrentCart.AsContract());
   }

@@ -36,6 +36,8 @@ var orleans = builder.AddOrleans("default")
 
 var api = builder.AddProject<Projects.MonoStore_Api>("monostore-api")
   .WithReference(orleans.AsClient())
+  .WithReference(postgres)
+  .WaitFor(postgres)
   .WithExternalHttpEndpoints();
 
 builder.AddProject<Projects.MonoStore_Cart_Module>("monostore-cart-module")

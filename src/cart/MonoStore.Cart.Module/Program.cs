@@ -1,5 +1,5 @@
 using Marten.Events.Projections;
-using MonoStore.Cart.Module;
+using MonoStore.Cart.Domain;
 
 var builder = Host.CreateApplicationBuilder(args).UseHosting("monostore-cart-module");
 builder.UseMartenEventStore("monostorepg", "cart", so =>
