@@ -1,0 +1,39 @@
+order = """
+{
+    "SalesOrderCreate": {
+        "createdBy": "INTCOMMERCE",
+        "purchaseOrderNumber": 1337,
+        "externalOrderId": "180598",
+        "country": "NO",
+        "TAX_FREE": "N",
+        "soldToAddress": "",
+        "billToAddress": "",
+        "payerAddress": "",
+        "deliveryData": {
+            "deliveryDataEmbeded": false,
+            "deliveryPreset": "POSTALB2B_MONDAY_TO_SUNDAY_00_TO_24_FIRST"
+        },
+        "shipToAddress": "",
+        "orderLines": [
+            {
+                "product": {
+                    "code": "DAIM460G",
+                    "price": [
+                        {
+                            "value": "79.00"
+                        }
+                    ]
+                },
+                "quantity": "1",
+                "entryNumber": "10"
+            }
+            ],
+        "markings": {
+            "billingContactReference": "billingMarkingContactReference123",
+            "billingContractReference": "billingMarkingContractReference121",
+            "billingPOReference": "billingMarkingPOReference123",
+            "shippingDeliveryContactName": "shippingMarkingDeliveryContactName123",
+            "shippingDeliveryInstructions": "shippingMarkingDeliveryInstructions123"
+        }
+    }
+}
