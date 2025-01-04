@@ -4,7 +4,7 @@ using MonoStore.Cart.Contracts.Dtos;
 using MonoStore.Cart.Contracts.Exceptions;
 using MonoStore.Cart.Contracts.Requests;
 
-namespace MonoStore.Cart.Module;
+namespace MonoStore.Cart.Domain;
 
 internal static class CartService
 {

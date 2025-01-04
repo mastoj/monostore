@@ -1,6 +1,6 @@
 using MonoStore.Cart.Contracts.Dtos;
 
-namespace MonoStore.Cart.Module;
+namespace MonoStore.Cart.Contracts.Exceptions;
 
 public class InvalidCartStatusException : Exception
 {
