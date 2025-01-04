@@ -34,7 +34,7 @@ var orleans = builder.AddOrleans("default")
   .WithClustering(clusteringTable)
   .WithGrainStorage("default", grainStorage);
 
-builder.AddProject<Projects.MonoStore_Api>("monostore-api")
+var api = builder.AddProject<Projects.MonoStore_Api>("monostore-api")
   .WithReference(orleans.AsClient())
   .WithExternalHttpEndpoints();
 
@@ -56,6 +56,15 @@ builder.AddProject<Projects.MonoStore_Product_Module>("monostore-product-module"
 
 builder.AddProject<Projects.MonoStore_Orelans_Dashboard>("orleans-dashboard")
   .WithReference(orleans)
+  .WithExternalHttpEndpoints();
+
+builder.AddNpmApp("monostore-backoffice", "../../backoffice", "dev")
+  .WithHttpEndpoint(env: "PORT")
+  .WithEnvironment("NEXT_OTEL_VERBOSE", "1")
+  .WithEnvironment("OTEL_LOG_LEVEL", "debug")
+  .WithEnvironment("NODE_TLS_REJECT_UNAUTHORIZED", "0")
+  .WithReference(api)
+  .WaitFor(api)
   .WithExternalHttpEndpoints();
 
 // builder.AddProject<Projects.Dummy>("dummy");
