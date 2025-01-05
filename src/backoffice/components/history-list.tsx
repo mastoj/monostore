@@ -6,29 +6,23 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-
-interface HistoryItem {
-  id: string;
-  event: string;
-  data: unknown;
-  timestamp: string;
-}
+import { Change } from "@/lib/monostore-api/monostore-api";
 
 interface HistoryListProps {
-  historyItems: HistoryItem[];
+  historyItems: Change[];
 }
 
 export function HistoryList({ historyItems }: HistoryListProps) {
   const sortedItems = historyItems.sort(
-    (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    (a, b) => new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime()
   );
 
   return (
     <Accordion type="single" collapsible className="w-full">
       {sortedItems.map((item, index) => (
-        <AccordionItem value={`item-${index}`} key={item.id}>
+        <AccordionItem value={`item-${index}`} key={item.version}>
           <AccordionTrigger className="text-left">
-            {new Date(item.timestamp).toLocaleString()} - {item.event}
+            {new Date(item.timeStamp).toLocaleString()} - {item.changeType}
           </AccordionTrigger>
           <AccordionContent>
             <pre className="bg-gray-100 p-2 rounded-md overflow-x-auto">

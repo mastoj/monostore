@@ -1,30 +1,33 @@
 import CartDetailsContent from "@/components/cart-details-content";
+import { PurchaseOrder } from "@/data/mock-carts";
+import { getCart, getChanges } from "@/lib/monostore-api/monostore-api-client";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import Layout from "../../../components/layout";
-import {
-  mockCartEvents,
-  mockCarts,
-  mockPurchaseOrders,
-} from "../../../data/mock-carts";
 
-export default function CartDetails({ params }: { params: { id: string } }) {
-  const cart = mockCarts.find((c) => c.id === params.id);
-  const cartEvents = mockCartEvents.filter((e) => e.cartId === params.id);
-  const purchaseOrders = mockPurchaseOrders.filter(
-    (po) => po.cartId === params.id
-  );
+export default async function CartDetails({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const cartData = getCart(id);
+  const cartEvents = getChanges(id);
+  const purchaseOrders: PurchaseOrder[] = [];
+  // mockPurchaseOrders.filter(
+  //   (po) => po.cartId === params.id
+  // );
 
-  if (!cart) {
+  if (!cartData) {
     notFound();
   }
 
   return (
     <Layout>
-      <h1 className="text-2xl font-bold mb-4">Cart Details: {cart.shortId}</h1>
+      <h1 className="text-2xl font-bold mb-4">Cart Details: {id}</h1>
       <Suspense fallback={<div>Loading...</div>}>
         <CartDetailsContent
-          cart={cart}
+          cart={cartData}
           cartEvents={cartEvents}
           purchaseOrders={purchaseOrders}
         />

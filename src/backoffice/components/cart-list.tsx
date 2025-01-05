@@ -8,9 +8,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Cart } from "@/lib/monostore-api/monostore-api";
 import { ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Cart } from "../data/mock-carts";
 
 interface CartListProps {
   carts: Cart[];
@@ -37,7 +37,7 @@ export function CartList({ carts }: CartListProps) {
           <TableHead className="hidden md:table-cell">Session ID</TableHead>
           <TableHead>Items</TableHead>
           <TableHead>Total</TableHead>
-          <TableHead className="hidden md:table-cell">Created At</TableHead>
+          {/* <TableHead className="hidden md:table-cell">Created At</TableHead> */}
           <TableHead className="w-4"></TableHead>
         </TableRow>
       </TableHeader>
@@ -53,7 +53,7 @@ export function CartList({ carts }: CartListProps) {
               <span>{`${cart.id.slice(0, 2)}...${cart.id.slice(-4)}`}</span>
             </TableCell>
             <TableCell className="hidden md:table-cell">
-              {cart.country}
+              {cart.operatingChain}
             </TableCell>
             <TableCell className="hidden md:table-cell">
               {cart.userId || "N/A"}
@@ -65,12 +65,15 @@ export function CartList({ carts }: CartListProps) {
             <TableCell>
               $
               {cart.items
-                .reduce((total, item) => total + item.price * item.quantity, 0)
+                .reduce(
+                  (total, item) => total + item.product.price * item.quantity,
+                  0
+                )
                 .toFixed(2)}
             </TableCell>
-            <TableCell className="hidden md:table-cell">
+            {/* <TableCell className="hidden md:table-cell">
               {new Date(cart.createdAt).toLocaleString()}
-            </TableCell>
+            </TableCell> */}
             <TableCell className="w-4">
               <ChevronRight className="h-4 w-4 text-gray-400" />
             </TableCell>

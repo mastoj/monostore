@@ -9,15 +9,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Cart, CartEvent, PurchaseOrder } from "@/data/mock-carts";
+import { PurchaseOrder } from "@/data/mock-carts";
+import { CartData, Change } from "@/lib/monostore-api/monostore-api";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { use } from "react";
 import { HistoryList } from "./history-list";
 
 interface CartDetailsContentProps {
-  cart: Cart;
-  cartEvents: CartEvent[];
+  cart: Promise<CartData>;
+  cartEvents: Promise<Change[]>;
   purchaseOrders: PurchaseOrder[];
 }
 
@@ -27,6 +29,10 @@ export default function CartDetailsContent({
   purchaseOrders,
 }: CartDetailsContentProps) {
   const router = useRouter();
+  const resolvedCart = use(cart);
+  const resolvedCartEvents = use(cartEvents);
+
+  console.log("==> Resolved cart: ", resolvedCart);
 
   const handleRowClick = (orderId: string) => {
     router.push(`/purchase-orders/${orderId}`);
@@ -46,24 +52,24 @@ export default function CartDetailsContent({
           <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <dt className="font-semibold">User ID:</dt>
-              <dd>{cart.userId || "N/A"}</dd>
+              <dd>{resolvedCart.userId || "N/A"}</dd>
             </div>
             <div>
               <dt className="font-semibold">Session ID:</dt>
-              <dd>{cart.sessionId}</dd>
+              <dd>{resolvedCart.sessionId}</dd>
             </div>
             <div>
-              <dt className="font-semibold">Country:</dt>
-              <dd>{cart.country}</dd>
+              <dt className="font-semibold">Operating chaing:</dt>
+              <dd>{resolvedCart.operatingChain}</dd>
             </div>
-            <div>
+            {/* <div>
               <dt className="font-semibold">Created At:</dt>
-              <dd>{new Date(cart.createdAt).toLocaleString()}</dd>
+              <dd>{new Date(resolvedCart.createdAt).toLocaleString()}</dd>
             </div>
             <div>
               <dt className="font-semibold">Updated At:</dt>
-              <dd>{new Date(cart.updatedAt).toLocaleString()}</dd>
-            </div>
+              <dd>{new Date(resolvedCart.updatedAt).toLocaleString()}</dd>
+            </div> */}
           </dl>
         </CardContent>
       </Card>
@@ -82,25 +88,35 @@ export default function CartDetailsContent({
                 <TableHead>Quantity</TableHead>
                 <TableHead>Price</TableHead>
                 <TableHead>Total</TableHead>
+                <TableHead className="w-4"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {cart.items.map((item) => (
-                <TableRow key={item.sku}>
+              {resolvedCart.items.map((item) => (
+                <TableRow
+                  key={item.product.id}
+                  onClick={() => {
+                    window.location.href = `https://www.elgiganten.se/p/${item.product.id}`;
+                  }}
+                  className="cursor-pointer hover:bg-gray-100 transition-colors"
+                >
                   <TableCell>
                     <Image
-                      src={item.image}
-                      alt={item.name}
+                      src={item.product.primaryImageUrl}
+                      alt={item.product.name}
                       width={50}
                       height={50}
                     />
                   </TableCell>
-                  <TableCell>{item.sku}</TableCell>
-                  <TableCell>{item.name}</TableCell>
+                  <TableCell>{item.product.id}</TableCell>
+                  <TableCell>{item.product.name}</TableCell>
                   <TableCell>{item.quantity}</TableCell>
-                  <TableCell>${item.price.toFixed(2)}</TableCell>
+                  <TableCell>${item.product.price.toFixed(2)}</TableCell>
                   <TableCell>
-                    ${(item.price * item.quantity).toFixed(2)}
+                    ${(item.product.price * item.quantity).toFixed(2)}
+                  </TableCell>
+                  <TableCell className="w-4">
+                    <ChevronRight className="h-4 w-4 text-gray-400" />
                   </TableCell>
                 </TableRow>
               ))}
@@ -159,7 +175,7 @@ export default function CartDetailsContent({
           <CardTitle>Cart History</CardTitle>
         </CardHeader>
         <CardContent>
-          <HistoryList historyItems={cartEvents} />
+          <HistoryList historyItems={resolvedCartEvents} />
         </CardContent>
       </Card>
     </div>

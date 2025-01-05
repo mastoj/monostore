@@ -1,12 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { Cart } from "@/lib/monostore-api/monostore-api";
+import { use, useState } from "react";
 import { CartFilter } from "../../components/cart-filter";
 import { CartList } from "../../components/cart-list";
-import { Cart, mockCarts } from "../../data/mock-carts";
 
-export default function CartsContent() {
-  const [filteredCarts, setFilteredCarts] = useState<Cart[]>(mockCarts);
+type CartsContentProps = {
+  carts: Promise<Cart[]>;
+};
+
+export default function CartsContent({ carts }: CartsContentProps) {
+  const resolvedCarts = use(carts);
   const [isExpanded, setIsExpanded] = useState(false);
   const [filters, setFilters] = useState({
     country: "",
@@ -21,38 +25,38 @@ export default function CartsContent() {
   };
 
   const handleFilterSubmit = () => {
-    const filtered = mockCarts.filter((cart) => {
-      if (
-        filters.country &&
-        filters.country !== "all" &&
-        cart.country !== filters.country
-      )
-        return false;
-      if (
-        filters.cartId &&
-        !cart.shortId.toLowerCase().includes(filters.cartId.toLowerCase())
-      )
-        return false;
-      if (
-        filters.sku &&
-        !cart.items.some((item) =>
-          item.sku.toLowerCase().includes(filters.sku.toLowerCase())
-        )
-      )
-        return false;
-      if (
-        filters.userId &&
-        cart.userId?.toLowerCase() !== filters.userId.toLowerCase()
-      )
-        return false;
-      if (
-        filters.sessionId &&
-        cart.sessionId.toLowerCase() !== filters.sessionId.toLowerCase()
-      )
-        return false;
-      return true;
-    });
-    setFilteredCarts(filtered);
+    //   const filtered = mockCarts.filter((cart) => {
+    //     if (
+    //       filters.country &&
+    //       filters.country !== "all" &&
+    //       cart.country !== filters.country
+    //     )
+    //       return false;
+    //     if (
+    //       filters.cartId &&
+    //       !cart.shortId.toLowerCase().includes(filters.cartId.toLowerCase())
+    //     )
+    //       return false;
+    //     if (
+    //       filters.sku &&
+    //       !cart.items.some((item) =>
+    //         item.sku.toLowerCase().includes(filters.sku.toLowerCase())
+    //       )
+    //     )
+    //       return false;
+    //     if (
+    //       filters.userId &&
+    //       cart.userId?.toLowerCase() !== filters.userId.toLowerCase()
+    //     )
+    //       return false;
+    //     if (
+    //       filters.sessionId &&
+    //       cart.sessionId.toLowerCase() !== filters.sessionId.toLowerCase()
+    //     )
+    //       return false;
+    //     return true;
+    //   });
+    //   setFilteredCarts(filtered);
   };
 
   return (
@@ -64,7 +68,7 @@ export default function CartsContent() {
         isExpanded={isExpanded}
         onToggleExpand={() => setIsExpanded(!isExpanded)}
       />
-      <CartList carts={filteredCarts} />
+      <CartList carts={resolvedCarts} />
     </div>
   );
 }
