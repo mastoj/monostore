@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using MonoStore.Cart.Domain;
 using JasperFx.CodeGeneration.Model;
 using MonoStore.Cart.Contracts.Dtos;
+using Monostore.Orleans.Types;
 
 public static class CartEndpoints
 {
@@ -47,7 +48,7 @@ public static class CartEndpoints
 
       var carts = await querySession.ToListAsync();
       return Results.Ok(carts);
-    });
+    }).Produces<List<Cart>>();
 
     routes.MapPost("/", async (HttpRequest request, IGrainFactory grains, CreateCartRequest createCart, ILoggerFactory loggerFactory) =>
     {
@@ -80,7 +81,7 @@ public static class CartEndpoints
         logger.LogError(ex, "Error creating cart");
         return Results.Problem(ex.Message);
       }
-    });
+    }).Produces<GrainResult<CartData, CartError>>();
 
     routes.MapPost("/{id}/items", async (IGrainFactory grains, Guid id, AddItemRequest addItemRequest) =>
     {
@@ -88,19 +89,19 @@ public static class CartEndpoints
       Console.WriteLine($"==> ProductGrainId: {productGrainId}");
       var cartGrain = grains.GetGrain<ICartGrain>(ICartGrain.CartGrainId(id));
       return await cartGrain.AddItem(addItemRequest);
-    });
+    }).Produces<GrainResult<CartData, CartError>>();
 
     routes.MapDelete("/{id}/items/{productId}", async (IGrainFactory grains, Guid id, string productId) =>
     {
       var cartGrain = grains.GetGrain<ICartGrain>(ICartGrain.CartGrainId(id));
       return await cartGrain.RemoveItem(new RemoveItem(productId));
-    });
+    }).Produces<GrainResult<CartData, CartError>>();
 
     routes.MapPut("/{id}/items/{productId}", async (IGrainFactory grains, Guid id, string productId, ChangeItemQuantity changeItemQuantity) =>
     {
       var cartGrain = grains.GetGrain<ICartGrain>(ICartGrain.CartGrainId(id));
       return await cartGrain.ChangeItemQuantity(new ChangeItemQuantity(productId, changeItemQuantity.Quantity));
-    });
+    }).Produces<GrainResult<CartData, CartError>>();
 
     routes.MapGet("/{id}", async (IGrainFactory grains, Guid id) =>
     {
@@ -124,7 +125,7 @@ public static class CartEndpoints
         Console.WriteLine(ex.Message);
         throw;
       }
-    });
+    }).Produces<GrainResult<CartData, CartError>>();
 
     routes.MapGet("/{id}/changes", async (ICartStore cartStore, Guid id) =>
     {
@@ -132,31 +133,31 @@ public static class CartEndpoints
       var changes = await session.Events.FetchStreamAsync(id);
       var result = changes?.Select(c => new Change(c.EventTypeName, c.Timestamp, c.Version, c.Data)).ToList();
       return Results.Ok(result);
-    });
+    }).Produces<List<Change>>();
 
     routes.MapPost("/{id}/abandon", async (IGrainFactory grains, Guid id) =>
     {
       var cartGrain = grains.GetGrain<ICartGrain>(ICartGrain.CartGrainId(id));
       return await cartGrain.AbandonCart(new AbandonCart());
-    });
+    }).Produces<GrainResult<CartData, CartError>>();
 
     routes.MapPost("/{id}/clear", async (IGrainFactory grains, Guid id) =>
     {
       var cartGrain = grains.GetGrain<ICartGrain>(ICartGrain.CartGrainId(id));
       return await cartGrain.ClearCart(new ClearCart());
-    });
+    }).Produces<GrainResult<CartData, CartError>>();
 
     routes.MapPost("/{id}/recover", async (IGrainFactory grains, Guid id) =>
     {
       var cartGrain = grains.GetGrain<ICartGrain>(ICartGrain.CartGrainId(id));
       return await cartGrain.RecoverCart(new RecoverCart());
-    });
+    }).Produces<GrainResult<CartData, CartError>>();
 
     routes.MapPost("/{id}/archive", async (IGrainFactory grains, Guid id) =>
     {
       var cartGrain = grains.GetGrain<ICartGrain>(ICartGrain.CartGrainId(id));
       return await cartGrain.ArchiveCart(new ArchiveCart());
-    });
+    }).Produces<GrainResult<CartData, CartError>>();
 
     return routes;
   }
