@@ -1,12 +1,12 @@
 import CartDetailsContent from "@/components/cart-details-content";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import Layout from "../../components/layout";
+import Layout from "../../../components/layout";
 import {
   mockCartEvents,
   mockCarts,
   mockPurchaseOrders,
-} from "../../data/mock-carts";
+} from "../../../data/mock-carts";
 
 export default function CartDetails({ params }: { params: { id: string } }) {
   const cart = mockCarts.find((c) => c.id === params.id);

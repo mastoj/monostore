@@ -1,6 +1,5 @@
 "use client";
 
-import { Cart, CartEvent, PurchaseOrder } from "@/app/data/mock-carts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -10,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Cart, CartEvent, PurchaseOrder } from "@/data/mock-carts";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";

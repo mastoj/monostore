@@ -1,11 +1,11 @@
 import PurchaseOrderDetailsContent from "@/components/purchase-order-details-content";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import Layout from "../../components/layout";
+import Layout from "../../../components/layout";
 import {
   mockPurchaseOrderChanges,
   mockPurchaseOrders,
-} from "../../data/mock-carts";
+} from "../../../data/mock-carts";
 
 export default function PurchaseOrderDetails({
   params,

@@ -1,15 +1,18 @@
-'use client'
+"use client";
 
-import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
-import { CountryName } from '../lib/dashboard-client'
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { CountryName } from "../lib/dashboard-client";
 
 interface CountrySelectorProps {
-  activeCountries: { [key in CountryName]: boolean }
-  onCountryToggle: (country: CountryName) => void
+  activeCountries: { [key in CountryName]: boolean };
+  onCountryToggle: (country: CountryName) => void;
 }
 
-export function CountrySelector({ activeCountries, onCountryToggle }: CountrySelectorProps) {
+export function CountrySelector({
+  activeCountries,
+  onCountryToggle,
+}: CountrySelectorProps) {
   return (
     <div className="flex flex-wrap gap-4">
       {(Object.keys(activeCountries) as CountryName[]).map((country) => (
@@ -23,6 +26,5 @@ export function CountrySelector({ activeCountries, onCountryToggle }: CountrySel
         </div>
       ))}
     </div>
-  )
+  );
 }
-

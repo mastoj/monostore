@@ -1,6 +1,6 @@
-import { Suspense } from 'react'
-import CartsContent from './carts-content'
-import Layout from '../components/layout'
+import { Suspense } from "react";
+import Layout from "../../components/layout";
+import CartsContent from "./carts-content";
 
 export default function Carts() {
   return (
@@ -10,6 +10,5 @@ export default function Carts() {
         <CartsContent />
       </Suspense>
     </Layout>
-  )
+  );
 }
-

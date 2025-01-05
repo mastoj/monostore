@@ -1,6 +1,6 @@
-import { Suspense } from 'react'
-import PurchaseOrdersContent from './purchase-orders-content'
-import Layout from '../components/layout'
+import { Suspense } from "react";
+import Layout from "../../components/layout";
+import PurchaseOrdersContent from "./purchase-orders-content";
 
 export default function PurchaseOrders() {
   return (
@@ -10,6 +10,5 @@ export default function PurchaseOrders() {
         <PurchaseOrdersContent />
       </Suspense>
     </Layout>
-  )
+  );
 }
-

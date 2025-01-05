@@ -1,7 +1,5 @@
-'use client'
+"use client";
 
-import { useRouter } from 'next/navigation'
-import { Cart } from '../data/mock-carts'
 import {
   Table,
   TableBody,
@@ -9,23 +7,25 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { ChevronRight } from 'lucide-react'
+} from "@/components/ui/table";
+import { ChevronRight } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Cart } from "../data/mock-carts";
 
 interface CartListProps {
   carts: Cart[];
 }
 
 export function CartList({ carts }: CartListProps) {
-  const router = useRouter()
+  const router = useRouter();
 
   const handleRowClick = (cartId: string) => {
-    router.push(`/carts/${cartId}`)
-  }
+    router.push(`/carts/${cartId}`);
+  };
 
   const handleRowMouseEnter = (cartId: string) => {
-    router.prefetch(`/carts/${cartId}`)
-  }
+    router.prefetch(`/carts/${cartId}`);
+  };
 
   return (
     <Table>
@@ -43,8 +43,8 @@ export function CartList({ carts }: CartListProps) {
       </TableHeader>
       <TableBody>
         {carts.map((cart) => (
-          <TableRow 
-            key={cart.id} 
+          <TableRow
+            key={cart.id}
             className="cursor-pointer hover:bg-gray-100 transition-colors"
             onClick={() => handleRowClick(cart.id)}
             onMouseEnter={() => handleRowMouseEnter(cart.id)}
@@ -52,14 +52,25 @@ export function CartList({ carts }: CartListProps) {
             <TableCell>
               <span>{`${cart.id.slice(0, 2)}...${cart.id.slice(-4)}`}</span>
             </TableCell>
-            <TableCell className="hidden md:table-cell">{cart.country}</TableCell>
-            <TableCell className="hidden md:table-cell">{cart.userId || 'N/A'}</TableCell>
-            <TableCell className="hidden md:table-cell">{cart.sessionId}</TableCell>
+            <TableCell className="hidden md:table-cell">
+              {cart.country}
+            </TableCell>
+            <TableCell className="hidden md:table-cell">
+              {cart.userId || "N/A"}
+            </TableCell>
+            <TableCell className="hidden md:table-cell">
+              {cart.sessionId}
+            </TableCell>
             <TableCell>{cart.items.length}</TableCell>
             <TableCell>
-              ${cart.items.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2)}
+              $
+              {cart.items
+                .reduce((total, item) => total + item.price * item.quantity, 0)
+                .toFixed(2)}
             </TableCell>
-            <TableCell className="hidden md:table-cell">{new Date(cart.createdAt).toLocaleString()}</TableCell>
+            <TableCell className="hidden md:table-cell">
+              {new Date(cart.createdAt).toLocaleString()}
+            </TableCell>
             <TableCell className="w-4">
               <ChevronRight className="h-4 w-4 text-gray-400" />
             </TableCell>
@@ -67,6 +78,5 @@ export function CartList({ carts }: CartListProps) {
         ))}
       </TableBody>
     </Table>
-  )
+  );
 }
-

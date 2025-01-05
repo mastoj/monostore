@@ -2,8 +2,8 @@
 
 import { PurchaseOrderList } from "@/components/purchase-order-list";
 import { useState } from "react";
-import { PurchaseOrderFilter } from "../components/purchase-order-filter";
-import { mockPurchaseOrders, PurchaseOrder } from "../data/mock-carts";
+import { PurchaseOrderFilter } from "../../components/purchase-order-filter";
+import { mockPurchaseOrders, PurchaseOrder } from "../../data/mock-carts";
 
 export default function PurchaseOrdersContent() {
   const [filteredOrders, setFilteredOrders] =
