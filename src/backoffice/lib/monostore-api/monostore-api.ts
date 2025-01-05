@@ -46,6 +46,40 @@ export interface Brand {
   brandName?: string;
 }
 
+export interface Cart {
+  /** @format uuid */
+  id: string;
+  operatingChain: string;
+  status: CartStatus;
+  items: CartItem[];
+  sessionId: string;
+  userId: string | null;
+  /** @format double */
+  total: number;
+  /**
+   * @format double
+   * @default 0
+   */
+  totalExVat?: number;
+  /**
+   * @format double
+   * @default 0
+   */
+  beforePriceTotal?: number;
+  /**
+   * @format double
+   * @default 0
+   */
+  beforePriceExVatTotal?: number;
+  /** @default "" */
+  currency?: string;
+  /**
+   * @format int32
+   * @default 1
+   */
+  version?: number;
+}
+
 export type CartData = {
   /** @format uuid */
   id: string;
@@ -84,6 +118,15 @@ export type CartStatus = number;
 export interface CGM {
   cgmId?: string;
   cgmName?: string;
+}
+
+export interface Change {
+  changeType: string;
+  /** @format date-time */
+  timeStamp: string;
+  /** @format int64 */
+  version: number;
+  data: any;
 }
 
 export interface ChangeItemQuantity {
