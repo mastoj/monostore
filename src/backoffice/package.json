@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate-api-types": "npx swagger-typescript-api --no-client -p http://localhost:5170/openapi/v1.json -o ./lib/monostore-api -n monostore-api.ts"
   },
   "dependencies": {
     "@azure/monitor-opentelemetry-exporter": "1.0.0-beta.27",
