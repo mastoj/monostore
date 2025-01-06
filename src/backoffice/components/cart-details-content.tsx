@@ -14,12 +14,11 @@ import { CartData, Change } from "@/lib/monostore-api/monostore-api";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { use } from "react";
 import { HistoryList } from "./history-list";
 
 interface CartDetailsContentProps {
-  cart: Promise<CartData>;
-  cartEvents: Promise<Change[]>;
+  cart: CartData;
+  cartEvents: Change[];
   purchaseOrders: PurchaseOrder[];
 }
 
@@ -29,8 +28,8 @@ export default function CartDetailsContent({
   purchaseOrders,
 }: CartDetailsContentProps) {
   const router = useRouter();
-  const resolvedCart = use(cart);
-  const resolvedCartEvents = use(cartEvents);
+  const resolvedCart = cart;
+  const resolvedCartEvents = cartEvents;
 
   console.log("==> Resolved cart: ", resolvedCart);
 

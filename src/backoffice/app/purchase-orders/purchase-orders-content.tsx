@@ -1,13 +1,18 @@
 "use client";
 
 import { PurchaseOrderList } from "@/components/purchase-order-list";
-import { useState } from "react";
+import { PurchaseOrder } from "@/lib/monostore-api/monostore-api";
+import { use, useState } from "react";
 import { PurchaseOrderFilter } from "../../components/purchase-order-filter";
-import { mockPurchaseOrders, PurchaseOrder } from "../../data/mock-carts";
 
-export default function PurchaseOrdersContent() {
-  const [filteredOrders, setFilteredOrders] =
-    useState<PurchaseOrder[]>(mockPurchaseOrders);
+export type PurchaseOrdersContentProps = {
+  orders: Promise<PurchaseOrder[]>;
+};
+
+export default function PurchaseOrdersContent({
+  orders,
+}: PurchaseOrdersContentProps) {
+  const resolvedOrders = use(orders);
   const [isExpanded, setIsExpanded] = useState(false);
   const [filters, setFilters] = useState({
     status: "",
@@ -21,33 +26,33 @@ export default function PurchaseOrdersContent() {
   };
 
   const handleFilterSubmit = () => {
-    const filtered = mockPurchaseOrders.filter((order) => {
-      if (
-        filters.status &&
-        filters.status !== "all" &&
-        order.status !== filters.status
-      )
-        return false;
-      if (
-        filters.orderId &&
-        !order.id.toLowerCase().includes(filters.orderId.toLowerCase())
-      )
-        return false;
-      if (
-        filters.cartId &&
-        !order.cartId.toLowerCase().includes(filters.cartId.toLowerCase())
-      )
-        return false;
-      if (
-        filters.customerName &&
-        !order.customerName
-          .toLowerCase()
-          .includes(filters.customerName.toLowerCase())
-      )
-        return false;
-      return true;
-    });
-    setFilteredOrders(filtered);
+    //   const filtered = mockPurchaseOrders.filter((order) => {
+    //     if (
+    //       filters.status &&
+    //       filters.status !== "all" &&
+    //       order.status !== filters.status
+    //     )
+    //       return false;
+    //     if (
+    //       filters.orderId &&
+    //       !order.id.toLowerCase().includes(filters.orderId.toLowerCase())
+    //     )
+    //       return false;
+    //     if (
+    //       filters.cartId &&
+    //       !order.cartId.toLowerCase().includes(filters.cartId.toLowerCase())
+    //     )
+    //       return false;
+    //     if (
+    //       filters.customerName &&
+    //       !order.customerName
+    //         .toLowerCase()
+    //         .includes(filters.customerName.toLowerCase())
+    //     )
+    //       return false;
+    //     return true;
+    //   });
+    //   setFilteredOrders(filtered);
   };
 
   return (
@@ -59,7 +64,7 @@ export default function PurchaseOrdersContent() {
         isExpanded={isExpanded}
         onToggleExpand={() => setIsExpanded(!isExpanded)}
       />
-      <PurchaseOrderList purchaseOrders={filteredOrders} />
+      <PurchaseOrderList purchaseOrders={resolvedOrders} />
     </div>
   );
 }

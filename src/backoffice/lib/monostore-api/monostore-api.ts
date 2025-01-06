@@ -144,6 +144,13 @@ export type CheapestBItemDto = {
   bTitle?: string;
 } | null;
 
+export type CheckoutError = {
+  message?: string;
+  type?: CheckoutErrorType;
+} | null;
+
+export type CheckoutErrorType = number;
+
 export interface CreateCartRequest {
   operatingChain: string;
 }
@@ -179,6 +186,20 @@ export interface GrainResultOfCartDataAndCartError {
   isFailure?: boolean;
 }
 
+export interface GrainResultOfPurchaseOrderAndCheckoutError {
+  data?: PurchaseOrder2;
+  error?: CheckoutError;
+  isSuccess?: boolean;
+  isFailure?: boolean;
+}
+
+export interface GrainResultOfPurchaseOrderDataAndCheckoutError {
+  data?: PurchaseOrderData;
+  error?: CheckoutError;
+  isSuccess?: boolean;
+  isFailure?: boolean;
+}
+
 export interface KeyWord {
   id?: string;
 }
@@ -209,6 +230,17 @@ export interface Product {
   beforePrice: number | null;
   /** @format double */
   beforePriceExVat: number | null;
+  url: string;
+  primaryImageUrl: string;
+}
+
+export interface Product2 {
+  id: string;
+  name: string;
+  /** @format double */
+  price: number;
+  /** @format double */
+  priceExVat: number;
   url: string;
   primaryImageUrl: string;
 }
@@ -420,6 +452,72 @@ export interface ProductTaxonomy {
 export interface PT {
   ptId?: string;
   ptName?: string;
+}
+
+export interface PurchaseOrder {
+  /** @format uuid */
+  id: string;
+  items: PurchaseOrderItem[];
+  /** @format double */
+  total: number;
+  /** @format double */
+  totalExVat: number;
+  currency: string;
+  operatingChain: string;
+  /** @format uuid */
+  cartId: string;
+  sessionId: string;
+  userId: string | null;
+  /**
+   * @format int32
+   * @default 1
+   */
+  version?: number;
+}
+
+export type PurchaseOrder2 = {
+  /** @format uuid */
+  id: string;
+  items: PurchaseOrderItem[];
+  /** @format double */
+  total: number;
+  /** @format double */
+  totalExVat: number;
+  currency: string;
+  operatingChain: string;
+  /** @format uuid */
+  cartId: string;
+  sessionId: string;
+  userId: string | null;
+  /**
+   * @format int32
+   * @default 1
+   */
+  version?: number;
+};
+
+export type PurchaseOrderData = {
+  /** @format uuid */
+  id: string;
+  /** @format int32 */
+  version: number;
+  items: PurchaseOrderItem[];
+  /** @format double */
+  total: number;
+  /** @format double */
+  totalExVat: number;
+  currency: string;
+  operatingChain: string;
+  sessionId: string;
+  userId: string | null;
+  /** @format uuid */
+  cartId: string;
+};
+
+export interface PurchaseOrderItem {
+  product: Product2;
+  /** @format int32 */
+  quantity: number;
 }
 
 export interface SellabillityInfo {

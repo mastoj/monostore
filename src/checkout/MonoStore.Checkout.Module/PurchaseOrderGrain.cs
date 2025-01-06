@@ -60,6 +60,6 @@ public class PurchaseOrderGrain : Grain, IPurchaseOrderGrain
 
   public Task<GrainResult<PurchaseOrderData, CheckoutError>> GetPurchaseOrder(GetPurchaseOrder getPurchaseOrder)
   {
-    throw new NotImplementedException();
+    return Task.FromResult(GrainResult<PurchaseOrderData, CheckoutError>.Success(CurrentPurchaseOrder.AsContract()));
   }
 }

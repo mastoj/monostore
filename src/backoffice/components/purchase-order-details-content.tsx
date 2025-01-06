@@ -9,26 +9,38 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { PurchaseOrder, PurchaseOrderChange } from "@/data/mock-carts";
+import { Change, PurchaseOrderData } from "@/lib/monostore-api/monostore-api";
+import { ChevronRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { HistoryList } from "./history-list";
 
 interface PurchaseOrderDetailsContentProps {
-  purchaseOrder: PurchaseOrder;
-  orderChanges: PurchaseOrderChange[];
+  purchaseOrder: PurchaseOrderData;
+  orderChanges: Change[];
 }
 
 export default function PurchaseOrderDetailsContent({
   purchaseOrder,
   orderChanges,
 }: PurchaseOrderDetailsContentProps) {
-  const router = useRouter();
-
   // const orderChanges = mockPurchaseOrderChanges
   //   .filter(change => change.purchaseOrderId === purchaseOrder.id)
   //   .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-
+  const mockOrder = {
+    shippingAddress: {
+      street: "123 Dummy St",
+      city: "Faketown",
+      state: "CA",
+      zipCode: "12345",
+      country: "USA",
+    },
+    paymentInfo: {
+      method: "Credit Card",
+      cardLastFour: "1234",
+      transactionId: "txn_01ABC23DEFG45HIJ",
+    },
+  };
   return (
     <div className="space-y-6">
       <Card>
@@ -37,10 +49,10 @@ export default function PurchaseOrderDetailsContent({
         </CardHeader>
         <CardContent>
           <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
+            {/* <div>
               <dt className="font-semibold">Status:</dt>
               <dd>{purchaseOrder.status}</dd>
-            </div>
+            </div> */}
             <div>
               <dt className="font-semibold">Cart ID:</dt>
               <dd className="flex items-center space-x-2">
@@ -58,12 +70,12 @@ export default function PurchaseOrderDetailsContent({
             </div>
             <div>
               <dt className="font-semibold">Total Amount:</dt>
-              <dd>${purchaseOrder.totalAmount.toFixed(2)}</dd>
+              <dd>${purchaseOrder.total.toFixed(2)}</dd>
             </div>
-            <div>
+            {/* <div>
               <dt className="font-semibold">Last Updated:</dt>
               <dd>{new Date(purchaseOrder.updatedAt).toLocaleString()}</dd>
-            </div>
+            </div> */}
           </dl>
         </CardContent>
       </Card>
@@ -76,15 +88,18 @@ export default function PurchaseOrderDetailsContent({
           <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <dt className="font-semibold">Name:</dt>
-              <dd>{purchaseOrder.customerName}</dd>
+              <dd>John Doe</dd>
+              {/* <dd>{purchaseOrder.customerName}</dd> */}
             </div>
             <div>
               <dt className="font-semibold">Email:</dt>
-              <dd>{purchaseOrder.customerEmail}</dd>
+              <dd>john@doe.no</dd>
+              {/* <dd>{purchaseOrder.customerEmail}</dd> */}
             </div>
             <div>
               <dt className="font-semibold">Phone:</dt>
-              <dd>{purchaseOrder.customerPhone}</dd>
+              <dd>+4712345678</dd>
+              {/* <dd>{purchaseOrder.customerPhone}</dd> */}
             </div>
           </dl>
         </CardContent>
@@ -98,23 +113,23 @@ export default function PurchaseOrderDetailsContent({
           <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <dt className="font-semibold">Address:</dt>
-              <dd>{purchaseOrder.shippingAddress.street}</dd>
+              <dd>{mockOrder.shippingAddress.street}</dd>
             </div>
             <div>
               <dt className="font-semibold">City:</dt>
-              <dd>{purchaseOrder.shippingAddress.city}</dd>
+              <dd>{mockOrder.shippingAddress.city}</dd>
             </div>
             <div>
               <dt className="font-semibold">State:</dt>
-              <dd>{purchaseOrder.shippingAddress.state}</dd>
+              <dd>{mockOrder.shippingAddress.state}</dd>
             </div>
             <div>
               <dt className="font-semibold">Zip Code:</dt>
-              <dd>{purchaseOrder.shippingAddress.zipCode}</dd>
+              <dd>{mockOrder.shippingAddress.zipCode}</dd>
             </div>
             <div>
               <dt className="font-semibold">Country:</dt>
-              <dd>{purchaseOrder.shippingAddress.country}</dd>
+              <dd>{mockOrder.shippingAddress.country}</dd>
             </div>
           </dl>
         </CardContent>
@@ -128,15 +143,15 @@ export default function PurchaseOrderDetailsContent({
           <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <dt className="font-semibold">Payment Method:</dt>
-              <dd>{purchaseOrder.paymentInfo.method}</dd>
+              <dd>{mockOrder.paymentInfo.method}</dd>
             </div>
             <div>
               <dt className="font-semibold">Card Number:</dt>
-              <dd>**** **** **** {purchaseOrder.paymentInfo.cardLastFour}</dd>
+              <dd>**** **** **** {mockOrder.paymentInfo.cardLastFour}</dd>
             </div>
             <div>
               <dt className="font-semibold">Transaction ID:</dt>
-              <dd>{purchaseOrder.paymentInfo.transactionId}</dd>
+              <dd>{mockOrder.paymentInfo.transactionId}</dd>
             </div>
           </dl>
         </CardContent>
@@ -159,13 +174,30 @@ export default function PurchaseOrderDetailsContent({
             </TableHeader>
             <TableBody>
               {purchaseOrder.items.map((item) => (
-                <TableRow key={item.sku}>
-                  <TableCell>{item.sku}</TableCell>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell>{item.quantity}</TableCell>
-                  <TableCell>${item.price.toFixed(2)}</TableCell>
+                <TableRow
+                  key={item.product.id}
+                  onClick={() => {
+                    window.location.href = `https://www.elgiganten.se/p/${item.product.id}`;
+                  }}
+                  className="cursor-pointer hover:bg-gray-100 transition-colors"
+                >
                   <TableCell>
-                    ${(item.price * item.quantity).toFixed(2)}
+                    <Image
+                      src={item.product.primaryImageUrl}
+                      alt={item.product.name}
+                      width={50}
+                      height={50}
+                    />
+                  </TableCell>
+                  <TableCell>{item.product.id}</TableCell>
+                  <TableCell>{item.product.name}</TableCell>
+                  <TableCell>{item.quantity}</TableCell>
+                  <TableCell>${item.product.price.toFixed(2)}</TableCell>
+                  <TableCell>
+                    ${(item.product.price * item.quantity).toFixed(2)}
+                  </TableCell>
+                  <TableCell className="w-4">
+                    <ChevronRight className="h-4 w-4 text-gray-400" />
                   </TableCell>
                 </TableRow>
               ))}

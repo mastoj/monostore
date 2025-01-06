@@ -4,13 +4,13 @@ import {
   GrainResultOfCartDataAndCartError,
 } from "./monostore-api";
 
-const apiBaseUrl = process.env["services__monostore-api__http__0"];
+const apiBaseUrl = `${process.env["services__monostore-api__http__0"]}/cart`;
 
 export type GetCartsRequest = {
   operatingChain: string;
 };
 export const getCarts = async ({ operatingChain }: GetCartsRequest) => {
-  const url = new URL(`${apiBaseUrl}/cart`);
+  const url = new URL(`${apiBaseUrl}`);
   url.searchParams.append("operatingChain", operatingChain);
   const response = await fetch(url);
   const carts = await response.json();
@@ -18,7 +18,7 @@ export const getCarts = async ({ operatingChain }: GetCartsRequest) => {
 };
 
 export const getCart = async (id: string) => {
-  const url = new URL(`${apiBaseUrl}/cart/${id}`);
+  const url = new URL(`${apiBaseUrl}/${id}`);
   const response = await fetch(url);
   const result =
     (await response.json()) satisfies GrainResultOfCartDataAndCartError;
@@ -29,7 +29,7 @@ export const getCart = async (id: string) => {
 };
 
 export const getChanges = async (id: string) => {
-  const url = new URL(`${apiBaseUrl}/cart/${id}/changes`);
+  const url = new URL(`${apiBaseUrl}/${id}/changes`);
   const response = await fetch(url);
   const changes = await response.json();
   return changes satisfies Change[];

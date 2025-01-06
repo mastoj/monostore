@@ -1,6 +1,6 @@
 import CartDetailsContent from "@/components/cart-details-content";
-import { PurchaseOrder } from "@/data/mock-carts";
-import { getCart, getChanges } from "@/lib/monostore-api/monostore-api-client";
+import { getCart, getChanges } from "@/lib/monostore-api/cart-client";
+import { getPurchaseOrders } from "@/lib/monostore-api/purchase-order-client";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import Layout from "../../../components/layout";
@@ -11,9 +11,13 @@ export default async function CartDetails({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const cartData = getCart(id);
-  const cartEvents = getChanges(id);
-  const purchaseOrders: PurchaseOrder[] = [];
+  const cartData = await getCart(id);
+  const cartEvents = await getChanges(id);
+  const purchaseOrders = await getPurchaseOrders({
+    operatingChain: "OCSEELG",
+    cartId: id,
+  });
+  // const purchaseOrders: PurchaseOrder[] = [];
   // mockPurchaseOrders.filter(
   //   (po) => po.cartId === params.id
   // );

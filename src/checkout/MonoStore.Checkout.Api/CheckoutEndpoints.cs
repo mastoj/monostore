@@ -15,6 +15,7 @@ using Marten;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using MonoStore.Checkout.Domain;
+using Monostore.Orleans.Types;
 
 public static class CheckoutEndpoints
 {
@@ -51,18 +52,11 @@ public static class CheckoutEndpoints
 
       return Results.Ok(result);
       // DiagnosticConfig.CreateCartCounter.Add(1, new KeyValuePair<string, object?>("operatingChain", "OCNOELK"));
-    });
+    }).Produces<GrainResult<PurchaseOrderData, CheckoutError>>();
 
-    routes.MapGet("/{id}", async (IGrainFactory grains, Guid id) =>
+    routes.MapGet("/", async (ICheckoutStore checkoutStore, string operatingChain, string? userId, string? sessionId, string? sku, string? cartId, string? query) =>
     {
-      var purchaseOrderGrain = grains.GetGrain<IPurchaseOrderGrain>(IPurchaseOrderGrain.PurchaseOrderGrainId(id));
-      var result = await purchaseOrderGrain.GetPurchaseOrder(new GetPurchaseOrder());
-      return Results.Ok(result);
-    });
-
-    routes.MapGet("/", async (ICheckoutStore cartStore, string operatingChain, string? userId, string? sessionId, string? sku, string? cartId, string? query) =>
-    {
-      await using var session = cartStore.LightweightSession();
+      await using var session = checkoutStore.LightweightSession();
       var querySession = session.Query<PurchaseOrder>().Where(c => c.OperatingChain == operatingChain);
       if (userId != null)
       {
@@ -84,6 +78,22 @@ public static class CheckoutEndpoints
       var carts = await querySession.ToListAsync();
       return Results.Ok(carts);
     }).Produces<List<PurchaseOrder>>();
+
+    routes.MapGet("/{id}", async (IGrainFactory grainFactory, Guid id) =>
+    {
+      var purchaseOrderGrain = grainFactory.GetGrain<IPurchaseOrderGrain>(IPurchaseOrderGrain.PurchaseOrderGrainId(id));
+      var result = await purchaseOrderGrain.GetPurchaseOrder(new GetPurchaseOrder());
+      return Results.Ok(result);
+    }).Produces<GrainResult<PurchaseOrderData, CheckoutError>>();
+
+    routes.MapGet("/{id}/changes", async (ICheckoutStore checkoutStore, Guid id) =>
+    {
+      await using var session = checkoutStore.LightweightSession();
+      var changes = await session.Events.FetchStreamAsync(id);
+      var result = changes?.Select(c => new Change(c.EventTypeName, c.Timestamp, c.Version, c.Data)).ToList();
+      return Results.Ok(result);
+    }).Produces<List<Change>>();
+
     return routes;
   }
 

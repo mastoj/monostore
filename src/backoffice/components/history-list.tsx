@@ -18,7 +18,7 @@ export function HistoryList({ historyItems }: HistoryListProps) {
   );
 
   return (
-    <Accordion type="single" collapsible className="w-full">
+    <Accordion type="multiple" className="w-full">
       {sortedItems.map((item, index) => (
         <AccordionItem value={`item-${index}`} key={item.version}>
           <AccordionTrigger className="text-left">

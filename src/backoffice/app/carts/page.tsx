@@ -1,4 +1,4 @@
-import { getCarts } from "@/lib/monostore-api/monostore-api-client";
+import { getCarts } from "@/lib/monostore-api/cart-client";
 import { Suspense } from "react";
 import Layout from "../../components/layout";
 import CartsContent from "./carts-content";
