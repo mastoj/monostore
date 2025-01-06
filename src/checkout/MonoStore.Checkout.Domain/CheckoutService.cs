@@ -1,10 +1,9 @@
 using DotNext;
-using JasperFx.CodeGeneration.Model;
 using Monostore.Checkout.Contracts.Grains;
 
-namespace MonoStore.Checkout.Module;
+namespace MonoStore.Checkout.Domain;
 
-internal static class CheckoutService
+public static class CheckoutService
 {
   private static string GetCurrency(string operatingChain) => operatingChain switch
   {

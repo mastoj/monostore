@@ -1,6 +1,7 @@
 using MonoStore.Checkout.Contracts;
+using MonoStore.Checkout.Domain;
 
-namespace MonoStore.Checkout.Module;
+namespace MonoStore.Checkout.Domain;
 
 #region Events
 public record PurchaseOrderCreated(Guid PurchaseOrderId, PurchaseOrderItem[] Items, decimal Total, decimal totalExVat, string Currency, string OperatingChain, Guid CartId, string SessionId, string? UserId);

@@ -65,6 +65,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monostore.Contracts", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoStore.Cart.Domain", "src\cart\MonoStore.Cart.Domain\MonoStore.Cart.Domain.csproj", "{DBF8757D-DDA8-43E7-A243-8171538E43E0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoStore.Checkout.Domain", "src\checkout\MonoStore.Checkout.Domain\MonoStore.Checkout.Domain.csproj", "{F151A8DD-3D93-4724-AC21-4AD06B897D7D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -166,6 +168,10 @@ Global
 		{DBF8757D-DDA8-43E7-A243-8171538E43E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBF8757D-DDA8-43E7-A243-8171538E43E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBF8757D-DDA8-43E7-A243-8171538E43E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F151A8DD-3D93-4724-AC21-4AD06B897D7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F151A8DD-3D93-4724-AC21-4AD06B897D7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F151A8DD-3D93-4724-AC21-4AD06B897D7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F151A8DD-3D93-4724-AC21-4AD06B897D7D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DA454B91-38C1-43F3-B0E3-A637A771DE73} = {3A654C76-9569-4E99-85BE-1FC3221077CE}
@@ -198,5 +204,6 @@ Global
 		{504364CE-ED1B-4B7A-9006-B3739FE197A7} = {DA454B91-38C1-43F3-B0E3-A637A771DE73}
 		{03C18DC2-9287-46C9-908E-A966C8CE9F90} = {DA454B91-38C1-43F3-B0E3-A637A771DE73}
 		{DBF8757D-DDA8-43E7-A243-8171538E43E0} = {E7C332E8-9DF0-4A98-8498-A3CB226EA9AD}
+		{F151A8DD-3D93-4724-AC21-4AD06B897D7D} = {8E6D4B8C-7F8A-441A-9402-4041529F24D7}
 	EndGlobalSection
 EndGlobal

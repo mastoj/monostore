@@ -11,6 +11,10 @@ using MonoStore.Checkout.Contracts.Requests;
 using Monostore.Checkout.Contracts.Grains;
 using MonoStore.Checkout.Contracts;
 using MonoStore.Cart.Contracts.Requests;
+using Marten;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
+using MonoStore.Checkout.Domain;
 
 public static class CheckoutEndpoints
 {
@@ -51,9 +55,57 @@ public static class CheckoutEndpoints
 
     routes.MapGet("/{id}", async (IGrainFactory grains, Guid id) =>
     {
+      var purchaseOrderGrain = grains.GetGrain<IPurchaseOrderGrain>(IPurchaseOrderGrain.PurchaseOrderGrainId(id));
+      var result = await purchaseOrderGrain.GetPurchaseOrder(new GetPurchaseOrder());
+      return Results.Ok(result);
     });
 
+    routes.MapGet("/", async (ICheckoutStore cartStore, string operatingChain, string? userId, string? sessionId, string? sku, string? cartId, string? query) =>
+    {
+      await using var session = cartStore.LightweightSession();
+      var querySession = session.Query<PurchaseOrder>().Where(c => c.OperatingChain == operatingChain);
+      if (userId != null)
+      {
+        querySession = querySession.Where(c => c.UserId == userId);
+      }
+      if (sessionId != null)
+      {
+        querySession = querySession.Where(c => c.SessionId == sessionId);
+      }
+      if (sku != null)
+      {
+        querySession = querySession.Where(c => c.Items.Any(i => i.Product.Id == sku));
+      }
+      if (cartId != null)
+      {
+        querySession = querySession.Where(c => c.CartId == Guid.Parse(cartId));
+      }
+
+      var carts = await querySession.ToListAsync();
+      return Results.Ok(carts);
+    }).Produces<List<PurchaseOrder>>();
     return routes;
+  }
+
+  public static T AddCheckout<T>(this T builder) where T : IHostApplicationBuilder
+  {
+    var connectionStringName = "monostorepg";
+    var databaseSchemaName = "checkout";
+    var connectionString = $"{builder.Configuration.GetConnectionString(connectionStringName)};sslmode=prefer;CommandTimeout=300";
+
+    builder.Services.AddMartenStore<ICheckoutStore>(s =>
+    {
+      var options = new StoreOptions();
+      options.Events.MetadataConfig.CorrelationIdEnabled = true;
+      options.Events.MetadataConfig.CausationIdEnabled = true;
+      options.DatabaseSchemaName = databaseSchemaName;
+      options.Connection(connectionString ?? throw new InvalidOperationException());
+      options.OpenTelemetry.TrackEventCounters();
+      options.AutoCreateSchemaObjects = Weasel.Core.AutoCreate.None;
+      return options;
+    });
+
+    return builder;
   }
 
   public static WebApplication UseCheckout(this WebApplication app, string groupPath)
@@ -62,3 +114,5 @@ public static class CheckoutEndpoints
     return app;
   }
 }
+
+public interface ICheckoutStore : IDocumentStore { }

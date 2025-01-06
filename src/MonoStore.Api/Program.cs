@@ -88,6 +88,7 @@ try
     });
 
     builder.AddCart();
+    builder.AddCheckout();
 
     var app = builder.Build();
     app.UseSerilogRequestLogging();

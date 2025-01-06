@@ -1,8 +1,10 @@
 ﻿using Monostore.Checkout.Contracts.Grains;
 using Monostore.Orleans.Types;
 using MonoStore.Checkout.Contracts;
+using MonoStore.Checkout.Domain;
 using MonoStore.Marten;
-using static MonoStore.Checkout.Module.CheckoutService;
+using static MonoStore.Checkout.Domain.CheckoutService;
+
 
 namespace MonoStore.Checkout.Module;
 
@@ -54,5 +56,10 @@ public class PurchaseOrderGrain : Grain, IPurchaseOrderGrain
       CurrentPurchaseOrder = await eventStore.CreateStream(createPurchaseOrder.PurchaseOrderId, result.Value, PurchaseOrder.Create, default);
     }
     return GrainResult<PurchaseOrderData, CheckoutError>.Success(CurrentPurchaseOrder.AsContract());
+  }
+
+  public Task<GrainResult<PurchaseOrderData, CheckoutError>> GetPurchaseOrder(GetPurchaseOrder getPurchaseOrder)
+  {
+    throw new NotImplementedException();
   }
 }

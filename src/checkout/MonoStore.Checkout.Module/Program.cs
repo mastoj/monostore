@@ -1,5 +1,5 @@
 ﻿using Marten.Events.Projections;
-using MonoStore.Checkout.Module;
+using MonoStore.Checkout.Domain;
 
 var builder = Host.CreateApplicationBuilder(args).UseHosting("monostore-checkout-module");
 builder.UseMartenEventStore("monostorepg", "checkout", so =>

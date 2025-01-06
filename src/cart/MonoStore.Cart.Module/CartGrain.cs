@@ -6,7 +6,6 @@ using MonoStore.Cart.Contracts.Grains;
 using MonoStore.Cart.Contracts.Requests;
 using MonoStore.Marten;
 using MonoStore.Product.Contracts.Grains;
-using MonoStore.Cart.Domain;
 using static MonoStore.Cart.Domain.CartService;
 
 namespace MonoStore.Cart.Module;
