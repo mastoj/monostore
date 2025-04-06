@@ -44,17 +44,17 @@ builder.AddProject<Projects.MonoStore_Cart_Module>("monostore-cart-module")
   .WithReference(postgres)
   .WaitFor(postgres)
   .WithReference(orleans)
-  .WithReplicas(1);
+  .WithReplicas(3);
 
 builder.AddProject<Projects.MonoStore_Checkout_Module>("monostore-checkout-module")
   .WithReference(postgres)
   .WaitFor(postgres)
   .WithReference(orleans)
-  .WithReplicas(1);
+  .WithReplicas(2);
 
 builder.AddProject<Projects.MonoStore_Product_Module>("monostore-product-module")
   .WithReference(orleans)
-  .WithReplicas(1);
+  .WithReplicas(3);
 
 builder.AddProject<Projects.MonoStore_Orelans_Dashboard>("orleans-dashboard")
   .WithReference(orleans)

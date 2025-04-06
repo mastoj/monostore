@@ -21,6 +21,9 @@ Cookie: user-id={{userId}}; session-id={{sessionId}}
 ### Query carts
 GET http://localhost:5170/cart?operatingChain=OCSEELG&userId={{userId}}
 
+### Get cart
+GET http://localhost:5170/cart/{{cartId}}
+
 ### Add item to cart
 POST http://localhost:5170/cart/{{cartId}}/items
 Content-Type: application/json

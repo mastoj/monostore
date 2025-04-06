@@ -5,8 +5,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Orleans.Sdk" Version="9.0.1" />
-    <PackageReference Include="Microsoft.Orleans.Serialization" Version="9.0.1" />
+    <PackageReference Include="Microsoft.Orleans.Sdk" Version="9.1.2" />
+    <PackageReference Include="Microsoft.Orleans.Serialization" Version="9.1.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\infrastructure\Monostore.Orleans\Monostore.Orleans.csproj" />

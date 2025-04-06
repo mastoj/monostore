@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DotNext" Version="5.17.2" />
+    <PackageReference Include="DotNext" Version="5.20.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MonoStore.Cart.Contracts\MonoStore.Cart.Contracts.csproj" />

@@ -90,3 +90,6 @@ build-publish-deploy-product: ## Deploys and builds the product
 #   --ingress external \
 #   --registry-server $ACR_NAME.azurecr.io \
 #   --query properties.configuration.ingress.fqdn
+
+run-local: ## Run the api locally
+	dotnet run --project ./src/aspire/MonoStore.AppHost/MonoStore.AppHost.csproj
