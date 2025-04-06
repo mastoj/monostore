@@ -1,7 +1,4 @@
-import {
-  ContainerApp,
-  ManagedEnvironment,
-} from "@kengachu-pulumi/azure-native-app";
+import { ContainerApp } from "@kengachu-pulumi/azure-native-app";
 import * as pulumi from "@pulumi/pulumi";
 
 const config = new pulumi.Config();
@@ -15,17 +12,17 @@ const workerApps = ["product", "cart", "checkout"];
 
 const resourceGroupName = config.require("resourceGroup");
 
-const containerAppEnv = new ManagedEnvironment(`containerAppEnv${stackName}`, {
-  resourceGroupName: resourceGroupName,
-  location: "North Europe",
-  // appLogsConfiguration: {
-  //   destination: "log-analytics",
-  //   logAnalyticsConfiguration: {
-  //     customerId: "<log-analytics-customer-id>",
-  //     sharedKey: "<log-analytics-shared-key>",
-  //   },
-  // },
-});
+// const containerAppEnv = new ManagedEnvironment(`containerAppEnv${stackName}`, {
+//   resourceGroupName: resourceGroupName,
+//   location: "North Europe",
+//   // appLogsConfiguration: {
+//   //   destination: "log-analytics",
+//   //   logAnalyticsConfiguration: {
+//   //     customerId: "<log-analytics-customer-id>",
+//   //     sharedKey: "<log-analytics-shared-key>",
+//   //   },
+//   // },
+// });
 
 const createApp = (app: string) => {
   const appName = `${systemName}-${app}-module`;
@@ -40,7 +37,7 @@ const createApp = (app: string) => {
   const containerApp = new ContainerApp(appName, {
     containerAppName: appName,
     resourceGroupName: config.require("resourceGroup"),
-    environmentId: containerAppEnv.id, //environmentId,
+    environmentId: environmentId,
     template: {
       scale: {
         minReplicas: 1,
