@@ -31,4 +31,7 @@ public interface ICartGrain : IGrainWithStringKey
   Task<GrainResult<CartData, CartError>> AbandonCart(AbandonCart abandonCart);
   Task<GrainResult<CartData, CartError>> RecoverCart(RecoverCart recoverCart);
   Task<GrainResult<CartData, CartError>> ArchiveCart(ArchiveCart archiveCart);
+
+  // Simple baseline performance test method that doesn't access the database
+  Task<GrainResult<string, CartError>> PerformanceTest();
 }

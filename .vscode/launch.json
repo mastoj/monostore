@@ -1,0 +1,25 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C#: MonoStore.AppHost [Default Configuration]",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-apphost",
+      "program": "${workspaceFolder}/src/aspire/MonoStore.AppHost/bin/Debug/net9.0/MonoStore.AppHost.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/src/aspire/MonoStore.AppHost",
+      "stopAtEntry": false,
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+      },
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "sourceFileMap": {
+        "/Views": "${workspaceFolder}/Views"
+      }
+    }
+  ]
+}

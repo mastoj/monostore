@@ -3,6 +3,7 @@ using Marten.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MonoStore.Marten;
+using Npgsql;
 
 namespace Microsoft.Extensions.Hosting;
 
@@ -12,8 +13,9 @@ public static class Hosting
   {
     Action doStuff = () =>
     {
+      // Connection string with pooling settings directly applied
+      var connectionString = $"{builder.Configuration.GetConnectionString(connectionStringName)};sslmode=prefer;CommandTimeout=60;Pooling=true;Maximum Pool Size=100;Minimum Pool Size=5;Connection Lifetime=30;Connection Idle Lifetime=15;Connection Pruning Interval=10";
 
-      var connectionString = $"{builder.Configuration.GetConnectionString(connectionStringName)};sslmode=prefer;CommandTimeout=300";
       builder.Services
         .AddSingleton<IEventStore, MartenEventStore>();
       builder.Services.AddMarten(s =>
@@ -25,6 +27,10 @@ public static class Hosting
           options.Connection(connectionString ?? throw new InvalidOperationException());
           // options.OpenTelemetry.TrackConnections = TrackLevel.Verbose;
           options.OpenTelemetry.TrackEventCounters();
+
+          // Configure Marten's command timeout
+          options.CommandTimeout = 30;
+
           if (storeOptionsConfig != null)
           {
             options = storeOptionsConfig(options);

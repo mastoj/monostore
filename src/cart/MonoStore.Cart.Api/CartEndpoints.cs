@@ -17,6 +17,7 @@ using MonoStore.Cart.Domain;
 using JasperFx.CodeGeneration.Model;
 using MonoStore.Cart.Contracts.Dtos;
 using Monostore.Orleans.Types;
+using Microsoft.AspNetCore.Http.Timeouts;
 
 public static class CartEndpoints
 {
@@ -28,9 +29,12 @@ public static class CartEndpoints
 
   public static RouteGroupBuilder MapCartEndpoints(this RouteGroupBuilder routes)
   {
+    // Set explicit timeouts for high-traffic routes
+    var highTrafficTimeoutValue = TimeSpan.FromSeconds(5);
 
     routes.MapGet("/", async (ICartStore cartStore, string operatingChain, string? userId, string? sessionId, string? sku, string? query) =>
     {
+      // Use LightweightSession with careful disposal
       await using var session = cartStore.LightweightSession();
       var querySession = session.Query<Cart>().Where(c => c.OperatingChain == operatingChain);
       if (userId != null)
@@ -48,7 +52,7 @@ public static class CartEndpoints
 
       var carts = await querySession.ToListAsync();
       return Results.Ok(carts);
-    }).Produces<List<Cart>>();
+    }).Produces<List<Cart>>().WithRequestTimeout(highTrafficTimeoutValue);
 
     routes.MapPost("/", async (HttpRequest request, IGrainFactory grains, CreateCartRequest createCart, ILoggerFactory loggerFactory) =>
     {
@@ -60,10 +64,10 @@ public static class CartEndpoints
 
       request.Cookies.TryGetValue("user-id", out var userId);
       var cartId = Guid.NewGuid();
-      // DiagnosticConfig.CreateCartCounter.Add(1, new KeyValuePair<string, object?>("operatingChain", "OCNOELK"));
+
       try
       {
-        Console.WriteLine("CreateCart");
+        // Console.WriteLine calls add overhead, consider removing in high-perf code
         var cartGrain = grains.GetGrain<ICartGrain>(ICartGrain.CartGrainId(cartId));
         var result = await cartGrain.CreateCart(new CreateCartMessage(cartId, createCart.OperatingChain, sessionId, userId));
         OperationsCounter.Add(1, new TagList() {
@@ -81,7 +85,7 @@ public static class CartEndpoints
         logger.LogError(ex, "Error creating cart");
         return Results.Problem(ex.Message);
       }
-    }).Produces<GrainResult<CartData, CartError>>();
+    }).Produces<GrainResult<CartData, CartError>>().WithRequestTimeout(highTrafficTimeoutValue);
 
     routes.MapPost("/{id}/items", async (IGrainFactory grains, Guid id, AddItemRequest addItemRequest) =>
     {
@@ -119,13 +123,12 @@ public static class CartEndpoints
       {
         OperationsCounter.Add(1, new TagList() {
           { "operation", "get" },
-          { "status", "success" },
+          { "status", "failure" },
         });
 
-        Console.WriteLine(ex.Message);
         throw;
       }
-    }).Produces<GrainResult<CartData, CartError>>();
+    }).Produces<GrainResult<CartData, CartError>>().WithRequestTimeout(highTrafficTimeoutValue);
 
     routes.MapGet("/{id}/changes", async (ICartStore cartStore, Guid id) =>
     {
@@ -159,6 +162,31 @@ public static class CartEndpoints
       return await cartGrain.ArchiveCart(new ArchiveCart());
     }).Produces<GrainResult<CartData, CartError>>();
 
+    // Performance test endpoint that doesn't access the database
+    routes.MapGet("/performance-test/{id}", async (IGrainFactory grains, Guid id) =>
+    {
+      // Track metrics for performance testing
+      var stopwatch = Stopwatch.StartNew();
+
+      // Get the cart grain and call the performance test method
+      var cartGrain = grains.GetGrain<ICartGrain>(ICartGrain.CartGrainId(id));
+      var result = await cartGrain.PerformanceTest();
+
+      stopwatch.Stop();
+
+      // Log performance metrics 
+      OperationsCounter.Add(1, new TagList() {
+        { "operation", "performance-test" },
+        { "duration_ms", stopwatch.ElapsedMilliseconds.ToString() }
+      });
+
+      return Results.Ok(new
+      {
+        result = result,
+        durationMs = stopwatch.ElapsedMilliseconds
+      });
+    }).Produces<object>().WithName("PerformanceTest").WithDescription("Baseline performance test endpoint that calls a grain without database access");
+
     return routes;
   }
 
@@ -166,7 +194,7 @@ public static class CartEndpoints
   {
     var connectionStringName = "monostorepg";
     var databaseSchemaName = "cart";
-    var connectionString = $"{builder.Configuration.GetConnectionString(connectionStringName)};sslmode=prefer;CommandTimeout=300";
+    var connectionString = $"{builder.Configuration.GetConnectionString(connectionStringName)};sslmode=prefer;CommandTimeout=60;Pooling=true;Maximum Pool Size=20;Minimum Pool Size=5;Connection Lifetime=30;Connection Idle Lifetime=10;Connection Pruning Interval=3";
 
     // builder.Services.AddSingleton<ICartStore, ICartStore>();
     // builder.Services.AddSingleton<ICartGrain, CartGrain>();
@@ -180,6 +208,10 @@ public static class CartEndpoints
       // options.OpenTelemetry.TrackConnections = TrackLevel.Verbose;
       options.OpenTelemetry.TrackEventCounters();
       options.AutoCreateSchemaObjects = Weasel.Core.AutoCreate.None;
+
+      // Configure optimal timeouts
+      options.CommandTimeout = 30;
+
       return options;
     });
 

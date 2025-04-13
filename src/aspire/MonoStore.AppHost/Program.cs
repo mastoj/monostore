@@ -24,7 +24,19 @@ var postgres = builder
   .WithPgAdmin(a =>
     {
       a.WithHostPort(8888);
-    });
+    })
+  .WithEnvironment("max_connections", "300")
+  .WithEnvironment("shared_buffers", "256MB")
+  .WithEnvironment("effective_cache_size", "768MB")
+  .WithEnvironment("maintenance_work_mem", "64MB")
+  .WithEnvironment("checkpoint_completion_target", "0.9")
+  .WithEnvironment("wal_buffers", "16MB")
+  .WithEnvironment("default_statistics_target", "100")
+  .WithEnvironment("random_page_cost", "1.1")
+  .WithEnvironment("effective_io_concurrency", "200")
+  .WithEnvironment("work_mem", "4MB")
+  .WithEnvironment("min_wal_size", "1GB")
+  .WithEnvironment("max_wal_size", "4GB");
 
 var storage = builder.AddAzureStorage("storage").RunAsEmulator(x => x.WithImageTag("latest"));
 var clusteringTable = storage.AddTables("clustering");

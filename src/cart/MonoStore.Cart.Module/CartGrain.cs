@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Monostore.Orleans.Types;
 using Monostore.ServiceDefaults;
 using MonoStore.Cart.Contracts.Commands;
@@ -6,6 +7,7 @@ using MonoStore.Cart.Contracts.Grains;
 using MonoStore.Cart.Contracts.Requests;
 using MonoStore.Marten;
 using MonoStore.Product.Contracts.Grains;
+using System.Collections.Concurrent;
 using static MonoStore.Cart.Domain.CartService;
 
 namespace MonoStore.Cart.Module;
@@ -14,14 +16,6 @@ internal static class Mappers
 {
   internal static CartData AsContract(this Domain.Cart cart)
   {
-    // var totals = cart.Items.Aggregate((total: 0m, totalExVat: 0m, beforePrice: 0m, beforePriceExVat: 0m), (acc, item) =>
-    // {
-    //   var price = item.Product?.Price ?? 0;
-    //   var priceExVat = item.Product?.PriceExVat ?? 0;
-    //   var beforePrice = item.Product?.BeforePrice ?? 0;
-    //   var beforePriceExVat = item.Product?.BeforePriceExVat ?? 0;
-    //   return (acc.total + price * item.Quantity, acc.totalExVat + priceExVat * item.Quantity, acc.beforePrice + beforePrice * item.Quantity, acc.beforePriceExVat + beforePriceExVat * item.Quantity);
-    // });
     return new CartData(cart.Id, cart.Version, cart.OperatingChain, cart.Status, cart.Items.ToList(), cart.Total, cart.TotalExVat, cart.BeforePriceTotal, cart.BeforePriceExVatTotal, cart.SessionId, cart.UserId);
   }
 }
@@ -54,8 +48,10 @@ public sealed class CartGrain
   {
     DiagnosticConfig.CartHost.ActiveCartCounter.Add(1, new KeyValuePair<string, object?>("operatingChain", "OCNOELK"));
     logger.LogInformation("Activating {grainKey}", this.GetPrimaryKeyString());
+
     var id = Guid.Parse(this.GetPrimaryKeyString().Split("/")[1]);
     _currentCart = await eventStore.GetState<Domain.Cart>(id, default);
+
     await base.OnActivateAsync(cancellationToken);
   }
 
@@ -183,4 +179,17 @@ public sealed class CartGrain
     return GrainResult<CartData, CartError>.Success(CurrentCart.AsContract());
   }
   #endregion
+
+  /// <summary>
+  /// Simple baseline performance test method that doesn't access the database.
+  /// This method is specifically for performance testing and only runs grain-level operations.
+  /// </summary>
+  public Task<GrainResult<string, CartError>> PerformanceTest()
+  {
+    // Log the call but don't access any database
+    logger.LogInformation("Performance test called for grain {grainKey}", this.GetPrimaryKeyString());
+
+    // Return a simple response without touching the database
+    return Task.FromResult(GrainResult<string, CartError>.Success($"Performance test successful at {DateTime.UtcNow}"));
+  }
 }

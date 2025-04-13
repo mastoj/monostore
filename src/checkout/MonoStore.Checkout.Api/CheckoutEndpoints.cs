@@ -101,7 +101,7 @@ public static class CheckoutEndpoints
   {
     var connectionStringName = "monostorepg";
     var databaseSchemaName = "checkout";
-    var connectionString = $"{builder.Configuration.GetConnectionString(connectionStringName)};sslmode=prefer;CommandTimeout=300";
+    var connectionString = $"{builder.Configuration.GetConnectionString(connectionStringName)};sslmode=prefer;CommandTimeout=60;Pooling=true;Maximum Pool Size=20;Minimum Pool Size=5;Connection Lifetime=30;Connection Idle Lifetime=10;Connection Pruning Interval=3";
 
     builder.Services.AddMartenStore<ICheckoutStore>(s =>
     {
