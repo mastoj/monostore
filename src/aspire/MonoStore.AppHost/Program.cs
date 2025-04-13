@@ -50,11 +50,11 @@ builder.AddProject<Projects.MonoStore_Checkout_Module>("monostore-checkout-modul
   .WithReference(postgres)
   .WaitFor(postgres)
   .WithReference(orleans)
-  .WithReplicas(1);
+  .WithReplicas(3);
 
 builder.AddProject<Projects.MonoStore_Product_Module>("monostore-product-module")
   .WithReference(orleans)
-  .WithReplicas(1);
+  .WithReplicas(3);
 
 builder.AddProject<Projects.MonoStore_Orelans_Dashboard>("orleans-dashboard")
   .WithReference(orleans)
