@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.ServiceDiscovery;
 using Npgsql;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
+using Serilog;
+using Serilog.Templates;
+using Serilog.Templates.Themes;
 
 namespace Microsoft.Extensions.Hosting;
 
@@ -16,7 +18,7 @@ namespace Microsoft.Extensions.Hosting;
 // To learn more about using this project, see https://aka.ms/dotnet/aspire/service-defaults
 public static class Extensions
 {
-    public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder, Action<OpenTelemetry.Resources.ResourceBuilder> configureOtel, Action<MeterProviderBuilder>? configureMetrics = null)
+    public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder, Action<OpenTelemetry.Resources.ResourceBuilder>? configureOtel = null, Action<MeterProviderBuilder>? configureMetrics = null)
     {
         builder.ConfigureOpenTelemetry(configureOtel, configureMetrics);
 
@@ -33,6 +35,9 @@ public static class Extensions
             http.AddServiceDiscovery();
         });
 
+        // Add Serilog configuration
+        builder.AddSerilog();
+
         // Uncomment the following to restrict the allowed schemes for service discovery.
         // builder.Services.Configure<ServiceDiscoveryOptions>(options =>
         // {
@@ -42,7 +47,7 @@ public static class Extensions
         return builder;
     }
 
-    public static IHostApplicationBuilder ConfigureOpenTelemetry(this IHostApplicationBuilder builder, Action<OpenTelemetry.Resources.ResourceBuilder> configureOtelResource, Action<MeterProviderBuilder>? configureMetrics = null)
+    public static IHostApplicationBuilder ConfigureOpenTelemetry(this IHostApplicationBuilder builder, Action<OpenTelemetry.Resources.ResourceBuilder>? configureOtelResource = null, Action<MeterProviderBuilder>? configureMetrics = null)
     {
         builder.Logging.AddOpenTelemetry(logging =>
         {
@@ -51,15 +56,17 @@ public static class Extensions
         });
 
         builder.Services.AddOpenTelemetry()
-            .ConfigureResource(configureOtelResource)
+            .ConfigureResource(configureOtelResource ?? (r => { }))
             .WithMetrics(metrics =>
             {
                 metrics.AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddRuntimeInstrumentation()
                     .AddMeter("Marten", "Microsoft.Orleans", "MonoStore.Cart.Api", "MonoStore.Cart.Host", "MonoStore.Cart.Module", "MonoStore.Product.Host", "MonoStore.Product.Module");
-                configureMetrics(metrics);
-
+                if (configureMetrics is not null)
+                {
+                    configureMetrics(metrics);
+                }
             })
             .WithTracing(tracing =>
             {
@@ -70,7 +77,7 @@ public static class Extensions
                 tracing.AddAspNetCoreInstrumentation()
                     // Uncomment the following line to enable gRPC instrumentation (requires the OpenTelemetry.Instrumentation.GrpcNetClient package)
                     //.AddGrpcClientInstrumentation()
-                    .AddHttpClientInstrumentation()
+                    //.AddHttpClientInstrumentation()
                     // .AddSource("Microsoft.Orleans.Runtime")
                     .AddSource("Microsoft.Orleans.Application")
                     .AddSource("Marten")
@@ -125,6 +132,48 @@ public static class Extensions
                 Predicate = r => r.Tags.Contains("live")
             });
         }
+
+        return app;
+    }
+
+    // Add Serilog extension method
+    public static IHostApplicationBuilder AddSerilog(this IHostApplicationBuilder builder)
+    {
+        // Configure Serilog
+        builder.Services.AddSerilog((services, loggerConfiguration) =>
+        {
+            var templateText = "[{@t:HH:mm:ss} {@l:u3}] {@m}\n{@x}";
+
+            loggerConfiguration
+                .ReadFrom.Configuration(builder.Configuration)
+                .Enrich.FromLogContext()
+                .WriteTo.Console(new ExpressionTemplate(templateText, theme: TemplateTheme.Code))
+                .MinimumLevel.Override("Microsoft.AspNetCore", Serilog.Events.LogEventLevel.Warning);
+
+            // Add OpenTelemetry sink if OTLP endpoint is configured
+            if (!string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]))
+            {
+                loggerConfiguration.WriteTo.OpenTelemetry();
+            }
+        });
+
+        return builder;
+    }
+
+    // Add helper method to configure Serilog in the WebApplication pipeline
+    public static WebApplication UseSerilogDefaults(this WebApplication app)
+    {
+        // Add Serilog request logging middleware
+        app.UseSerilogRequestLogging(
+            options =>
+            {
+                options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+                {
+                    diagnosticContext.Set("RequestHost", httpContext?.Request?.Host.Value ?? "");
+                    diagnosticContext.Set("RequestScheme", httpContext?.Request?.Scheme ?? "");
+                };
+            }
+        );
 
         return app;
     }

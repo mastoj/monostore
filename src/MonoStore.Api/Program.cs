@@ -31,50 +31,52 @@ try
 
     var attributes = builder.Configuration["OTEL_RESOURCE_ATTRIBUTES"]?.Split(',').Select(s => s.Split("=")) ?? [];
     var serviceInstanceId = attributes.FirstOrDefault(y => y[0].Contains("service.instance.id"))?[1] ?? throw new Exception("Service instance id not found");
-    builder.AddServiceDefaults(c =>
-    {
-        c.AddService(serviceName, serviceInstanceId: serviceInstanceId);
-    }, cm =>
-    {
-        cm.AddMeter(DiagnosticConfig.GetMeter(serviceName).Name);
-    });
+    builder.AddServiceDefaults();
+    // builder.AddServiceDefaults(c =>
+    // {
+    //     c.AddService(serviceName, serviceInstanceId: serviceInstanceId);
+    // }, cm =>
+    // {
+    //     cm.AddMeter(DiagnosticConfig.GetMeter(serviceName).Name);
+    // }
+    // );
 
     builder.Services.AddEndpointsApiExplorer();
 
-    builder.Services.AddSerilog((services, lc) =>
-    {
-        lc.ReadFrom.Configuration(config)
-            .ReadFrom.Services(services)
-            .Enrich.FromLogContext()
-            .WriteTo.OpenTelemetry(options =>
-            {
-                //options.Endpoint = "http://monostore-jaeger:4318";
-                options.Endpoint = builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"] ?? "http://monostore-jaeger:4317";
-                Console.WriteLine($"OTLP Endpoint: {options.Endpoint}");
-                var headers = builder.Configuration["OTEL_EXPORTER_OTLP_HEADERS"]?.Split(',') ?? [];
-                foreach (var header in headers)
-                {
-                    Console.WriteLine($"Header: {header}");
-                    var (key, value) = header.Split('=') switch
-                    {
-                    [string k, string v] => (k, v),
-                        var v => throw new Exception($"Invalid header format {v}")
-                    };
-                    options.Headers.Add(key, value);
-                }
-                options.ResourceAttributes.Add("service.name", serviceName);
-                // options.ResourceAttributes.Add("service.name", serviceName);
-                //To remove the duplicate issue, we can use the below code to get the key and value from the configuration
-                foreach (var attribute in attributes)
-                {
-                    options.ResourceAttributes.Add(attribute[0], attribute[1]);
-                }
-            })
-            .WriteTo.Console(new ExpressionTemplate(
-                // Include trace and span ids when present.
-                "[{@t:HH:mm:ss} {@l:u3}{#if @tr is not null} ({substring(@tr,0,4)}:{substring(@sp,0,4)}){#end}] {@m}\n{@x}",
-                theme: TemplateTheme.Code));
-    });
+    // builder.Services.AddSerilog((services, lc) =>
+    // {
+    //     lc.ReadFrom.Configuration(config)
+    //         .ReadFrom.Services(services)
+    //         .Enrich.FromLogContext()
+    //         .WriteTo.OpenTelemetry(options =>
+    //         {
+    //             //options.Endpoint = "http://monostore-jaeger:4318";
+    //             options.Endpoint = builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"] ?? "http://monostore-jaeger:4317";
+    //             Console.WriteLine($"OTLP Endpoint: {options.Endpoint}");
+    //             var headers = builder.Configuration["OTEL_EXPORTER_OTLP_HEADERS"]?.Split(',') ?? [];
+    //             foreach (var header in headers)
+    //             {
+    //                 Console.WriteLine($"Header: {header}");
+    //                 var (key, value) = header.Split('=') switch
+    //                 {
+    //                     [string k, string v] => (k, v),
+    //                     var v => throw new Exception($"Invalid header format {v}")
+    //                 };
+    //                 options.Headers.Add(key, value);
+    //             }
+    //             options.ResourceAttributes.Add("service.name", serviceName);
+    //             // options.ResourceAttributes.Add("service.name", serviceName);
+    //             //To remove the duplicate issue, we can use the below code to get the key and value from the configuration
+    //             foreach (var attribute in attributes)
+    //             {
+    //                 options.ResourceAttributes.Add(attribute[0], attribute[1]);
+    //             }
+    //         })
+    //         .WriteTo.Console(new ExpressionTemplate(
+    //             // Include trace and span ids when present.
+    //             "[{@t:HH:mm:ss} {@l:u3}{#if @tr is not null} ({substring(@tr,0,4)}:{substring(@sp,0,4)}){#end}] {@m}\n{@x}",
+    //             theme: TemplateTheme.Code));
+    // });
 
     // Add services to the container.
     builder.Services.AddRazorPages();
@@ -87,11 +89,16 @@ try
         builder.AddActivityPropagation();
     });
 
+    // builder.Host.UseOrleansClient((ctx, builder) =>
+    // {
+    //     builder.AddActivityPropagation();
+    // });
+
     builder.AddCart();
     builder.AddCheckout();
 
     var app = builder.Build();
-    app.UseSerilogRequestLogging();
+    app.UseSerilogDefaults();
 
     #region Endpoints
     app.UseCart("cart");
