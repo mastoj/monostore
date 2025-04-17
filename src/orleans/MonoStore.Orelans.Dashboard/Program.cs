@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 var serviceName = builder.Configuration["OTEL_RESOURCE_NAME"] ?? "orleans-dashboard";
 var serviceInstanceId = builder.Configuration["OTEL_RESOURCE_ATTRIBUTES"]?.Split('=') switch
 {
-[string k, string v] => v,
+  [string k, string v] => v,
   _ => throw new Exception($"Invalid header format {builder.Configuration["OTEL_RESOURCE_ATTRIBUTES"]}")
 };
 
@@ -28,6 +28,11 @@ var app = builder.Build();
 
 app.Map("/dashboard", x => x.UseOrleansDashboard());
 
-app.MapGet("/", () => "Hello World!");
+// Redirect to the dashboard
+app.MapGet("/", async context =>
+{
+  context.Response.Redirect("/dashboard", true);
+  await Task.CompletedTask;
+});
 
 app.Run();
