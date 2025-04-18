@@ -28,7 +28,7 @@ export class DashboardClient {
 
   async getMetricDefinitions(): Promise<Metric[]> {
     // In a real application, this would be an API call
-    return metrics;
+    return metrics as Metric[];
   }
 
   async getChartData(): Promise<ChartDataPoint[]> {

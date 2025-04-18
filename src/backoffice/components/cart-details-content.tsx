@@ -9,8 +9,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { PurchaseOrder } from "@/data/mock-carts";
-import { CartData, Change } from "@/lib/monostore-api/monostore-api";
+import {
+  CartData,
+  Change,
+  PurchaseOrder,
+} from "@/lib/monostore-api/monostore-api";
+import { PaginatedResponse } from "@/lib/monostore-api/purchase-order-client";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -19,7 +23,7 @@ import { HistoryList } from "./history-list";
 interface CartDetailsContentProps {
   cart: CartData;
   cartEvents: Change[];
-  purchaseOrders: PurchaseOrder[];
+  purchaseOrders: PaginatedResponse<PurchaseOrder>;
 }
 
 export default function CartDetailsContent({
@@ -129,7 +133,7 @@ export default function CartDetailsContent({
           <CardTitle>Associated Purchase Orders</CardTitle>
         </CardHeader>
         <CardContent>
-          {purchaseOrders.length > 0 ? (
+          {purchaseOrders.data.length > 0 ? (
             <Table>
               <TableHeader>
                 <TableRow>
@@ -140,7 +144,7 @@ export default function CartDetailsContent({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {purchaseOrders.map((order) => (
+                {purchaseOrders.data.map((order) => (
                   <TableRow
                     key={order.id}
                     className="cursor-pointer hover:bg-gray-100 transition-colors"
@@ -152,9 +156,9 @@ export default function CartDetailsContent({
                         -4
                       )}`}</span>
                     </TableCell>
-                    <TableCell>{order.status}</TableCell>
+                    <TableCell>[[STATUS]]</TableCell>
                     <TableCell>
-                      {new Date(order.updatedAt).toLocaleString()}
+                      {new Date().toLocaleString()} [[LAST_UPDATED]]
                     </TableCell>
                     <TableCell className="w-4">
                       <ChevronRight className="h-4 w-4 text-gray-400" />

@@ -60,14 +60,26 @@ builder.AddProject<Projects.MonoStore_Orelans_Dashboard>("orleans-dashboard")
   .WithReference(orleans)
   .WithExternalHttpEndpoints();
 
-builder.AddNpmApp("monostore-backoffice", "../../backoffice", "dev")
-  .WithHttpEndpoint(env: "PORT")
-  .WithEnvironment("NEXT_OTEL_VERBOSE", "1")
-  .WithEnvironment("OTEL_LOG_LEVEL", "debug")
-  .WithEnvironment("NODE_TLS_REJECT_UNAUTHORIZED", "0")
-  .WithReference(api)
-  .WaitFor(api)
-  .WithExternalHttpEndpoints();
+if (builder.ExecutionContext.IsPublishMode)
+{
+  // Add a Dockerfile app, named "frontend", at "../frontend"
+  builder.AddDockerfile("monostore-backoffice", "../../backoffice")
+      // allow Aspire to control the port via env variable PORT and target port 3000
+      .WithHttpEndpoint(env: "PORT", targetPort: 3000)
+      // give the app an extenral endpoint
+      .WithExternalHttpEndpoints();
+}
+else
+{
+  builder.AddNpmApp("monostore-backoffice", "../../backoffice", "dev")
+    .WithHttpEndpoint(env: "PORT")
+    .WithEnvironment("NEXT_OTEL_VERBOSE", "1")
+    .WithEnvironment("OTEL_LOG_LEVEL", "debug")
+    .WithEnvironment("NODE_TLS_REJECT_UNAUTHORIZED", "0")
+    .WithReference(api)
+    .WaitFor(api)
+    .WithExternalHttpEndpoints();
+}
 
 // builder.AddProject<Projects.Dummy>("dummy");
 

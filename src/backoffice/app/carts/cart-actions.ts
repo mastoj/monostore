@@ -1,7 +1,7 @@
 "use server";
 
 const cartBaseUrl = process.env["services__monostore-api__http__0"];
-export const createCart = async (sessionId: string, formData: FormData) => {
+export const createCart = async (sessionId: string) => {
   const url = new URL(`${cartBaseUrl}/cart`);
   console.log("==> Creating cart with session ID", sessionId, url);
   const response = await fetch(url, {

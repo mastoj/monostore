@@ -403,3 +403,4 @@ sample_data/
 
 .DS_Store
 tmp/
+.azure
