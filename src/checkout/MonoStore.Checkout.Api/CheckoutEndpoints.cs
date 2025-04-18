@@ -54,7 +54,7 @@ public static class CheckoutEndpoints
       // DiagnosticConfig.CreateCartCounter.Add(1, new KeyValuePair<string, object?>("operatingChain", "OCNOELK"));
     }).Produces<GrainResult<PurchaseOrderData, CheckoutError>>();
 
-    routes.MapGet("/", async (ICheckoutStore checkoutStore, string operatingChain, string? userId, string? sessionId, string? sku, string? cartId, string? query) =>
+    routes.MapGet("/", async (ICheckoutStore checkoutStore, string operatingChain, string? userId, string? sessionId, string? sku, string? cartId, string? query, int? page = 1, int? pageSize = 50) =>
     {
       await using var session = checkoutStore.LightweightSession();
       var querySession = session.Query<PurchaseOrder>().Where(c => c.OperatingChain == operatingChain);
@@ -75,9 +75,33 @@ public static class CheckoutEndpoints
         querySession = querySession.Where(c => c.CartId == Guid.Parse(cartId));
       }
 
-      var carts = await querySession.ToListAsync();
-      return Results.Ok(carts);
-    }).Produces<List<PurchaseOrder>>();
+      // Apply pagination
+      var currentPage = Math.Max(page ?? 1, 1); // Ensure page is at least 1
+      var size = Math.Max(pageSize ?? 50, 1); // Ensure pageSize is at least 1
+      var skip = (currentPage - 1) * size;
+
+      // Get total count for pagination metadata
+      var totalCount = await querySession.CountAsync();
+
+      // Apply pagination to query
+      var paginatedQuery = querySession.Skip(skip).Take(size);
+
+      // Get the paginated results
+      var purchaseOrders = await paginatedQuery.ToListAsync();
+
+      // Return paginated results with pagination metadata
+      return Results.Ok(new
+      {
+        data = purchaseOrders,
+        pagination = new
+        {
+          currentPage,
+          pageSize = size,
+          totalItems = totalCount,
+          totalPages = (int)Math.Ceiling((double)totalCount / size)
+        }
+      });
+    }).Produces<object>();
 
     routes.MapGet("/{id}", async (IGrainFactory grainFactory, Guid id) =>
     {

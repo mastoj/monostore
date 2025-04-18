@@ -13,7 +13,7 @@ public static class Hosting
     Action doStuff = () =>
     {
 
-      var connectionString = $"{builder.Configuration.GetConnectionString(connectionStringName)};sslmode=prefer;CommandTimeout=300";
+      var connectionString = $"{builder.Configuration.GetConnectionString(connectionStringName)};sslmode=prefer;CommandTimeout=300;Pooling=true;MinPoolSize=1;MaxPoolSize=100";
       builder.Services
         .AddSingleton<IEventStore, MartenEventStore>();
       builder.Services.AddMarten(s =>

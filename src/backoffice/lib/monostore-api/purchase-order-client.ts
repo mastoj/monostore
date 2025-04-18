@@ -1,3 +1,4 @@
+"use server";
 import {
   Change,
   GrainResultOfPurchaseOrderDataAndCheckoutError,
@@ -6,22 +7,41 @@ import {
 
 const apiBaseUrl = `${process.env["services__monostore-api__http__0"]}/checkout`;
 
-export type getPurchaseOrderRequest = {
+export type PaginatedResponse<T> = {
+  data: T[];
+  pagination: {
+    currentPage: number;
+    pageSize: number;
+    totalItems: number;
+    totalPages: number;
+  };
+};
+
+export type GetPurchaseOrdersRequest = {
   operatingChain: string;
   cartId?: string;
+  page?: number;
+  pageSize?: number;
 };
+
 export const getPurchaseOrders = async ({
   operatingChain,
   cartId,
-}: getPurchaseOrderRequest) => {
+  page = 1,
+  pageSize = 50,
+}: GetPurchaseOrdersRequest): Promise<PaginatedResponse<PurchaseOrder>> => {
+  console.log("==> Base url: ", apiBaseUrl);
   const url = new URL(apiBaseUrl);
   url.searchParams.append("operatingChain", operatingChain);
   if (cartId) {
     url.searchParams.append("cartId", cartId);
   }
+  url.searchParams.append("page", page.toString());
+  url.searchParams.append("pageSize", pageSize.toString());
+
   const response = await fetch(url);
-  const purchaseOrders = await response.json();
-  return purchaseOrders satisfies PurchaseOrder[];
+  const result = await response.json();
+  return result as PaginatedResponse<PurchaseOrder>;
 };
 
 export const getPurchaseOrder = async (id: string) => {
