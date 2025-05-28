@@ -13,23 +13,9 @@ public static class Hosting
   {
     DotEnv.Load();
 
-    // var serviceName = builder.Configuration["OTEL_RESOURCE_NAME"] ?? defaultServiceName;
-
-    // var attributes = builder.Configuration["OTEL_RESOURCE_ATTRIBUTES"]?.Split(',').Select(s => s.Split("=")) ?? [];
-    // var serviceInstanceId = attributes.FirstOrDefault(y => y[0].Contains("service.instance.id"))?[1] ?? throw new Exception("Service instance id not found");
-
     builder.AddServiceDefaults();
-
-    // builder.AddServiceDefaults(c =>
-    //     {
-    //       c.AddService(serviceName, serviceInstanceId: serviceInstanceId);
-    //     }, cm =>
-    //     {
-    //       cm.AddMeter(DiagnosticConfig.GetMeter(serviceName).Name);
-    //     });
     builder.AddKeyedAzureTableClient("clustering", settings => settings.DisableTracing = true);
     builder.AddKeyedAzureBlobClient("grainstate", settings => settings.DisableTracing = true);
-
     builder.UseOrleans(siloBuilder =>
     {
       siloBuilder
