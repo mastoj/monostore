@@ -398,9 +398,12 @@ FodyWeavers.xsd
 *.sln.iml
 
 .env
+*.env
+*azurite*
 
 sample_data/
 
 .DS_Store
 tmp/
 .azure
+publish/
