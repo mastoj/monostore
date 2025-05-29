@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Monostore.ServiceDefaults;
-using MonoStore.Product.Contracts;
-using MonoStore.Product.Contracts.Grains;
+using MonoStore.Contracts.Product;
+using MonoStore.Contracts.Product.Grains;
 using Orleans.Streams;
 
 namespace MonoStore.Product.Module;

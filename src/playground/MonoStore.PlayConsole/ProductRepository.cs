@@ -1,5 +1,5 @@
 using Microsoft.Azure.Cosmos;
-using MonoStore.Product.Contracts;
+using MonoStore.Contracts.Product;
 
 namespace MonoStore.PlayConsole;
 

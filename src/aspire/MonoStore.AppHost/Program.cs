@@ -55,7 +55,7 @@ builder.AddProject<Projects.MonoStore_Cart_Module>("monostore-cart-module")
   .WaitFor(postgres)
     .WithReference(orleans)
     .WithReplicas(3)
-    .WithComputeEnvironment(containerApps)
+//    .WithComputeEnvironment(containerApps)
     .WithComputeEnvironment(compose);
 
 
@@ -72,8 +72,8 @@ builder.AddProject<Projects.MonoStore_Product_Module>("monostore-product-module"
   .WithReference(orleans)
   .WithReplicas(3)
   .WithEnvironment("COSMOS_CONNECTION_STRING", Environment.GetEnvironmentVariable("COSMOS_CONNECTION_STRING"))
-  .WithComputeEnvironment(compose)
-  .WithComputeEnvironment(containerApps);
+//  .WithComputeEnvironment(containerApps)
+  .WithComputeEnvironment(compose);
 
 
 builder.AddProject<Projects.MonoStore_Orelans_Dashboard>("orleans-dashboard")

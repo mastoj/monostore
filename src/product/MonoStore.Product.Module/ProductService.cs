@@ -1,6 +1,6 @@
 ﻿using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Logging;
-using MonoStore.Product.Contracts;
+using MonoStore.Contracts.Product;
 
 namespace MonoStore.Product.Module;
 

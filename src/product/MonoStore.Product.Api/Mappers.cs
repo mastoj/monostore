@@ -1,5 +1,5 @@
 using System.Globalization;
-using MonoStore.Product.Contracts;
+using MonoStore.Contracts.Product;
 
 namespace MonoStore.Product.Api;
 

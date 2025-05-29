@@ -13,8 +13,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\aspire\MonoStore.ServiceDefaults\MonoStore.ServiceDefaults.csproj" />
     <ProjectReference Include="..\..\infrastructure\Monostore.Infrastructure.Hosting\Monostore.Infrastructure.Hosting.csproj" />
-    <ProjectReference Include="..\..\cart\MonoStore.Cart.Contracts\MonoStore.Cart.Contracts.csproj" />
-    <ProjectReference Include="..\..\checkout\MonoStore.Checkout.Contracts\MonoStore.Checkout.Contracts.csproj" />
-    <ProjectReference Include="..\MonoStore.Product.Contracts\MonoStore.Product.Contracts.csproj" />
+    <ProjectReference Include="..\..\MonoStore.Contracts\MonoStore.Contracts.csproj" />
   </ItemGroup>
 </Project>

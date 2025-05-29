@@ -100,6 +100,9 @@ try
     var app = builder.Build();
     app.UseSerilogDefaults();
 
+
+    app.MapGet("/ping", () => "pong");
+
     #region Endpoints
     app.UseCart("cart");
     app.UseProduct("product");

@@ -8,6 +8,6 @@
     <PackageReference Include="Microsoft.Orleans.Sdk" Version="9.1.2" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\infrastructure\Monostore.Orleans\Monostore.Orleans.csproj" />
+    <ProjectReference Include="..\infrastructure\Monostore.Orleans\Monostore.Orleans.csproj" />
   </ItemGroup>
 </Project>

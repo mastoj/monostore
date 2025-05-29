@@ -4,18 +4,18 @@ using System.Diagnostics.Metrics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Http;
-using MonoStore.Cart.Contracts.Grains;
+using MonoStore.Contracts.Cart.Grains;
 using Orleans;
 // using Microsoft.AspNetCore.Http;
-using MonoStore.Checkout.Contracts.Requests;
-using Monostore.Checkout.Contracts.Grains;
-using MonoStore.Checkout.Contracts;
-using MonoStore.Cart.Contracts.Requests;
+using MonoStore.Contracts.Checkout.Requests;
+using MonoStore.Contracts.Checkout;
+using MonoStore.Contracts.Cart.Requests;
 using Marten;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using MonoStore.Checkout.Domain;
 using Monostore.Orleans.Types;
+using MonoStore.Contracts.Checkout.Grains;
 
 public static class CheckoutEndpoints
 {

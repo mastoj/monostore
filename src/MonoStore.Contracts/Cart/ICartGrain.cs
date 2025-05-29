@@ -1,8 +1,8 @@
-using MonoStore.Cart.Contracts.Requests;
-using MonoStore.Cart.Contracts.Dtos;
+using MonoStore.Contracts.Cart.Requests;
+using MonoStore.Contracts.Cart.Dtos;
 using Monostore.Orleans.Types;
 
-namespace MonoStore.Cart.Contracts.Grains;
+namespace MonoStore.Contracts.Cart.Grains;
 
 public enum CartErrorType
 {

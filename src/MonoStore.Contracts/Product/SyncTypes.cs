@@ -1,4 +1,4 @@
-namespace MonoStore.Product.Contracts;
+namespace MonoStore.Contracts.Product;
 
 [GenerateSerializer, Alias(nameof(GlobalTradeItemNumbersDto))]
 public record class GlobalTradeItemNumbersDto

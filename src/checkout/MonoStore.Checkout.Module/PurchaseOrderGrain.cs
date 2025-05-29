@@ -1,6 +1,6 @@
-﻿using Monostore.Checkout.Contracts.Grains;
+﻿using MonoStore.Contracts.Checkout.Grains;
 using Monostore.Orleans.Types;
-using MonoStore.Checkout.Contracts;
+using MonoStore.Contracts.Checkout;
 using MonoStore.Checkout.Domain;
 using MonoStore.Marten;
 using static MonoStore.Checkout.Domain.CheckoutService;

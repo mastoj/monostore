@@ -1,7 +1,7 @@
 using Monostore.Orleans.Types;
-using MonoStore.Checkout.Contracts;
+using MonoStore.Contracts.Checkout;
 
-namespace Monostore.Checkout.Contracts.Grains;
+namespace MonoStore.Contracts.Checkout.Grains;
 
 public enum CheckoutErrorType
 {

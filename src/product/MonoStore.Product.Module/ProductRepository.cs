@@ -1,7 +1,7 @@
 namespace MonoStore.Product.Module;
 
 using Microsoft.Azure.Cosmos;
-using MonoStore.Product.Contracts;
+using MonoStore.Contracts.Product;
 
 public class ProductRepository(CosmosClient client)
 {

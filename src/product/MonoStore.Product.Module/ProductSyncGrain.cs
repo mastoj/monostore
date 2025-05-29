@@ -3,7 +3,7 @@ using MonoStore.Product.Module;
 using Orleans.Streams;
 using Orleans.Utilities;
 
-namespace MonoStore.Product.Contracts.Grains
+namespace MonoStore.Contracts.Product.Grains
 {
   public class ProductSyncGrain : Grain, IProductSyncGrain
   {

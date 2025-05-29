@@ -1,5 +1,4 @@
-using MonoStore.Checkout.Contracts;
-using MonoStore.Checkout.Domain;
+using MonoStore.Contracts.Checkout;
 
 namespace MonoStore.Checkout.Domain;
 

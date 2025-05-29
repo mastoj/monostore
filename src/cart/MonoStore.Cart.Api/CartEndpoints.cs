@@ -5,17 +5,17 @@ using System.Diagnostics.Metrics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Http;
-using MonoStore.Cart.Contracts.Grains;
+using MonoStore.Contracts.Cart.Grains;
 using Orleans;
-using MonoStore.Product.Contracts.Grains;
-using MonoStore.Cart.Contracts.Requests;
+using MonoStore.Contracts.Product.Grains;
+using MonoStore.Contracts.Cart.Requests;
 using Microsoft.Extensions.Logging;
 using Marten;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using MonoStore.Cart.Domain;
 using JasperFx.CodeGeneration.Model;
-using MonoStore.Cart.Contracts.Dtos;
+using MonoStore.Contracts.Cart.Dtos;
 using Monostore.Orleans.Types;
 
 public static class CartEndpoints

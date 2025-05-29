@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <ProjectReference Include="..\MonoStore.Checkout.Contracts\MonoStore.Checkout.Contracts.csproj" />
+    <ProjectReference Include="..\..\MonoStore.Contracts\MonoStore.Contracts.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNext" Version="5.20.0" />

@@ -1,4 +1,4 @@
-namespace MonoStore.Cart.Contracts.Dtos;
+namespace MonoStore.Contracts.Cart.Dtos;
 
 public enum CartStatus
 {

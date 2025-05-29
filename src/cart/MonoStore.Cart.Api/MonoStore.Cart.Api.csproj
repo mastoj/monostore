@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\infrastructure\Monostore.Contracts\Monostore.Contracts.csproj" />
+    <ProjectReference Include="..\..\infrastructure\Monostore.Infrastructure.Contracts\Monostore.Infrastructure.Contracts.csproj" />
     <ProjectReference Include="..\MonoStore.Cart.Domain\MonoStore.Cart.Domain.csproj" />
   </ItemGroup>
 

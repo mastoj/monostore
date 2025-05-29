@@ -1,6 +1,6 @@
-using MonoStore.Cart.Contracts.Dtos;
+using MonoStore.Contracts.Cart.Dtos;
 
-namespace MonoStore.Cart.Contracts.Exceptions;
+namespace MonoStore.Contracts.Cart.Exceptions;
 
 public class InvalidCartStatusException : Exception
 {

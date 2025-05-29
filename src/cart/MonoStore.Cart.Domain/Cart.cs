@@ -1,5 +1,5 @@
-using MonoStore.Cart.Contracts;
-using MonoStore.Cart.Contracts.Dtos;
+using MonoStore.Contracts.Cart;
+using MonoStore.Contracts.Cart.Dtos;
 
 namespace MonoStore.Cart.Domain;
 

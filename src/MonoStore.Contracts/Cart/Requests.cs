@@ -1,6 +1,6 @@
-using MonoStore.Cart.Contracts.Dtos;
+using MonoStore.Contracts.Cart.Dtos;
 
-namespace MonoStore.Cart.Contracts.Requests;
+namespace MonoStore.Contracts.Cart.Requests;
 
 [GenerateSerializer]
 public record CreateCartRequest(string OperatingChain);

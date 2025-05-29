@@ -1,5 +1,5 @@
 using DotNext;
-using Monostore.Checkout.Contracts.Grains;
+using MonoStore.Contracts.Checkout.Grains;
 
 namespace MonoStore.Checkout.Domain;
 

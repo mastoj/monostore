@@ -1,11 +1,11 @@
 using Monostore.Orleans.Types;
 using Monostore.ServiceDefaults;
-using MonoStore.Cart.Contracts.Commands;
-using MonoStore.Cart.Contracts.Dtos;
-using MonoStore.Cart.Contracts.Grains;
-using MonoStore.Cart.Contracts.Requests;
+using MonoStore.Contracts.Cart.Commands;
+using MonoStore.Contracts.Cart.Dtos;
+using MonoStore.Contracts.Cart.Grains;
+using MonoStore.Contracts.Cart.Requests;
 using MonoStore.Marten;
-using MonoStore.Product.Contracts.Grains;
+using MonoStore.Contracts.Product.Grains;
 using static MonoStore.Cart.Domain.CartService;
 
 namespace MonoStore.Cart.Module;
@@ -91,7 +91,7 @@ public sealed class CartGrain
       throw new Exception("Product price not found");
     }
     var addItem = new AddItem(new CartItem(
-      new Contracts.Dtos.Product(product.ArticleNumber, product.Name ?? "", product.Price.Price, product.Price.PriceExclVat, product.BeforePrice?.Price, product.BeforePrice?.PriceExclVat, product.ProductUrl ?? "", product.ImageUrl ?? ""),
+      new Product(product.ArticleNumber, product.Name ?? "", product.Price.Price, product.Price.PriceExclVat, product.BeforePrice?.Price, product.BeforePrice?.PriceExclVat, product.ProductUrl ?? "", product.ImageUrl ?? ""),
       1
     ));
 

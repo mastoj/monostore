@@ -2,8 +2,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using MonoStore.Product.Contracts;
-using MonoStore.Product.Contracts.Grains;
+using MonoStore.Contracts.Product;
+using MonoStore.Contracts.Product.Grains;
 
 namespace MonoStore.Product.Api;
 

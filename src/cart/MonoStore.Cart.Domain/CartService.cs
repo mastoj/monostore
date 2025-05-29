@@ -1,8 +1,8 @@
 using DotNext;
-using MonoStore.Cart.Contracts.Commands;
-using MonoStore.Cart.Contracts.Dtos;
-using MonoStore.Cart.Contracts.Exceptions;
-using MonoStore.Cart.Contracts.Requests;
+using MonoStore.Contracts.Cart.Commands;
+using MonoStore.Contracts.Cart.Dtos;
+using MonoStore.Contracts.Cart.Exceptions;
+using MonoStore.Contracts.Cart.Requests;
 
 namespace MonoStore.Cart.Domain;
 

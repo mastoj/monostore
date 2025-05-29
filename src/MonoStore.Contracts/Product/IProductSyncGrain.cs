@@ -1,4 +1,4 @@
-namespace MonoStore.Product.Contracts.Grains;
+namespace MonoStore.Contracts.Product.Grains;
 
 public interface IProductSyncGrain : IGrainWithStringKey
 {

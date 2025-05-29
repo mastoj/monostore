@@ -1,4 +1,4 @@
-namespace MonoStore.Checkout.Contracts;
+namespace MonoStore.Contracts.Checkout;
 
 [GenerateSerializer]
 public record Product(string Id, string Name, decimal Price, decimal PriceExVat, string Url, string PrimaryImageUrl);
