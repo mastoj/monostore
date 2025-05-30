@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Worker">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -11,8 +11,6 @@
     <PackageReference Include="OrleansDashboard" Version="8.2.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\aspire\MonoStore.ServiceDefaults\MonoStore.ServiceDefaults.csproj" />
-    <ProjectReference Include="..\..\infrastructure\Monostore.Infrastructure.Hosting\Monostore.Infrastructure.Hosting.csproj" />
     <ProjectReference Include="..\..\MonoStore.Contracts\MonoStore.Contracts.csproj" />
   </ItemGroup>
 </Project>

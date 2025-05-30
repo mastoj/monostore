@@ -1,23 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <ItemGroup>
-      <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Marten" Version="7.39.5" />
     <PackageReference Include="Microsoft.Orleans.Sdk" Version="9.1.2" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\infrastructure\Monostore.Infrastructure.Contracts\Monostore.Infrastructure.Contracts.csproj" />
     <ProjectReference Include="..\MonoStore.Cart.Domain\MonoStore.Cart.Domain.csproj" />
+    <ProjectReference Include="..\..\infrastructure\MonoStore.Marten\MonoStore.Marten.csproj" />
   </ItemGroup>
-
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
 </Project>

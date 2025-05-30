@@ -8,7 +8,7 @@ namespace Microsoft.Extensions.Hosting;
 
 public static class Hosting
 {
-  public static HostApplicationBuilder UseMartenEventStore(this HostApplicationBuilder builder, string connectionStringName, string databaseSchemaName, Func<StoreOptions, StoreOptions>? storeOptionsConfig = null)
+  public static IHostApplicationBuilder UseMartenEventStore(this IHostApplicationBuilder builder, string connectionStringName, string databaseSchemaName, Func<StoreOptions, StoreOptions>? storeOptionsConfig = null)
   {
     Action doStuff = () =>
     {

@@ -1,12 +1,12 @@
-﻿using MonoStore.Contracts.Checkout.Grains;
+using MonoStore.Contracts.Checkout.Grains;
 using Monostore.Orleans.Types;
 using MonoStore.Contracts.Checkout;
-using MonoStore.Checkout.Domain;
 using MonoStore.Marten;
 using static MonoStore.Checkout.Domain.CheckoutService;
+using Microsoft.Extensions.Logging;
 
 
-namespace MonoStore.Checkout.Module;
+namespace MonoStore.Checkout.Domain;
 
 internal static class Mappers
 {

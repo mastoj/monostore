@@ -10,13 +10,13 @@ using Orleans;
 using MonoStore.Contracts.Product.Grains;
 using MonoStore.Contracts.Cart.Requests;
 using Microsoft.Extensions.Logging;
-using Marten;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using MonoStore.Cart.Domain;
-using JasperFx.CodeGeneration.Model;
 using MonoStore.Contracts.Cart.Dtos;
 using Monostore.Orleans.Types;
+using global::Marten; // Add this line with global:: prefix
+
 
 public static class CartEndpoints
 {
@@ -165,7 +165,7 @@ public static class CartEndpoints
   public static T AddCart<T>(this T builder) where T : IHostApplicationBuilder
   {
     var connectionStringName = "monostorepg";
-    var databaseSchemaName = "cart";
+    var databaseSchemaName = "monostore";
     var connectionString = $"{builder.Configuration.GetConnectionString(connectionStringName)};sslmode=prefer;CommandTimeout=300";
 
     // builder.Services.AddSingleton<ICartStore, ICartStore>();
@@ -192,5 +192,3 @@ public static class CartEndpoints
     return app;
   }
 }
-
-public interface ICartStore : IDocumentStore { }

@@ -46,35 +46,19 @@ var api = builder.AddProject<Projects.MonoStore_Api>("monostore-api")
   .WithReference(postgres)
   .WaitFor(postgres)
   .WithExternalHttpEndpoints()
+  .WithReplicas(2)
   //.WithComputeEnvironment(containerApps)
   .WithComputeEnvironment(compose);
 
 
-builder.AddProject<Projects.MonoStore_Cart_Module>("monostore-cart-module")
-  .WithReference(postgres)
-  .WaitFor(postgres)
-    .WithReference(orleans)
-    .WithReplicas(3)
-//    .WithComputeEnvironment(containerApps)
-    .WithComputeEnvironment(compose);
-
-
-builder.AddProject<Projects.MonoStore_Checkout_Module>("monostore-checkout-module")
-  .WithReference(postgres)
-  .WaitFor(postgres)
-  .WithReference(orleans)
-  .WithReplicas(2)
-//  .WithComputeEnvironment(containerApps)
-  .WithComputeEnvironment(compose);
-
-
-builder.AddProject<Projects.MonoStore_Product_Module>("monostore-product-module")
-  .WithReference(orleans)
-  .WithReplicas(3)
+builder.AddProject<Projects.MonoStore_Service>("monostore-service")
   .WithEnvironment("COSMOS_CONNECTION_STRING", Environment.GetEnvironmentVariable("COSMOS_CONNECTION_STRING"))
-//  .WithComputeEnvironment(containerApps)
+  .WithReference(postgres)
+  .WaitFor(postgres)
+  .WithReference(orleans)
+  .WithReplicas(6)
+//    .WithComputeEnvironment(containerApps)
   .WithComputeEnvironment(compose);
-
 
 builder.AddProject<Projects.MonoStore_Orelans_Dashboard>("orleans-dashboard")
   .WithReference(orleans)

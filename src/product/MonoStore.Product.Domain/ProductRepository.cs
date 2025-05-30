@@ -1,4 +1,4 @@
-namespace MonoStore.Product.Module;
+namespace MonoStore.Product.Domain;
 
 using Microsoft.Azure.Cosmos;
 using MonoStore.Contracts.Product;

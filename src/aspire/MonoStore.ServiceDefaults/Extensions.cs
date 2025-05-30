@@ -62,7 +62,7 @@ public static class Extensions
                 metrics.AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddRuntimeInstrumentation()
-                    .AddMeter("Marten", "Microsoft.Orleans", "MonoStore.Cart.Api", "MonoStore.Cart.Host", "MonoStore.Cart.Module", "MonoStore.Product.Host", "MonoStore.Product.Module");
+                    .AddMeter("Marten", "Microsoft.Orleans", "MonoStore.Cart.Api", "MonoStore.Cart.Host", "MonoStore.Cart.Module", "MonoStore.Product.Host", "MonoStore.Product.Domain");
                 if (configureMetrics is not null)
                 {
                     configureMetrics(metrics);

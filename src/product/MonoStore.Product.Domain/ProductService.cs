@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using MonoStore.Contracts.Product;
 
-namespace MonoStore.Product.Module;
+namespace MonoStore.Product.Domain;
 
 public record ProductCosmosDto(
   string id,
