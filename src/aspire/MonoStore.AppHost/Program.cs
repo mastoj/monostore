@@ -58,16 +58,6 @@ builder.AddProject<Projects.MonoStore_Service>("monostore-service")
 //    .WithComputeEnvironment(containerApps)
     .WithComputeEnvironment(compose);
 
-
-builder.AddProject<Projects.MonoStore_Checkout_Module>("monostore-checkout-module")
-  .WithReference(postgres)
-  .WaitFor(postgres)
-  .WithReference(orleans)
-  .WithReplicas(2)
-//  .WithComputeEnvironment(containerApps)
-  .WithComputeEnvironment(compose);
-
-
 builder.AddProject<Projects.MonoStore_Product_Module>("monostore-product-module")
   .WithReference(orleans)
   .WithReplicas(3)

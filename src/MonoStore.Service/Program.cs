@@ -1,9 +1,14 @@
 using MonoStore.Cart.Domain;
-
+using MonoStore.Checkout.Domain;
 
 var builder = Host.CreateApplicationBuilder(args).UseHosting("monostore-service");
 
-builder.UseCartService();
+builder.UseMartenEventStore("monostorepg", "monostore", so =>
+{
+  return so.AddCartProjections()
+    .AddCheckoutProjections();
+});
+
 
 // builder.UseMartenEventStore("monostorepg", "cart", so =>
 // {

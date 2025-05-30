@@ -165,7 +165,7 @@ public static class CartEndpoints
   public static T AddCart<T>(this T builder) where T : IHostApplicationBuilder
   {
     var connectionStringName = "monostorepg";
-    var databaseSchemaName = "cart";
+    var databaseSchemaName = "monostore";
     var connectionString = $"{builder.Configuration.GetConnectionString(connectionStringName)};sslmode=prefer;CommandTimeout=300";
 
     // builder.Services.AddSingleton<ICartStore, ICartStore>();
@@ -192,5 +192,3 @@ public static class CartEndpoints
     return app;
   }
 }
-
-public interface ICartStore : IDocumentStore { }

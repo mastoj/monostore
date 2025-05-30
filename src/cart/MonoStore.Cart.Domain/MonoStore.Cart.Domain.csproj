@@ -6,6 +6,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DotNext" Version="5.20.0" />
+    <PackageReference Include="Marten" Version="7.39.5" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\MonoStore.Contracts\MonoStore.Contracts.csproj" />

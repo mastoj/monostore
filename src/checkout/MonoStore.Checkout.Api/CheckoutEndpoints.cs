@@ -10,7 +10,7 @@ using Orleans;
 using MonoStore.Contracts.Checkout.Requests;
 using MonoStore.Contracts.Checkout;
 using MonoStore.Contracts.Cart.Requests;
-using Marten;
+using global::Marten;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using MonoStore.Checkout.Domain;
@@ -124,7 +124,7 @@ public static class CheckoutEndpoints
   public static T AddCheckout<T>(this T builder) where T : IHostApplicationBuilder
   {
     var connectionStringName = "monostorepg";
-    var databaseSchemaName = "checkout";
+    var databaseSchemaName = "monostore";
     var connectionString = $"{builder.Configuration.GetConnectionString(connectionStringName)};sslmode=prefer;CommandTimeout=300";
 
     builder.Services.AddMartenStore<ICheckoutStore>(s =>

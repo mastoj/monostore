@@ -1,9 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <ProjectReference Include="..\..\MonoStore.Contracts\MonoStore.Contracts.csproj" />
+    <ProjectReference Include="..\..\infrastructure\MonoStore.Marten\MonoStore.Marten.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNext" Version="5.20.0" />
+    <PackageReference Include="Marten" Version="7.39.5" />
   </ItemGroup>
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>

@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\infrastructure\Monostore.Infrastructure.Contracts\Monostore.Infrastructure.Contracts.csproj" />
     <ProjectReference Include="..\MonoStore.Cart.Domain\MonoStore.Cart.Domain.csproj" />
+    <ProjectReference Include="..\..\infrastructure\MonoStore.Marten\MonoStore.Marten.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
