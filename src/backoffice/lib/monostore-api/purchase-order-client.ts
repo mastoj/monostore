@@ -3,6 +3,7 @@ import {
   Change,
   GrainResultOfPurchaseOrderDataAndCheckoutError,
   PurchaseOrder,
+  PurchaseOrderData,
 } from "./monostore-api";
 
 const apiBaseUrl = `${process.env["services__monostore-api__http__0"]}/checkout`;
@@ -52,7 +53,7 @@ export const getPurchaseOrder = async (id: string) => {
   if (result.error) {
     throw new Error(result.error);
   }
-  return result.data satisfies PurchaseOrder[];
+  return result.data satisfies PurchaseOrderData;
 };
 
 export const getChanges = async (id: string) => {
