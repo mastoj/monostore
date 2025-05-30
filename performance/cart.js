@@ -1,7 +1,7 @@
 import http from "k6/http";
 export const options = {
-  vus: 64,
-  duration: "60s",
+  vus: 10,
+  duration: "180s",
 };
 
 const getRandomInt = (min, max) => {
@@ -29,7 +29,7 @@ const baseUrls = {
   local: "http://localhost:5170",
   prod: "https://monostore-api.whiteground-32f83688.northeurope.azurecontainerapps.io",
 };
-const environment = "docker";
+const environment = "local";
 const baseUrl = baseUrls[environment];
 
 export default function () {

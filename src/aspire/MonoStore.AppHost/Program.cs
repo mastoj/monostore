@@ -50,7 +50,7 @@ var api = builder.AddProject<Projects.MonoStore_Api>("monostore-api")
   .WithComputeEnvironment(compose);
 
 
-builder.AddProject<Projects.MonoStore_Cart_Module>("monostore-cart-module")
+builder.AddProject<Projects.MonoStore_Service>("monostore-service")
   .WithReference(postgres)
   .WaitFor(postgres)
     .WithReference(orleans)

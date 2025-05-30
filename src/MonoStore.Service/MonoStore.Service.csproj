@@ -11,10 +11,10 @@
     <PackageReference Include="OrleansDashboard" Version="8.2.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\infrastructure\MonoStore.Marten\MonoStore.Marten.csproj" />
-    <ProjectReference Include="..\..\aspire\MonoStore.ServiceDefaults\MonoStore.ServiceDefaults.csproj" />
-    <ProjectReference Include="..\..\infrastructure\Monostore.Infrastructure.Hosting\Monostore.Infrastructure.Hosting.csproj" />
-    <ProjectReference Include="..\..\MonoStore.Contracts\MonoStore.Contracts.csproj" />
-    <ProjectReference Include="..\MonoStore.Cart.Domain\MonoStore.Cart.Domain.csproj" />
+    <ProjectReference Include="..\infrastructure\MonoStore.Marten\MonoStore.Marten.csproj" />
+    <ProjectReference Include="..\aspire\MonoStore.ServiceDefaults\MonoStore.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\infrastructure\Monostore.Infrastructure.Hosting\Monostore.Infrastructure.Hosting.csproj" />
+    <ProjectReference Include="..\MonoStore.Contracts\MonoStore.Contracts.csproj" />
+    <ProjectReference Include="..\cart\MonoStore.Cart.Domain\MonoStore.Cart.Domain.csproj" />
   </ItemGroup>
 </Project>

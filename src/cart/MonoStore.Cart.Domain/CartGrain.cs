@@ -1,5 +1,4 @@
 using Monostore.Orleans.Types;
-using Monostore.ServiceDefaults;
 using MonoStore.Contracts.Cart.Commands;
 using MonoStore.Contracts.Cart.Dtos;
 using MonoStore.Contracts.Cart.Grains;
@@ -7,12 +6,13 @@ using MonoStore.Contracts.Cart.Requests;
 using MonoStore.Marten;
 using MonoStore.Contracts.Product.Grains;
 using static MonoStore.Cart.Domain.CartService;
+using Microsoft.Extensions.Logging;
 
-namespace MonoStore.Cart.Module;
+namespace MonoStore.Cart.Domain;
 
 internal static class Mappers
 {
-  internal static CartData AsContract(this Domain.Cart cart)
+  internal static CartData AsContract(this Cart cart)
   {
     // var totals = cart.Items.Aggregate((total: 0m, totalExVat: 0m, beforePrice: 0m, beforePriceExVat: 0m), (acc, item) =>
     // {
@@ -32,8 +32,8 @@ public sealed class CartGrain
   private IEventStore eventStore;
   private readonly ILogger<CartGrain> logger;
   private readonly IGrainFactory grains;
-  private Domain.Cart? _currentCart;
-  private Domain.Cart CurrentCart
+  private Cart? _currentCart;
+  private Cart CurrentCart
   {
     get => _currentCart ?? throw new InvalidOperationException("Cart not found");
     set
@@ -52,17 +52,17 @@ public sealed class CartGrain
 
   public override async Task OnActivateAsync(CancellationToken cancellationToken)
   {
-    DiagnosticConfig.CartHost.ActiveCartCounter.Add(1, new KeyValuePair<string, object?>("operatingChain", "OCNOELK"));
+    // DiagnosticConfig.CartHost.ActiveCartCounter.Add(1, new KeyValuePair<string, object?>("operatingChain", "OCNOELK"));
     logger.LogInformation("Activating {grainKey}", this.GetPrimaryKeyString());
     var id = Guid.Parse(this.GetPrimaryKeyString().Split("/")[1]);
-    _currentCart = await eventStore.GetState<Domain.Cart>(id, default);
+    _currentCart = await eventStore.GetState<Cart>(id, default);
     await base.OnActivateAsync(cancellationToken);
   }
 
   public override Task OnDeactivateAsync(DeactivationReason reason, CancellationToken cancellationToken)
   {
     logger.LogInformation("Deactivating {grainKey}", this.GetPrimaryKeyString());
-    DiagnosticConfig.CartHost.ActiveCartCounter.Add(-1, new KeyValuePair<string, object?>("operatingChain", "OCNOELK"));
+    // DiagnosticConfig.CartHost.ActiveCartCounter.Add(-1, new KeyValuePair<string, object?>("operatingChain", "OCNOELK"));
 
     return base.OnDeactivateAsync(reason, cancellationToken);
   }

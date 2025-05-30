@@ -14,15 +14,15 @@ WORKDIR /src
 # COPY ["src/product/MonoStore.Product.Contracts/MonoStore.Product.Contracts.csproj", "product/MonoStore.Product.Contracts/"]
 #RUN dotnet restore "cart/MonoStore.Cart.Module/MonoStore.Cart.Module.csproj"
 COPY ./src .
-WORKDIR "/src/cart/MonoStore.Cart.Module"
-RUN dotnet build "MonoStore.Cart.Module.csproj" -c Release -o /app/build
+WORKDIR "/src/MonoStore.Service"
+RUN dotnet build "MonoStore.Service.csproj" -c Release -o /app/build
 
 # Publish the application
 FROM build AS publish
-RUN dotnet publish "MonoStore.Cart.Module.csproj" -c Release -o /app/publish
+RUN dotnet publish "MonoStore.Service.csproj" -c Release -o /app/publish
 
 # Create a final layer with the base image
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "MonoStore.Cart.Module.dll"]
+ENTRYPOINT ["dotnet", "MonoStore.Service.dll"]

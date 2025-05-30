@@ -10,13 +10,13 @@ using Orleans;
 using MonoStore.Contracts.Product.Grains;
 using MonoStore.Contracts.Cart.Requests;
 using Microsoft.Extensions.Logging;
-using Marten;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using MonoStore.Cart.Domain;
-using JasperFx.CodeGeneration.Model;
 using MonoStore.Contracts.Cart.Dtos;
 using Monostore.Orleans.Types;
+using global::Marten; // Add this line with global:: prefix
+
 
 public static class CartEndpoints
 {

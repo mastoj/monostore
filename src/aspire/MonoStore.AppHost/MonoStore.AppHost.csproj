@@ -25,9 +25,9 @@
     <ProjectReference Include="..\..\MonoStore.Api\MonoStore.Api.csproj" />
     <ProjectReference Include="..\..\orleans\MonoStore.Orelans.Dashboard\MonoStore.Orelans.Dashboard.csproj" />
     <ProjectReference Include="..\..\Dummy\Dummy.csproj" />
-    <ProjectReference Include="..\..\cart\MonoStore.Cart.Module\MonoStore.Cart.Module.csproj" />
     <ProjectReference Include="..\..\checkout\MonoStore.Checkout.Module\MonoStore.Checkout.Module.csproj" />
     <ProjectReference Include="..\..\product\MonoStore.Product.Module\MonoStore.Product.Module.csproj" />
+    <ProjectReference Include="..\..\MonoStore.Service\MonoStore.Service.csproj" />
   </ItemGroup>
 
 </Project>
