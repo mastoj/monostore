@@ -1,7 +1,7 @@
 import http from "k6/http";
 export const options = {
-  vus: 10,
-  duration: "180s",
+  vus: 50,
+  duration: "60s",
 };
 
 const getRandomInt = (min, max) => {

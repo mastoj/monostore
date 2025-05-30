@@ -23,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "infrastructure", "infrastru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoStore.Marten", "src\infrastructure\MonoStore.Marten\MonoStore.Marten.csproj", "{6A03E5E5-CE63-41B3-9821-47974C3FFB4A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoStore.Product.Module", "src\product\MonoStore.Product.Module\MonoStore.Product.Module.csproj", "{E2E1C6CB-5D6D-4194-A040-41350A5F99C1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoStore.Product.Domain", "src\product\MonoStore.Product.Domain\MonoStore.Product.Domain.csproj", "{E2E1C6CB-5D6D-4194-A040-41350A5F99C1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoStore.Product.Tests", "src\product\MonoStore.Product.Tests\MonoStore.Product.Tests.csproj", "{5CB0BD81-AE8B-4317-8E3C-B79C57666931}"
 EndProject

@@ -1,6 +1,7 @@
 using System.Diagnostics.Metrics;
 
 namespace Monostore.ServiceDefaults;
+
 public static class DiagnosticConfig
 {
   public static string apiServiceName = "monostore-api";
@@ -9,15 +10,15 @@ public static class DiagnosticConfig
   public static Counter<long> CreateCartCounter => GetMeter(apiServiceName).CreateCounter<long>("cart.create");
   public static Histogram<long> CartValue => GetMeter(apiServiceName).CreateHistogram<long>("cart.value");
 
-  public static class CartHost
-  {
-    public static Meter Meter = new Meter("MonoStore.Cart.Module");
-    public static Counter<long> ActiveCartCounter = Meter.CreateCounter<long>("cart.active");
-  }
+  // public static class CartHost
+  // {
+  //   public static Meter Meter = new Meter("MonoStore.Cart.Module");
+  //   public static Counter<long> ActiveCartCounter = Meter.CreateCounter<long>("cart.active");
+  // }
 
-  public static class ProductHost
-  {
-    public static Meter Meter = new Meter("MonoStore.Product.Module");
-    public static Counter<long> ActiveProductCounter = Meter.CreateCounter<long>("product.active");
-  }
+  // public static class ProductHost
+  // {
+  //   public static Meter Meter = new Meter("MonoStore.Product.Domain");
+  //   public static Counter<long> ActiveProductCounter = Meter.CreateCounter<long>("product.active");
+  // }
 }

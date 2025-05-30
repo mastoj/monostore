@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Logging;
-using MonoStore.Product.Module;
+using MonoStore.Product.Domain;
 using Orleans.Streams;
-using Orleans.Utilities;
 
 namespace MonoStore.Contracts.Product.Grains
 {

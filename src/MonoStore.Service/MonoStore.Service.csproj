@@ -17,5 +17,6 @@
     <ProjectReference Include="..\MonoStore.Contracts\MonoStore.Contracts.csproj" />
     <ProjectReference Include="..\cart\MonoStore.Cart.Domain\MonoStore.Cart.Domain.csproj" />
     <ProjectReference Include="..\checkout\MonoStore.Checkout.Domain\MonoStore.Checkout.Domain.csproj" />
+    <ProjectReference Include="..\product\MonoStore.Product.Domain\MonoStore.Product.Domain.csproj" />
   </ItemGroup>
 </Project>

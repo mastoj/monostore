@@ -1,10 +1,8 @@
-using Microsoft.Extensions.Logging;
-using Monostore.ServiceDefaults;
 using MonoStore.Contracts.Product;
 using MonoStore.Contracts.Product.Grains;
 using Orleans.Streams;
 
-namespace MonoStore.Product.Module;
+namespace MonoStore.Product.Domain;
 
 public class ProductGrain : Grain, IProductGrain
 {
@@ -27,7 +25,7 @@ public class ProductGrain : Grain, IProductGrain
       var stream = streamProvider.GetStream<ProductSyncEvent>("ProductSyncStream");
       await stream.SubscribeAsync(OnNextAsync);
 
-      DiagnosticConfig.ProductHost.ActiveProductCounter.Add(1, new KeyValuePair<string, object?>("operatingChain", state.OperatingChain ?? ""));
+      // DiagnosticConfig.ProductHost.ActiveProductCounter.Add(1, new KeyValuePair<string, object?>("operatingChain", state.OperatingChain ?? ""));
     }
     catch (Exception ex)
     {
@@ -39,7 +37,7 @@ public class ProductGrain : Grain, IProductGrain
 
   public override async Task OnDeactivateAsync(DeactivationReason reason, CancellationToken cancellationToken)
   {
-    DiagnosticConfig.ProductHost.ActiveProductCounter.Add(1, new KeyValuePair<string, object?>("operatingChain", state?.OperatingChain));
+    // DiagnosticConfig.ProductHost.ActiveProductCounter.Add(1, new KeyValuePair<string, object?>("operatingChain", state?.OperatingChain));
     await base.OnDeactivateAsync(reason, cancellationToken);
   }
   public Task<ProductDetail> GetProductAsync()
