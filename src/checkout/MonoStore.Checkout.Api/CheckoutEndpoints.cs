@@ -118,6 +118,23 @@ public static class CheckoutEndpoints
       return Results.Ok(result);
     }).Produces<List<Change>>();
 
+    routes.MapPost("/{id}/payment", async (IGrainFactory grains, Guid id, AddPaymentRequest addPaymentRequest) =>
+    {
+      var addPaymentMessage = new AddPaymentMessage(
+        addPaymentRequest.TransactionId,
+        addPaymentRequest.PaymentMethod,
+        addPaymentRequest.PaymentProvider,
+        addPaymentRequest.Amount,
+        addPaymentRequest.Currency,
+        addPaymentRequest.ProcessedAt,
+        addPaymentRequest.Status
+      );
+
+      var purchaseOrderGrain = grains.GetGrain<IPurchaseOrderGrain>(IPurchaseOrderGrain.PurchaseOrderGrainId(id));
+      var result = await purchaseOrderGrain.AddPayment(addPaymentMessage);
+      return Results.Ok(result);
+    }).Produces<GrainResult<PurchaseOrderData, CheckoutError>>();
+
     return routes;
   }
 

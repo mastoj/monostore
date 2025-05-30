@@ -140,20 +140,57 @@ export default function PurchaseOrderDetailsContent({
           <CardTitle>Payment Information</CardTitle>
         </CardHeader>
         <CardContent>
-          <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <dt className="font-semibold">Payment Method:</dt>
-              <dd>{mockOrder.paymentInfo.method}</dd>
-            </div>
-            <div>
-              <dt className="font-semibold">Card Number:</dt>
-              <dd>**** **** **** {mockOrder.paymentInfo.cardLastFour}</dd>
-            </div>
-            <div>
-              <dt className="font-semibold">Transaction ID:</dt>
-              <dd>{mockOrder.paymentInfo.transactionId}</dd>
-            </div>
-          </dl>
+          {purchaseOrder.paymentInfo ? (
+            <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <dt className="font-semibold">Payment Method:</dt>
+                <dd>{purchaseOrder.paymentInfo.paymentMethod}</dd>
+              </div>
+              <div>
+                <dt className="font-semibold">Payment Provider:</dt>
+                <dd>{purchaseOrder.paymentInfo.paymentProvider}</dd>
+              </div>
+              <div>
+                <dt className="font-semibold">Transaction ID:</dt>
+                <dd>{purchaseOrder.paymentInfo.transactionId}</dd>
+              </div>
+              <div>
+                <dt className="font-semibold">Amount:</dt>
+                <dd>
+                  {purchaseOrder.paymentInfo.amount.toFixed(2)}{" "}
+                  {purchaseOrder.paymentInfo.currency}
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold">Status:</dt>
+                <dd>
+                  <span
+                    className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                      purchaseOrder.paymentInfo.status === "Completed"
+                        ? "bg-green-100 text-green-800"
+                        : purchaseOrder.paymentInfo.status === "Failed"
+                        ? "bg-red-100 text-red-800"
+                        : "bg-yellow-100 text-yellow-800"
+                    }`}
+                  >
+                    {purchaseOrder.paymentInfo.status}
+                  </span>
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold">Processed At:</dt>
+                <dd>
+                  {new Date(
+                    purchaseOrder.paymentInfo.processedAt
+                  ).toLocaleString()}
+                </dd>
+              </div>
+            </dl>
+          ) : (
+            <p className="text-gray-500 italic">
+              No payment information available
+            </p>
+          )}
         </CardContent>
       </Card>
 

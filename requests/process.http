@@ -75,4 +75,21 @@ Content-Type: application/json
   "cartId": "{{cartId}}"
 }
 ###
-@purchaseOrderId={{createPurchaseOrder.response.body.data.purchaseOrderId}}
+@purchaseOrderId={{createPurchaseOrder.response.body.data.id}}
+
+### Add payment to purchase order
+POST http://localhost:5170/checkout/{{purchaseOrderId}}/payment
+Content-Type: application/json
+
+{
+  "transactionId": "txn_stripe_123456789",
+  "paymentMethod": "Credit Card",
+  "paymentProvider": "Stripe",
+  "amount": 1900,
+  "currency": "SEK",
+  "processedAt": "2025-05-31T10:30:00Z",
+  "status": "Completed"
+}
+
+### Get purchase order with payment
+GET http://localhost:5170/checkout/{{purchaseOrderId}}
