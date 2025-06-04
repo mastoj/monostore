@@ -496,6 +496,18 @@ export type PurchaseOrder2 = {
   version?: number;
 };
 
+export interface PaymentInfo {
+  transactionId: string;
+  paymentMethod: string;
+  paymentProvider: string;
+  /** @format double */
+  amount: number;
+  currency: string;
+  /** @format date-time */
+  processedAt: string;
+  status: string;
+}
+
 export type PurchaseOrderData = {
   /** @format uuid */
   id: string;
@@ -512,6 +524,7 @@ export type PurchaseOrderData = {
   userId: string | null;
   /** @format uuid */
   cartId: string;
+  paymentInfo?: PaymentInfo;
 };
 
 export interface PurchaseOrderItem {

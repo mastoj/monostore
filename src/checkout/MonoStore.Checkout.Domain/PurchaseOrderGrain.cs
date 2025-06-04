@@ -12,7 +12,18 @@ internal static class Mappers
 {
   internal static PurchaseOrderData AsContract(this PurchaseOrder purchaseOrder)
   {
-    return new PurchaseOrderData(purchaseOrder.Id, purchaseOrder.Version, purchaseOrder.Items.ToList(), purchaseOrder.Total, purchaseOrder.TotalExVat, purchaseOrder.Currency, purchaseOrder.OperatingChain, purchaseOrder.SessionId, purchaseOrder.UserId, purchaseOrder.CartId);
+    return new PurchaseOrderData(
+      purchaseOrder.Id,
+      purchaseOrder.Version,
+      purchaseOrder.Items.ToList(),
+      purchaseOrder.Total,
+      purchaseOrder.TotalExVat,
+      purchaseOrder.Currency,
+      purchaseOrder.OperatingChain,
+      purchaseOrder.SessionId,
+      purchaseOrder.UserId,
+      purchaseOrder.CartId,
+      purchaseOrder.PaymentInfo);
   }
 }
 
@@ -55,6 +66,43 @@ public class PurchaseOrderGrain : Grain, IPurchaseOrderGrain
     {
       CurrentPurchaseOrder = await eventStore.CreateStream(createPurchaseOrder.PurchaseOrderId, result.Value, PurchaseOrder.Create, default);
     }
+    return GrainResult<PurchaseOrderData, CheckoutError>.Success(CurrentPurchaseOrder.AsContract());
+  }
+
+  public async Task<GrainResult<PurchaseOrderData, CheckoutError>> AddPayment(AddPaymentMessage addPayment)
+  {
+    // Check if payment already exists
+    if (CurrentPurchaseOrder.PaymentInfo != null)
+    {
+      return GrainResult<PurchaseOrderData, CheckoutError>.Failure(new CheckoutError
+      {
+        Message = "Payment already exists for this purchase order",
+        Type = CheckoutErrorType.PaymentAlreadyExists
+      });
+    }
+
+    // Validate payment amount matches purchase order total
+    if (addPayment.Amount != CurrentPurchaseOrder.Total)
+    {
+      return GrainResult<PurchaseOrderData, CheckoutError>.Failure(new CheckoutError
+      {
+        Message = $"Payment amount {addPayment.Amount} does not match purchase order total {CurrentPurchaseOrder.Total}",
+        Type = CheckoutErrorType.InvalidPaymentAmount
+      });
+    }
+
+    var paymentEvent = new PaymentAdded(
+      CurrentPurchaseOrder.Id,
+      addPayment.TransactionId,
+      addPayment.PaymentMethod,
+      addPayment.PaymentProvider,
+      addPayment.Amount,
+      addPayment.Currency,
+      addPayment.ProcessedAt,
+      addPayment.Status
+    );
+
+    CurrentPurchaseOrder = await eventStore.AppendToStream(CurrentPurchaseOrder.Id, paymentEvent, CurrentPurchaseOrder.Version, CurrentPurchaseOrder.AddPayment, default);
     return GrainResult<PurchaseOrderData, CheckoutError>.Success(CurrentPurchaseOrder.AsContract());
   }
 
