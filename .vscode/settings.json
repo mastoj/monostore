@@ -1,0 +1,14 @@
+{
+  "chat.promptFiles": true,
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "text": "Use imperative present tense verb at the start of the commit message subject, like \"Fix\", \"Add\", or \"Refactor\". The subject should be in one line, no more than 72 characters."
+    },
+    {
+      "text": "Separate the subject from the body with a blank line. The body should explain the reason for the change in one or more sentences."
+    },
+    {
+      "text": "Use the Conventional Commits format where possible. For example: `feat(feature-name): Add new feature`. If using gitmoji, use a colon to separate the emoji from the description."
+    }
+  ]
+}

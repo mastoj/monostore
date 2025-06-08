@@ -85,7 +85,7 @@ Content-Type: application/json
   "transactionId": "txn_stripe_123456789",
   "paymentMethod": "Credit Card",
   "paymentProvider": "Stripe",
-  "amount": 1900,
+  "amount": 5700,
   "currency": "SEK",
   "processedAt": "2025-05-31T10:30:00Z",
   "status": "Completed"

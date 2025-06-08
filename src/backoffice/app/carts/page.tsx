@@ -3,6 +3,8 @@ import { Suspense } from "react";
 import Layout from "../../components/layout";
 import CartsContent from "./carts-content";
 
+export const dynamic = "force-dynamic"; // Force dynamic rendering for this page
+
 export default function Carts() {
   const carts = getCarts({ operatingChain: "OCSEELG" });
   return (

@@ -9,7 +9,7 @@ DotEnv.Load();
 var builder = DistributedApplication.CreateBuilder(args);
 
 var compose = builder.AddDockerComposeEnvironment("docker-env");
-var containerApps = builder.AddAzureContainerAppEnvironment("containerapp-env");
+// var containerApps = builder.AddAzureContainerAppEnvironment("containerapp-env");
 
 builder.Configuration.AddEnvironmentVariables();
 
@@ -30,8 +30,8 @@ var postgres = builder
     {
       a.WithHostPort(8888);
     })
-    //.WithComputeEnvironment(containerApps)
-    .WithComputeEnvironment(compose);
+//.WithComputeEnvironment(containerApps)
+.WithComputeEnvironment(compose);
 
 var storage = builder.AddAzureStorage("storage").RunAsEmulator(x => x.WithImageTag("latest"));
 var clusteringTable = storage.AddTables("clustering");
@@ -47,8 +47,8 @@ var api = builder.AddProject<Projects.MonoStore_Api>("monostore-api")
   .WaitFor(postgres)
   .WithExternalHttpEndpoints()
   .WithReplicas(2)
-  //.WithComputeEnvironment(containerApps)
-  .WithComputeEnvironment(compose);
+//.WithComputeEnvironment(containerApps)
+.WithComputeEnvironment(compose);
 
 
 builder.AddProject<Projects.MonoStore_Service>("monostore-service")
@@ -58,37 +58,37 @@ builder.AddProject<Projects.MonoStore_Service>("monostore-service")
   .WithReference(orleans)
   .WithReplicas(6)
 //    .WithComputeEnvironment(containerApps)
-  .WithComputeEnvironment(compose);
+.WithComputeEnvironment(compose);
 
 builder.AddProject<Projects.MonoStore_Orelans_Dashboard>("orleans-dashboard")
   .WithReference(orleans)
   .WithExternalHttpEndpoints()
-  //.WithComputeEnvironment(containerApps)
-  .WithComputeEnvironment(compose);
+//.WithComputeEnvironment(containerApps)
+.WithComputeEnvironment(compose);
 
-// if (builder.ExecutionContext.IsPublishMode)
-// {
-//   // Add a Dockerfile app, named "frontend", at "../frontend"
-//   builder.AddDockerfile("monostore-backoffice", "../../backoffice")
-//       // allow Aspire to control the port via env variable PORT and target port 3000
-//       .WithHttpEndpoint(env: "PORT", targetPort: 3000)
-//       // give the app an extenral endpoint
-//       .WithExternalHttpEndpoints()
-//    .WithComputeEnvironment(containerApps)
-//       .WithComputeEnvironment(compose);
+if (builder.ExecutionContext.IsPublishMode)
+{
+  // Add a Dockerfile app, named "frontend", at "../frontend"
+  builder.AddDockerfile("monostore-backoffice", "../../backoffice")
+      // allow Aspire to control the port via env variable PORT and target port 3000
+      .WithHttpEndpoint(env: "PORT", targetPort: 3000)
+      // give the app an extenral endpoint
+      .WithExternalHttpEndpoints()
+       //      .WithComputeEnvironment(containerApps);
+       .WithComputeEnvironment(compose);
 
-// }
-// else
-// {
-//   builder.AddNpmApp("monostore-backoffice", "../../backoffice", "dev")
-//     .WithHttpEndpoint(env: "PORT")
-//     .WithEnvironment("NEXT_OTEL_VERBOSE", "1")
-//     .WithEnvironment("OTEL_LOG_LEVEL", "debug")
-//     .WithEnvironment("NODE_TLS_REJECT_UNAUTHORIZED", "0")
-//     .WithReference(api)
-//     .WaitFor(api)
-//     .WithExternalHttpEndpoints();
-// }
+}
+else
+{
+  builder.AddNpmApp("monostore-backoffice", "../../backoffice", "dev")
+    .WithHttpEndpoint(env: "PORT")
+    .WithEnvironment("NEXT_OTEL_VERBOSE", "1")
+    .WithEnvironment("OTEL_LOG_LEVEL", "debug")
+    .WithEnvironment("NODE_TLS_REJECT_UNAUTHORIZED", "0")
+    .WithReference(api)
+    .WaitFor(api)
+    .WithExternalHttpEndpoints();
+}
 
 #pragma warning restore ASPIRECOMPUTE001
 // builder.AddProject<Projects.Dummy>("dummy");
