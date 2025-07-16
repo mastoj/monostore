@@ -32,5 +32,12 @@ namespace MonoStore.Contracts.Product.Grains
         ProductGrainIds = productGrainIds
       });
     }
+
+    public async Task<int> DumpProductsToFileAsync()
+    {
+      Console.WriteLine("==> Dumping products to file");
+      var productCount = await repository.DumpProductsToFile();
+      return productCount;
+    }
   }
 }
