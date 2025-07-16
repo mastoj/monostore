@@ -7,6 +7,9 @@
 ### Get a product
 GET {{BASE_URL}}/product/OCSEELG/209984
 
+### Sample dump request
+POST {{BASE_URL}}/product/dump
+
 ### Sample sync request
 POST {{BASE_URL}}/product/sync
 Content-Type: application/json

@@ -35,6 +35,16 @@ public static class ProductEndpoints
       await productSyncGrain.SyncProductAsync(productDetails);
       return Results.Ok();
     });
+    routes.MapPost("/dump", async (IGrainFactory grains) =>
+    {
+      var productSyncGrain = grains.GetGrain<IProductSyncGrain>(IProductSyncGrain.ProductSyncGrainId());
+      var productCount = await productSyncGrain.DumpProductsToFileAsync();
+      return Results.Json(new
+      {
+        Message = "Products dumped to file",
+        Count = productCount
+      });
+    });
     return routes;
   }
 

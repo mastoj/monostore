@@ -407,3 +407,6 @@ sample_data/
 tmp/
 .azure
 publish/
+
+
+.dump/

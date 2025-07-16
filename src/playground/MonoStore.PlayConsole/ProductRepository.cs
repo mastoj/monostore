@@ -1,5 +1,6 @@
 using Microsoft.Azure.Cosmos;
 using MonoStore.Contracts.Product;
+using System.Text.Json;
 
 namespace MonoStore.PlayConsole;
 
@@ -62,5 +63,51 @@ public class ProductRepository
       return chunkOperations;
     });
     await Task.WhenAll(batchOperations);
+  }
+
+  public async Task DumpProductsToFile()
+  {
+    try
+    {
+      var container = await GetContainer();
+      var products = new List<ProductDetail>();
+
+      // Query all products from the container
+      var queryDefinition = new QueryDefinition("SELECT * FROM c");
+      using var feedIterator = container.GetItemQueryIterator<ProductDetail>(queryDefinition);
+
+      while (feedIterator.HasMoreResults)
+      {
+        var response = await feedIterator.ReadNextAsync();
+        products.AddRange(response);
+      }
+
+      // Serialize to JSON
+      var jsonOptions = new JsonSerializerOptions
+      {
+        WriteIndented = true,
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+      };
+
+      var json = JsonSerializer.Serialize(products, jsonOptions);
+
+      // Write to file
+      var fileName = $"products_dump_{DateTime.UtcNow:yyyyMMdd_HHmmss}.json";
+      var filePath = Path.Combine(Environment.CurrentDirectory, ".dump", fileName);
+      var directory = Path.GetDirectoryName(filePath);
+      if (!Directory.Exists(directory) && directory != null)
+      {
+        Directory.CreateDirectory(directory);
+      }
+      await File.WriteAllTextAsync(filePath, json);
+
+      Console.WriteLine($"==> Products dumped to file: {filePath}");
+      Console.WriteLine($"==> Total products exported: {products.Count}");
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"==> Failed to dump products to file: {ex.Message}");
+      throw;
+    }
   }
 }
