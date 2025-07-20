@@ -9,11 +9,11 @@ type HeaderProps = {
 
 export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps) {
   return (
-    <header className="bg-white shadow-sm">
+    <header className="bg-white shadow-xs">
       <div className="flex items-center justify-between h-16 px-6">
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="text-gray-500 focus:outline-none focus:text-gray-700 lg:hidden"
+          className="text-gray-500 focus:outline-hidden focus:text-gray-700 lg:hidden"
         >
           <Menu className="w-6 h-6" />
         </button>

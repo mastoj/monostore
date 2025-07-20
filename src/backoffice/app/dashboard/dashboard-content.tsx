@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { use, useState } from "react";
 import { CountrySelector } from "../../components/country-selector";
 import { DateRangePicker } from "../../components/date-range-picker";
 import { MetricCards } from "../../components/metric-cards";
@@ -13,15 +13,15 @@ import {
 } from "../../lib/dashboard-client";
 
 interface DashboardContentProps {
-  metrics: { [key in CountryName]: CountryData };
-  metricDefinitions: Metric[];
-  chartData: ChartDataPoint[];
+  metrics: Promise<{ [key in CountryName]: CountryData }>;
+  metricDefinitions: Promise<Metric[]>;
+  chartData: Promise<ChartDataPoint[]>;
 }
 
 export default function DashboardContent({
-  metrics,
-  metricDefinitions,
-  chartData,
+  metrics: metricsPromise,
+  metricDefinitions: metricDefinitionsPromise,
+  chartData: chartDataPromise,
 }: DashboardContentProps) {
   const [activeCountries, setActiveCountries] = useState<{
     [key in CountryName]: boolean;
@@ -31,6 +31,10 @@ export default function DashboardContent({
     Norway: true,
     Denmark: true,
   });
+
+  const metrics = use(metricsPromise);
+  const metricDefinitions = use(metricDefinitionsPromise);
+  const chartData = use(chartDataPromise);
 
   const handleCountryToggle = (country: CountryName) => {
     setActiveCountries((prev) => ({ ...prev, [country]: !prev[country] }));

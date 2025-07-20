@@ -45,7 +45,9 @@ export const getPurchaseOrders = async ({
   return result as PaginatedResponse<PurchaseOrder>;
 };
 
-export const getPurchaseOrder = async (id: string) => {
+export const getPurchaseOrder = async (
+  id: string
+): Promise<PurchaseOrderData> => {
   const url = new URL(`${apiBaseUrl}/${id}`);
   const response = await fetch(url);
   const result =

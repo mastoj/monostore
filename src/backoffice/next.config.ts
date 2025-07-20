@@ -17,6 +17,9 @@ const nextConfig: NextConfig = {
       fullUrl: true,
     },
   },
+  experimental: {
+    cacheComponents: true,
+  },
 };
 
 export default nextConfig;

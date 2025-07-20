@@ -4,12 +4,15 @@ import { getPurchaseOrders } from "@/lib/monostore-api/purchase-order-client";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import Layout from "../../../components/layout";
+import { cacheLife } from "next/dist/server/use-cache/cache-life";
 
 export default async function CartDetails({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
+  "use cache";
+  cacheLife("minutes");
   const { id } = await params;
   const cartData = await getCart(id);
   const cartEvents = await getChanges(id);

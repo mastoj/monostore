@@ -14,16 +14,19 @@ import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { HistoryList } from "./history-list";
+import { use } from "react";
 
 interface PurchaseOrderDetailsContentProps {
-  purchaseOrder: PurchaseOrderData;
-  orderChanges: Change[];
+  purchaseOrderPromise: Promise<PurchaseOrderData>;
+  orderChangesPromise: Promise<Change[]>;
 }
 
 export default function PurchaseOrderDetailsContent({
-  purchaseOrder,
-  orderChanges,
+  purchaseOrderPromise,
+  orderChangesPromise,
 }: PurchaseOrderDetailsContentProps) {
+  const purchaseOrder = use(purchaseOrderPromise);
+  const orderChanges = use(orderChangesPromise);
   // const orderChanges = mockPurchaseOrderChanges
   //   .filter(change => change.purchaseOrderId === purchaseOrder.id)
   //   .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())

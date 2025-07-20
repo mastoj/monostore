@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { countryData, metrics } from "../data/mock-data";
 
 export interface CountryData {
@@ -32,6 +33,7 @@ export class DashboardClient {
   }
 
   async getChartData(): Promise<ChartDataPoint[]> {
+    await connection();
     // In a real application, this would be an API call
     const countries: CountryName[] = ["Sweden", "Finland", "Norway", "Denmark"];
     return Array.from({ length: 24 }, (_, i) => {

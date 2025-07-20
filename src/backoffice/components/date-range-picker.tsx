@@ -1,17 +1,17 @@
-'use client'
+"use client";
 
-import * as React from "react"
-import { CalendarIcon } from 'lucide-react'
-import { addDays, format } from "date-fns"
-import { DateRange } from "react-day-picker"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
+import * as React from "react";
+import { CalendarIcon } from "lucide-react";
+import { addDays, format } from "date-fns";
+import { DateRange } from "react-day-picker";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 
 export function DateRangePicker({
   className,
@@ -19,7 +19,7 @@ export function DateRangePicker({
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: addDays(new Date(), -7),
     to: new Date(),
-  })
+  });
 
   return (
     <div className={cn("flex items-center", className)}>
@@ -60,6 +60,5 @@ export function DateRangePicker({
         </PopoverContent>
       </Popover>
     </div>
-  )
+  );
 }
-

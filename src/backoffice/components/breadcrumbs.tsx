@@ -1,15 +1,15 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { Home } from 'lucide-react'
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Home } from "lucide-react";
 
 export function Breadcrumbs() {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
-  if (pathname === '/') return null
+  if (pathname === "/") return null;
 
-  const pathSegments = pathname.split('/').filter(segment => segment !== '')
+  const pathSegments = pathname.split("/").filter((segment) => segment !== "");
 
   return (
     <nav aria-label="Breadcrumb" className="mb-4">
@@ -21,8 +21,8 @@ export function Breadcrumbs() {
           </Link>
         </li>
         {pathSegments.map((segment, index) => {
-          const href = `/${pathSegments.slice(0, index + 1).join('/')}`
-          const isLast = index === pathSegments.length - 1
+          const href = `/${pathSegments.slice(0, index + 1).join("/")}`;
+          const isLast = index === pathSegments.length - 1;
 
           return (
             <li key={segment} className="flex items-center">
@@ -35,10 +35,9 @@ export function Breadcrumbs() {
                 </Link>
               )}
             </li>
-          )
+          );
         })}
       </ol>
     </nav>
-  )
+  );
 }
-

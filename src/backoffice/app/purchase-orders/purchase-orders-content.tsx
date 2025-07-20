@@ -9,17 +9,17 @@ import {
   getPurchaseOrders,
 } from "@/lib/monostore-api/purchase-order-client";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { use, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { PurchaseOrderFilter } from "../../components/purchase-order-filter";
 
 export type PurchaseOrdersContentProps = {
-  purchaseOrdersPromise: Promise<PaginatedResponse<PurchaseOrder>>;
+  purchaseOrders: PaginatedResponse<PurchaseOrder>;
 };
 
 export default function PurchaseOrdersContent({
-  purchaseOrdersPromise,
+  purchaseOrders,
 }: PurchaseOrdersContentProps) {
-  const initialPaginatedResponse = use(purchaseOrdersPromise);
+  const initialPaginatedResponse = purchaseOrders;
   const [paginatedResponse, setPaginatedResponse] = useState<
     PaginatedResponse<PurchaseOrder>
   >(initialPaginatedResponse);

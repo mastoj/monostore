@@ -1,16 +1,16 @@
 "use client";
 
 import { Cart } from "@/lib/monostore-api/monostore-api";
-import { use, useState } from "react";
+import { useState } from "react";
 import { CartFilter } from "../../components/cart-filter";
 import { CartList } from "../../components/cart-list";
 
 type CartsContentProps = {
-  carts: Promise<Cart[]>;
+  carts: Cart[];
 };
 
 export default function CartsContent({ carts }: CartsContentProps) {
-  const resolvedCarts = use(carts);
+  const resolvedCarts = carts;
   const [isExpanded, setIsExpanded] = useState(false);
   const [filters, setFilters] = useState({
     country: "",

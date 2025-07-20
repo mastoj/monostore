@@ -1,23 +1,32 @@
 import { getPurchaseOrders } from "@/lib/monostore-api/purchase-order-client";
-import { Suspense } from "react";
-import Layout from "../../components/layout";
 import PurchaseOrdersContent from "./purchase-orders-content";
+import { Suspense } from "react";
+import { connection } from "next/server";
 
-export const dynamic = "force-dynamic"; // Force dynamic rendering for this page
+export const experimental_ppr = true;
 
-export default function PurchaseOrders() {
-  const purchaseOrdersPromise = getPurchaseOrders({
+const PurchaseOrdersLoader = async () => {
+  await connection();
+  const purchaseOrders = await getPurchaseOrders({
     operatingChain: "OCSEELG",
     page: 1,
     pageSize: 50,
   });
 
   return (
-    <Layout>
+    <>
+      <PurchaseOrdersContent purchaseOrders={purchaseOrders} />
+    </>
+  );
+};
+
+export default function PurchaseOrders() {
+  return (
+    <>
       <h1 className="text-2xl font-bold mb-4">Purchase Orders Management</h1>
       <Suspense fallback={<div>Loading...</div>}>
-        <PurchaseOrdersContent purchaseOrdersPromise={purchaseOrdersPromise} />
+        <PurchaseOrdersLoader />
       </Suspense>
-    </Layout>
+    </>
   );
 }
