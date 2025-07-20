@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import Layout from "../../../components/layout";
 import { cacheLife } from "next/dist/server/use-cache/cache-life";
+import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 
 export default async function CartDetails({
   params,
@@ -14,6 +15,7 @@ export default async function CartDetails({
   "use cache";
   cacheLife("minutes");
   const { id } = await params;
+  cacheTag(`cart-${id}`);
   const cartData = await getCart(id);
   const cartEvents = await getChanges(id);
   const purchaseOrders = await getPurchaseOrders({
@@ -30,7 +32,7 @@ export default async function CartDetails({
   }
 
   return (
-    <Layout>
+    <>
       <h1 className="text-2xl font-bold mb-4">Cart Details: {id}</h1>
       <Suspense fallback={<div>Loading...</div>}>
         <CartDetailsContent
@@ -39,6 +41,6 @@ export default async function CartDetails({
           purchaseOrders={purchaseOrders}
         />
       </Suspense>
-    </Layout>
+    </>
   );
 }
