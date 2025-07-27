@@ -22,4 +22,9 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MonoStore.Cart.Domain\MonoStore.Cart.Domain.csproj" />
+    <ProjectReference Include="..\..\MonoStore.Contracts\MonoStore.Contracts.csproj" />
+  </ItemGroup>
+
 </Project>
