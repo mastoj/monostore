@@ -5,7 +5,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNext" Version="5.20.0" />
-    <PackageReference Include="Marten" Version="7.39.5" />
+    <PackageReference Include="Marten" Version="8.5.0" />
   </ItemGroup>
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>

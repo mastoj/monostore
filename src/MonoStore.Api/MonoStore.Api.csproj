@@ -12,7 +12,7 @@
   <ItemGroup>
     <PackageReference Include="Aspire.Npgsql" Version="9.4.0" />
     <PackageReference Include="dotenv.net" Version="3.2.1" />
-    <PackageReference Include="Marten" Version="7.39.5" />
+    <PackageReference Include="Marten" Version="8.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3" />
     <PackageReference Include="Microsoft.Orleans.Client" Version="9.1.2" />
     <PackageReference Include="OrleansDashboard" Version="8.2.0" />

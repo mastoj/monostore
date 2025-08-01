@@ -179,7 +179,8 @@ public static class CartEndpoints
       options.Connection(connectionString ?? throw new InvalidOperationException());
       // options.OpenTelemetry.TrackConnections = TrackLevel.Verbose;
       options.OpenTelemetry.TrackEventCounters();
-      options.AutoCreateSchemaObjects = Weasel.Core.AutoCreate.None;
+      options.AutoCreateSchemaObjects = JasperFx.AutoCreate.None;
+
       return options;
     });
 

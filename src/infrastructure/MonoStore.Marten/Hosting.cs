@@ -22,6 +22,7 @@ public static class Hosting
           options.Events.MetadataConfig.CorrelationIdEnabled = true;
           options.Events.MetadataConfig.CausationIdEnabled = true;
           options.DatabaseSchemaName = databaseSchemaName;
+          options.AutoCreateSchemaObjects = JasperFx.AutoCreate.None;
           options.Connection(connectionString ?? throw new InvalidOperationException());
           // options.OpenTelemetry.TrackConnections = TrackLevel.Verbose;
           options.OpenTelemetry.TrackEventCounters();

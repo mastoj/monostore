@@ -152,7 +152,7 @@ public static class CheckoutEndpoints
       options.DatabaseSchemaName = databaseSchemaName;
       options.Connection(connectionString ?? throw new InvalidOperationException());
       options.OpenTelemetry.TrackEventCounters();
-      options.AutoCreateSchemaObjects = Weasel.Core.AutoCreate.None;
+      options.AutoCreateSchemaObjects = JasperFx.AutoCreate.None;
       return options;
     });
 

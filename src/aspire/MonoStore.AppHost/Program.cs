@@ -46,17 +46,21 @@ var api = builder.AddProject<Projects.MonoStore_Api>("monostore-api")
   .WithReference(postgres)
   .WaitFor(postgres)
   .WithExternalHttpEndpoints()
-  .WithReplicas(2)
+  .WithReplicas(1)
 //.WithComputeEnvironment(containerApps)
 .WithComputeEnvironment(compose);
 
+builder.AddProject<Projects.MonoStore_Service>("monostore-schema-gen")
+  .WithArgs("db-patch", "patch.sql")
+  .WithReference(postgres)
+  .WithExplicitStart();
 
 builder.AddProject<Projects.MonoStore_Service>("monostore-service")
   .WithEnvironment("COSMOS_CONNECTION_STRING", Environment.GetEnvironmentVariable("COSMOS_CONNECTION_STRING"))
   .WithReference(postgres)
   .WaitFor(postgres)
   .WithReference(orleans)
-  .WithReplicas(6)
+  .WithReplicas(1)
 //    .WithComputeEnvironment(containerApps)
 .WithComputeEnvironment(compose);
 

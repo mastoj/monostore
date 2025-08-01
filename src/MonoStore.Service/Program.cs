@@ -1,6 +1,7 @@
 using MonoStore.Cart.Domain;
 using MonoStore.Checkout.Domain;
 using MonoStore.Product.Domain;
+using JasperFx;
 
 var builder = Host.CreateApplicationBuilder(args).UseHosting("monostore-service");
 
@@ -19,4 +20,5 @@ builder.AddProductService();
 // });
 
 var host = builder.Build();
-host.Run();
+
+await host.RunJasperFxCommands(args);
