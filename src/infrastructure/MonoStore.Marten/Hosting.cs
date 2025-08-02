@@ -32,8 +32,8 @@ public static class Hosting
           }
           return options;
         })
-        .UseLightweightSessions()
-        .ApplyAllDatabaseChangesOnStartup();
+        .UseLightweightSessions();
+      // .ApplyAllDatabaseChangesOnStartup();
     };
     var attempts = 0;
     var maxAttempts = 3;

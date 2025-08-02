@@ -41,32 +41,39 @@ var orleans = builder.AddOrleans("default")
   .WithClustering(clusteringTable)
   .WithGrainStorage("default", grainStorage);
 
-var api = builder.AddProject<Projects.MonoStore_Api>("monostore-api")
-  .WithReference(orleans.AsClient())
+var migrations = builder.AddProject<Projects.MonoStore_DbMigrations>("monostore-migrations")
   .WithReference(postgres)
-  .WaitFor(postgres)
-  .WithExternalHttpEndpoints()
-  .WithReplicas(1)
-//.WithComputeEnvironment(containerApps)
-.WithComputeEnvironment(compose);
+  .WaitFor(postgres);
+
 
 builder.AddProject<Projects.MonoStore_Service>("monostore-schema-gen")
   .WithArgs("db-patch", "patch.sql")
   .WithReference(postgres)
+  .WaitFor(postgres)
   .WithExplicitStart();
+
+var api = builder.AddProject<Projects.MonoStore_Api>("monostore-api")
+  .WithReference(orleans.AsClient())
+  .WithReference(postgres)
+  .WithExternalHttpEndpoints()
+  .WaitForCompletion(migrations)
+  .WithReplicas(2)
+//.WithComputeEnvironment(containerApps)
+.WithComputeEnvironment(compose);
 
 builder.AddProject<Projects.MonoStore_Service>("monostore-service")
   .WithEnvironment("COSMOS_CONNECTION_STRING", Environment.GetEnvironmentVariable("COSMOS_CONNECTION_STRING"))
   .WithReference(postgres)
-  .WaitFor(postgres)
   .WithReference(orleans)
-  .WithReplicas(1)
+  .WithReplicas(3)
+  .WaitForCompletion(migrations)
 //    .WithComputeEnvironment(containerApps)
 .WithComputeEnvironment(compose);
 
 builder.AddProject<Projects.MonoStore_Orelans_Dashboard>("orleans-dashboard")
   .WithReference(orleans)
   .WithExternalHttpEndpoints()
+  .WaitForCompletion(migrations)
 //.WithComputeEnvironment(containerApps)
 .WithComputeEnvironment(compose);
 

@@ -26,6 +26,7 @@
     <ProjectReference Include="..\..\orleans\MonoStore.Orelans.Dashboard\MonoStore.Orelans.Dashboard.csproj" />
     <ProjectReference Include="..\..\Dummy\Dummy.csproj" />
     <ProjectReference Include="..\..\MonoStore.Service\MonoStore.Service.csproj" />
+    <ProjectReference Include="..\..\MonoStore.DbMigrations\MonoStore.DbMigrations.csproj" />
   </ItemGroup>
 
 </Project>
