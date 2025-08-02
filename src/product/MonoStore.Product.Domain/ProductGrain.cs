@@ -30,6 +30,7 @@ public class ProductGrain : Grain, IProductGrain
     catch (Exception ex)
     {
       Console.WriteLine("==> Product: OnActivateAsync: " + primaryKeyString);
+      Console.WriteLine("==> Error: ", ex.Message);
       throw;
     }
     await base.OnActivateAsync(cancellationToken);
@@ -59,7 +60,7 @@ public class ProductGrain : Grain, IProductGrain
     }
   }
 
-  private async Task<ProductDetail> GetProduct()
+  private async Task<ProductDetail?> GetProduct()
   {
     var primaryKeyString = this.GetPrimaryKeyString();
     var id = primaryKeyString.Split("/")[1];

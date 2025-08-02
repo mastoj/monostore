@@ -12,7 +12,7 @@ public class ProductRepository
     _cosmosClient = client;
   }
 
-  private Database _database;
+  private Database? _database;
   private async Task<Database> GetDatabase()
   {
     if (_database == null)
@@ -22,7 +22,7 @@ public class ProductRepository
     return _database;
   }
 
-  private Container _container;
+  private Container? _container;
   private async Task<Container> GetContainer()
   {
     if (_container == null)

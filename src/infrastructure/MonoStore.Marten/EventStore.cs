@@ -1,11 +1,12 @@
 using Marten;
 
 namespace MonoStore.Marten;
+
 public interface IEventStore
 {
   Task<TState> CreateStream<T, TState>(Guid id, T @event, Func<T, TState> apply, CancellationToken ct) where T : class;
   Task<TState> AppendToStream<T, TState>(Guid id, T @event, int version, Func<T, TState> apply, CancellationToken ct) where T : class;
-  Task<TState> GetState<TState>(Guid id, CancellationToken ct) where TState : class;
+  Task<TState?> GetState<TState>(Guid id, CancellationToken ct) where TState : class;
 }
 
 public class MartenEventStore : IEventStore
@@ -39,7 +40,7 @@ public class MartenEventStore : IEventStore
     }
   }
 
-  public async Task<TState> GetState<TState>(Guid id, CancellationToken ct) where TState : class
+  public async Task<TState?> GetState<TState>(Guid id, CancellationToken ct) where TState : class
   {
     using var _session = _documentStore.QuerySession();
     var result = await _session.Events.AggregateStreamAsync<TState>(id, token: ct);

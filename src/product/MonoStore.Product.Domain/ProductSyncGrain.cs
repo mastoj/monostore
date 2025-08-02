@@ -6,13 +6,25 @@ namespace MonoStore.Contracts.Product.Grains
 {
   public class ProductSyncGrain : Grain, IProductSyncGrain
   {
-    private IAsyncStream<ProductSyncEvent> stream;
+    private IAsyncStream<ProductSyncEvent>? stream;
 
     private readonly ProductRepository repository;
 
     public ProductSyncGrain(ILogger<ProductSyncGrain> logger, ProductRepository repository)
     {
       this.repository = repository;
+    }
+
+    public IAsyncStream<ProductSyncEvent> ProductSyncStream
+    {
+      get
+      {
+        if (stream == null)
+        {
+          throw new InvalidOperationException("Stream is not initialized. Call OnActivateAsync first.");
+        }
+        return stream;
+      }
     }
 
     public override Task OnActivateAsync(CancellationToken cancellationToken)
@@ -27,7 +39,7 @@ namespace MonoStore.Contracts.Product.Grains
       Console.WriteLine("==> SyncProductAsync: " + products.Count);
       await repository.WriteProducts(products);
       var productGrainIds = products.Select(p => IProductGrain.ProductGrainId(p.OperatingChain, p.ArticleNumber)).ToList();
-      await stream.OnNextAsync(new ProductSyncEvent
+      await ProductSyncStream.OnNextAsync(new ProductSyncEvent
       {
         ProductGrainIds = productGrainIds
       });

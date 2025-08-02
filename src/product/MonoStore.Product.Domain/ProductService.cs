@@ -33,23 +33,28 @@ public class ProductService : IProductService
   //   return Results.NotFound();
   // }
 
-  private static string databaseName = "ecom-data";
-  private static string containerId = "product-ecom-feed4-dotnet";
-  public async Task<ProductDetail> GetProductAsync(string sku, string operatingChain)
+  // private static string databaseName = "ecom-data";
+  // private static string containerId = "product-ecom-feed4-dotnet";
+
+  public Task<ProductDetail> GetProductAsync(string sku, string operatingChain)
   {
     throw new NotImplementedException();
-    // var container = cosmosClient.GetContainer(databaseName, $"{containerId}-{operatingChain}");
-    // var key = $"{operatingChain}_b2c_{sku}";
-    // var result = await container.ReadItemAsync<ProductCosmosDto>(key, new PartitionKey(key));
-    // logger.LogInformation($"GetProductAsync: {key}");
-    // logger.LogInformation($"GetProductAsync: {result.Resource.value}");
-    // return new ProductDetail
-    // {
-    //   Sku = sku,
-    //   OperatingChain = operatingChain,
-    //   Name = result.Resource.value,
-    //   Price = 123,
-    //   PriceExclVat = 133
-    // };
   }
+  // public async Task<ProductDetail> GetProductAsync(string sku, string operatingChain)
+  // {
+  //   throw new NotImplementedException();
+  //   // var container = cosmosClient.GetContainer(databaseName, $"{containerId}-{operatingChain}");
+  //   // var key = $"{operatingChain}_b2c_{sku}";
+  //   // var result = await container.ReadItemAsync<ProductCosmosDto>(key, new PartitionKey(key));
+  //   // logger.LogInformation($"GetProductAsync: {key}");
+  //   // logger.LogInformation($"GetProductAsync: {result.Resource.value}");
+  //   // return new ProductDetail
+  //   // {
+  //   //   Sku = sku,
+  //   //   OperatingChain = operatingChain,
+  //   //   Name = result.Resource.value,
+  //   //   Price = 123,
+  //   //   PriceExclVat = 133
+  //   // };
+  // }
 }

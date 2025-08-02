@@ -5,8 +5,8 @@ using OpenTelemetry.Resources;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
-builder.AddKeyedAzureTableClient("clustering");
-builder.AddKeyedAzureBlobClient("grainstate");
+builder.AddKeyedAzureTableServiceClient("clustering");
+builder.AddKeyedAzureBlobServiceClient("grainstate");
 builder.Host.UseOrleans(siloBuilder =>
 {
   siloBuilder.UseDashboard(x => x.HostSelf = true);

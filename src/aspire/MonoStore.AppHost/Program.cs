@@ -47,7 +47,7 @@ var migrations = builder.AddProject<Projects.MonoStore_DbMigrations>("monostore-
 
 
 builder.AddProject<Projects.MonoStore_Service>("monostore-schema-gen")
-  .WithArgs("db-patch", "patch.sql")
+  .WithArgs("db-patch", "../../../.patches/patch.sql")
   .WithReference(postgres)
   .WaitFor(postgres)
   .WithExplicitStart();

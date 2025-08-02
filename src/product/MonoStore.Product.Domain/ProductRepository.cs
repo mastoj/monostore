@@ -28,7 +28,7 @@ public class ProductRepository(CosmosClient client)
     return _container;
   }
 
-  public async Task<ProductDetail> GetProductAsync(string operatingChain, string sku)
+  public async Task<ProductDetail?> GetProductAsync(string operatingChain, string sku)
   {
     try
     {

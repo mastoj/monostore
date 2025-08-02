@@ -15,12 +15,12 @@ public class Event
   public Guid Id { get; set; }
   public Guid StreamId { get; set; }
   public int Version { get; set; }
-  public string Data { get; set; }
-  public string Type { get; set; }
+  // public string Data { get; set; }
+  // public string Type { get; set; }
   public DateTimeOffset Timestamp { get; set; }
-  public string TenantId { get; set; }
-  public string MtDotnetType { get; set; }
-  public string CorrelationId { get; set; }
-  public string CausationId { get; set; }
+  // public string TenantId { get; set; }
+  // public string MtDotnetType { get; set; }
+  // public string CorrelationId { get; set; }
+  // public string CausationId { get; set; }
   public bool IsArchived { get; set; }
 }

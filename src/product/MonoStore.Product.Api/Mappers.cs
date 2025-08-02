@@ -134,7 +134,7 @@ public static class Mappers
         BeforePrice = MapPriceStrings(productDto.BeforePrice, productDto.BeforePriceExVat),
         AverageRating = productDto.AverageRating,
         Bulletpoints = new string?[] { productDto.Bulletpoint1, productDto.Bulletpoint2, productDto.Bulletpoint3 }.Where(x => x != null).Cast<string>().ToArray(),
-        ChainPrice = MapPriceStrings(productDto.ChainPriceAmount, productDto.ChainPriceAmountExVat),
+        ChainPrice = MapPriceStrings(productDto.ChainPriceAmount, productDto.ChainPriceAmountExVat) ?? new ProductPrice(),
         CheapestBItem = productDto.CheapestBItem != null ? new ProductShortItem
         {
           ArticleNumber = productDto.CheapestBItem.BArticleNumber,
@@ -185,6 +185,7 @@ public static class Mappers
     catch (Exception e)
     {
       Console.WriteLine("==> Failed with sku: ", productDto.ArticleNumber);
+      Console.WriteLine("==> Error: " + e.Message);
       throw;
     }
   }

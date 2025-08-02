@@ -17,7 +17,7 @@ public static class PostgresStuff
     // Insert 10000 events and measure the time it takes to insert them.
 
     var events = new List<Event>();
-    var randomJsonObject = @"{""prop1"": ""value1""}";
+    // var randomJsonObject = @"{""prop1"": ""value1""}";
     //, prop2: ""value2"", prop3: ""value3"", prop4: ""value4"", prop5: ""value5"", prop6: ""value6"", prop7: ""value7"", prop8: ""value8"", prop9: ""value9"", prop10: ""value10"", prop11: ""value11"", prop12: ""value12"", prop13: ""value13"", prop14: ""value14"", prop15: ""value15"", prop16: ""value16"", prop17: ""value17"", prop18: ""value18"", prop19: ""value19"", prop20: ""value20""}";
     for (int i = 0; i < 1000; i++)
     {
@@ -26,13 +26,13 @@ public static class PostgresStuff
         Id = Guid.NewGuid(),
         StreamId = Guid.NewGuid(),
         Version = i,
-        Data = randomJsonObject,
-        Type = "TestEvent",
+        // Data = randomJsonObject,
+        // Type = "TestEvent",
         Timestamp = DateTimeOffset.UtcNow,
-        TenantId = "test",
-        MtDotnetType = "MonoStore.PlayConsole.Event",
-        CorrelationId = null,
-        CausationId = null,
+        // TenantId = "test",
+        // MtDotnetType = "MonoStore.PlayConsole.Event",
+        // CorrelationId = null,
+        // CausationId = null,
         IsArchived = false
       });
     }
@@ -78,7 +78,7 @@ public static class PostgresStuff
     // Insert 10000 events and measure the time it takes to insert them.
 
     var events = new List<Event>();
-    var randomJsonObject = @"{""prop1"": ""value1""}";
+    // var randomJsonObject = @"{""prop1"": ""value1""}";
     //, prop2: ""value2"", prop3: ""value3"", prop4: ""value4"", prop5: ""value5"", prop6: ""value6"", prop7: ""value7"", prop8: ""value8"", prop9: ""value9"", prop10: ""value10"", prop11: ""value11"", prop12: ""value12"", prop13: ""value13"", prop14: ""value14"", prop15: ""value15"", prop16: ""value16"", prop17: ""value17"", prop18: ""value18"", prop19: ""value19"", prop20: ""value20""}";
     var eventCount = 5000;
     for (int i = 0; i < 5000; i++)
@@ -88,13 +88,13 @@ public static class PostgresStuff
         Id = Guid.NewGuid(),
         StreamId = Guid.NewGuid(),
         Version = i,
-        Data = randomJsonObject,
-        Type = "TestEvent",
+        // Data = randomJsonObject,
+        // Type = "TestEvent",
         Timestamp = DateTimeOffset.UtcNow,
-        TenantId = "test",
-        MtDotnetType = "MonoStore.PlayConsole.Event",
-        CorrelationId = null,
-        CausationId = null,
+        // TenantId = "test",
+        // MtDotnetType = "MonoStore.PlayConsole.Event",
+        // CorrelationId = null,
+        // CausationId = null,
         IsArchived = false
       });
     }

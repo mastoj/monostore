@@ -18,7 +18,7 @@ public static class ProductEndpoints
       var productGrain = grains.GetGrain<IProductGrain>(productGrainId);
       return await productGrain.GetProductAsync();
     });
-    routes.MapPost("/", async (IGrainFactory grains, ProductDetail product) =>
+    routes.MapPost("/", (IGrainFactory grains, ProductDetail product) =>
     {
       throw new NotImplementedException();
       // var productGrain = grains.GetGrain<IProductGrain>(product.Sku);

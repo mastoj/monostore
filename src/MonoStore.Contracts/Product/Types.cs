@@ -249,7 +249,7 @@ public record class ProductDetail
 public class ProductSyncEvent
 {
   [Id(0)]
-  public List<string> ProductGrainIds { get; set; }
+  public List<string> ProductGrainIds { get; set; } = new List<string>();
 }
 
 public interface IProductService
