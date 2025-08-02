@@ -1,6 +1,4 @@
 ﻿using dotenv.net;
-using Monostore.ServiceDefaults;
-using OpenTelemetry.Resources;
 using Orleans.Configuration;
 
 namespace Microsoft.Extensions.Hosting;
@@ -14,8 +12,8 @@ public static class Hosting
     DotEnv.Load();
 
     builder.AddServiceDefaults();
-    builder.AddKeyedAzureTableClient("clustering", settings => settings.DisableTracing = true);
-    builder.AddKeyedAzureBlobClient("grainstate", settings => settings.DisableTracing = true);
+    builder.AddKeyedAzureTableServiceClient("clustering", settings => settings.DisableTracing = true);
+    builder.AddKeyedAzureBlobServiceClient("grainstate", settings => settings.DisableTracing = true);
     builder.UseOrleans(siloBuilder =>
     {
       siloBuilder

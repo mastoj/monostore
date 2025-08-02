@@ -2,7 +2,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\aspire\MonoStore.ServiceDefaults\MonoStore.ServiceDefaults.csproj" />
-    <ProjectReference Include="..\Monostore.Contracts\Monostore.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>
