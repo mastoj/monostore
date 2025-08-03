@@ -71,38 +71,21 @@ public class PurchaseOrderGrain : Grain, IPurchaseOrderGrain
 
   public async Task<GrainResult<PurchaseOrderData, CheckoutError>> AddPayment(AddPaymentMessage addPayment)
   {
-    // Check if payment already exists
-    if (CurrentPurchaseOrder.PaymentInfo != null)
+    var result = Handle(CurrentPurchaseOrder, addPayment);
+    if (!result.IsSuccessful)
     {
       return GrainResult<PurchaseOrderData, CheckoutError>.Failure(new CheckoutError
       {
-        Message = "Payment already exists for this purchase order",
-        Type = CheckoutErrorType.PaymentAlreadyExists
+        Message = result.Error.Message,
+        Type = result.Error switch
+        {
+          PaymentAlreadyAddedException => CheckoutErrorType.PaymentAlreadyExists,
+          PaymentAmountMismatchException => CheckoutErrorType.InvalidPaymentAmount,
+          _ => CheckoutErrorType.Unkown
+        }
       });
     }
-
-    // Validate payment amount matches purchase order total
-    if (addPayment.Amount != CurrentPurchaseOrder.Total)
-    {
-      return GrainResult<PurchaseOrderData, CheckoutError>.Failure(new CheckoutError
-      {
-        Message = $"Payment amount {addPayment.Amount} does not match purchase order total {CurrentPurchaseOrder.Total}",
-        Type = CheckoutErrorType.InvalidPaymentAmount
-      });
-    }
-
-    var paymentEvent = new PaymentAdded(
-      CurrentPurchaseOrder.Id,
-      addPayment.TransactionId,
-      addPayment.PaymentMethod,
-      addPayment.PaymentProvider,
-      addPayment.Amount,
-      addPayment.Currency,
-      addPayment.ProcessedAt,
-      addPayment.Status
-    );
-
-    CurrentPurchaseOrder = await eventStore.AppendToStream(CurrentPurchaseOrder.Id, paymentEvent, CurrentPurchaseOrder.Version, CurrentPurchaseOrder.AddPayment, default);
+    CurrentPurchaseOrder = await eventStore.AppendToStream(CurrentPurchaseOrder.Id, result.Value, CurrentPurchaseOrder.Version, CurrentPurchaseOrder.AddPayment, default);
     return GrainResult<PurchaseOrderData, CheckoutError>.Success(CurrentPurchaseOrder.AsContract());
   }
 
