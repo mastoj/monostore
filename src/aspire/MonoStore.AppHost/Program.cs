@@ -57,7 +57,7 @@ var api = builder.AddProject<Projects.MonoStore_Api>("monostore-api")
   .WithReference(postgres)
   .WithExternalHttpEndpoints()
   .WaitForCompletion(migrations)
-  .WithReplicas(2)
+  .WithReplicas(1)
 //.WithComputeEnvironment(containerApps)
 .WithComputeEnvironment(compose);
 
@@ -65,7 +65,7 @@ builder.AddProject<Projects.MonoStore_Service>("monostore-service")
   .WithEnvironment("COSMOS_CONNECTION_STRING", Environment.GetEnvironmentVariable("COSMOS_CONNECTION_STRING"))
   .WithReference(postgres)
   .WithReference(orleans)
-  .WithReplicas(3)
+  .WithReplicas(1)
   .WaitForCompletion(migrations)
 //    .WithComputeEnvironment(containerApps)
 .WithComputeEnvironment(compose);

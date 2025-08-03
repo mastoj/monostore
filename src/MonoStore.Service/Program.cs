@@ -13,6 +13,9 @@ builder.UseMartenEventStore("monostorepg", "monostore", so =>
 
 builder.AddProductService();
 
+// Register the background service to keep the reporting grain active
+builder.Services.AddHostedService<PurchaseOrderReportingService>();
+
 // builder.UseMartenEventStore("monostorepg", "cart", so =>
 // {
 //   so.Projections.Snapshot<Cart>(SnapshotLifecycle.Inline);

@@ -20,6 +20,7 @@ public static class Hosting
               .AddActivityPropagation()
               .UseDashboard(x => x.HostSelf = true)
               .AddMemoryStreams("ProductStreamProvider")
+              .AddMemoryStreams("OrderStreamProvider")
               .AddMemoryGrainStorage("PubSubStore")
               .Configure<GrainCollectionOptions>(options =>
                     {

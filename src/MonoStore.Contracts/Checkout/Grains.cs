@@ -58,3 +58,10 @@ public interface IPurchaseOrderGrain : IGrainWithStringKey
   Task<GrainResult<PurchaseOrderData, CheckoutError>> AddPayment(AddPaymentMessage addPayment);
   Task<GrainResult<PurchaseOrderData, CheckoutError>> GetPurchaseOrder(GetPurchaseOrder getPurchaseOrder);
 }
+
+public interface IPurchaseOrderReportingGrain : IGrainWithStringKey
+{
+  public static string ReportingGrainId => "purchase-order-reporting";
+  Task StartListening();
+  Task StopListening();
+}

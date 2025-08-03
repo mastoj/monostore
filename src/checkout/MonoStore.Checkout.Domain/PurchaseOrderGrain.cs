@@ -33,7 +33,7 @@ public class PurchaseOrderGrain : Grain, IPurchaseOrderGrain
   private IEventStore eventStore;
   private readonly ILogger<PurchaseOrderGrain> logger;
   private PurchaseOrder? _currentPurchaseOrder;
-  private IAsyncStream<OrderPaidEvent>? orderPaidStream;
+  private IAsyncStream<OrderPaidEvent>? centralOrderPaidStream;
 
   private PurchaseOrder CurrentPurchaseOrder
   {
@@ -42,18 +42,6 @@ public class PurchaseOrderGrain : Grain, IPurchaseOrderGrain
     {
       _currentPurchaseOrder = value;
       logger.LogInformation("Purchase order {purchaseOrderId} updated to version {version}", value.Id, value.Version);
-    }
-  }
-
-  public IAsyncStream<OrderPaidEvent> OrderPaidStream
-  {
-    get
-    {
-      if (orderPaidStream == null)
-      {
-        throw new InvalidOperationException("OrderPaidStream is not initialized. Call OnActivateAsync first.");
-      }
-      return orderPaidStream;
     }
   }
 
@@ -69,7 +57,7 @@ public class PurchaseOrderGrain : Grain, IPurchaseOrderGrain
     var id = Guid.Parse(this.GetPrimaryKeyString().Split("/")[1]);
     _currentPurchaseOrder = await eventStore.GetState<PurchaseOrder>(id, default);
     var streamProvider = this.GetStreamProvider("OrderStreamProvider");
-    orderPaidStream = streamProvider.GetStream<OrderPaidEvent>("OrderPaidStream");
+    centralOrderPaidStream = streamProvider.GetStream<OrderPaidEvent>(StreamId.Create("OrderPaidEvent", Guid.Empty));
     await base.OnActivateAsync(cancellationToken);
   }
 
@@ -113,7 +101,12 @@ public class PurchaseOrderGrain : Grain, IPurchaseOrderGrain
       ProcessedAt = addPayment.ProcessedAt,
       Status = addPayment.Status
     };
-    await OrderPaidStream.OnNextAsync(paidEvent);
+
+    // Publish to the central reporting stream
+    if (centralOrderPaidStream != null)
+    {
+      await centralOrderPaidStream.OnNextAsync(paidEvent);
+    }
 
     return GrainResult<PurchaseOrderData, CheckoutError>.Success(CurrentPurchaseOrder.AsContract());
   }
