@@ -4,7 +4,7 @@ using MonoStore.Contracts.Checkout;
 using MonoStore.Marten;
 using static MonoStore.Checkout.Domain.CheckoutService;
 using Microsoft.Extensions.Logging;
-
+using Orleans.Streams;
 
 namespace MonoStore.Checkout.Domain;
 
@@ -30,11 +30,11 @@ internal static class Mappers
 
 public class PurchaseOrderGrain : Grain, IPurchaseOrderGrain
 {
-
   private IEventStore eventStore;
-
   private readonly ILogger<PurchaseOrderGrain> logger;
   private PurchaseOrder? _currentPurchaseOrder;
+  private IAsyncStream<OrderPaidEvent>? orderPaidStream;
+
   private PurchaseOrder CurrentPurchaseOrder
   {
     get => _currentPurchaseOrder ?? throw new InvalidOperationException("Purchase order not found");
@@ -42,6 +42,18 @@ public class PurchaseOrderGrain : Grain, IPurchaseOrderGrain
     {
       _currentPurchaseOrder = value;
       logger.LogInformation("Purchase order {purchaseOrderId} updated to version {version}", value.Id, value.Version);
+    }
+  }
+
+  public IAsyncStream<OrderPaidEvent> OrderPaidStream
+  {
+    get
+    {
+      if (orderPaidStream == null)
+      {
+        throw new InvalidOperationException("OrderPaidStream is not initialized. Call OnActivateAsync first.");
+      }
+      return orderPaidStream;
     }
   }
 
@@ -56,6 +68,8 @@ public class PurchaseOrderGrain : Grain, IPurchaseOrderGrain
     logger.LogInformation("Activating {grainKey}", this.GetPrimaryKeyString());
     var id = Guid.Parse(this.GetPrimaryKeyString().Split("/")[1]);
     _currentPurchaseOrder = await eventStore.GetState<PurchaseOrder>(id, default);
+    var streamProvider = this.GetStreamProvider("OrderStreamProvider");
+    orderPaidStream = streamProvider.GetStream<OrderPaidEvent>("OrderPaidStream");
     await base.OnActivateAsync(cancellationToken);
   }
 
@@ -86,6 +100,21 @@ public class PurchaseOrderGrain : Grain, IPurchaseOrderGrain
       });
     }
     CurrentPurchaseOrder = await eventStore.AppendToStream(CurrentPurchaseOrder.Id, result.Value, CurrentPurchaseOrder.Version, CurrentPurchaseOrder.AddPayment, default);
+
+    // Publish OrderPaidEvent to stream
+    var paidEvent = new OrderPaidEvent
+    {
+      PurchaseOrderId = CurrentPurchaseOrder.Id,
+      TransactionId = addPayment.TransactionId,
+      PaymentMethod = addPayment.PaymentMethod,
+      PaymentProvider = addPayment.PaymentProvider,
+      Amount = addPayment.Amount,
+      Currency = addPayment.Currency,
+      ProcessedAt = addPayment.ProcessedAt,
+      Status = addPayment.Status
+    };
+    await OrderPaidStream.OnNextAsync(paidEvent);
+
     return GrainResult<PurchaseOrderData, CheckoutError>.Success(CurrentPurchaseOrder.AsContract());
   }
 

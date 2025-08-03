@@ -6,6 +6,7 @@
   <ItemGroup>
     <PackageReference Include="DotNext" Version="5.20.0" />
     <PackageReference Include="Marten" Version="8.5.0" />
+    <PackageReference Include="Microsoft.Orleans.Streaming" Version="9.2.1" />
   </ItemGroup>
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
