@@ -85,7 +85,7 @@ Content-Type: application/json
   "transactionId": "txn_stripe_123456789",
   "paymentMethod": "Credit Card",
   "paymentProvider": "Stripe",
-  "amount": 3800,
+  "amount": 1900,
   "currency": "SEK",
   "processedAt": "2025-05-31T10:30:00Z",
   "status": "Completed"
@@ -93,3 +93,6 @@ Content-Type: application/json
 
 ### Get purchase order with payment
 GET http://localhost:5170/checkout/{{purchaseOrderId}}
+
+### Test OrderPaidEvent stream (should trigger OnNextAsync in reporting grain)
+POST http://localhost:5170/cart/test/order-paid-event

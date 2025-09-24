@@ -4,7 +4,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Marten" Version="8.5.0" />
-    <PackageReference Include="Microsoft.Orleans.Sdk" Version="9.1.2" />
+    <PackageReference Include="Microsoft.Orleans.Sdk" Version="9.2.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\infrastructure\Monostore.Infrastructure.Contracts\Monostore.Infrastructure.Contracts.csproj" />
