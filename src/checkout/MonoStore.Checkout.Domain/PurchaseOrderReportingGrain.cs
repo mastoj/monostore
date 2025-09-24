@@ -1,11 +1,12 @@
 using Microsoft.Extensions.Logging;
 using MonoStore.Contracts.Checkout.Grains;
+using MonoStore.Contracts.Checkout;
 using Orleans.Streams;
 
 namespace MonoStore.Checkout.Domain;
 
 [KeepAlive]
-[ImplicitStreamSubscription("OrderPaidEvent")]
+[ImplicitStreamSubscription(StreamConstants.OrderPaidEventNamespace)]
 public class PurchaseOrderReportingGrain : Grain, IPurchaseOrderReportingGrain
 {
   private readonly ILogger<PurchaseOrderReportingGrain> logger;
@@ -34,15 +35,14 @@ public class PurchaseOrderReportingGrain : Grain, IPurchaseOrderReportingGrain
     {
       logger.LogInformation("Starting to listen for OrderPaidEvents using ImplicitStreamSubscription");
 
-      var streamProvider = this.GetStreamProvider("OrderStreamProvider");
+      var streamProvider = this.GetStreamProvider(StreamConstants.OrderStreamProviderName);
 
       // Use a fixed GUID for the reporting grain stream
-      var reportingGrainGuid = new Guid("11111111-1111-1111-1111-111111111111");
-      var streamId = StreamId.Create("OrderPaidEvent", reportingGrainGuid);
+      var streamId = StreamId.Create(StreamConstants.OrderPaidEventNamespace, StreamConstants.ReportingGrainStreamGuid);
       orderPaidStream = streamProvider.GetStream<OrderPaidEvent>(streamId);
 
       logger.LogInformation("Setting up stream subscription with StreamId: {StreamId}, GUID: {Guid}",
-        streamId, reportingGrainGuid);
+        streamId, StreamConstants.ReportingGrainStreamGuid);
 
       // With ImplicitStreamSubscription, we just need to call SubscribeAsync
       // The runtime automatically creates subscriptions for grains with the attribute
@@ -144,13 +144,12 @@ public class PurchaseOrderReportingGrain : Grain, IPurchaseOrderReportingGrain
     {
       logger.LogInformation("Testing: Publishing a test event to the same stream we're subscribed to");
 
-      var streamProvider = this.GetStreamProvider("OrderStreamProvider");
-      var reportingGrainGuid = new Guid("11111111-1111-1111-1111-111111111111");
-      var streamId = StreamId.Create("OrderPaidEvent", reportingGrainGuid);
+      var streamProvider = this.GetStreamProvider(StreamConstants.OrderStreamProviderName);
+      var streamId = StreamId.Create(StreamConstants.OrderPaidEventNamespace, StreamConstants.ReportingGrainStreamGuid);
       var testStream = streamProvider.GetStream<OrderPaidEvent>(streamId);
 
       logger.LogInformation("Publisher stream details - StreamId: {StreamId}, GUID: {StreamGuid}, StreamProvider: {StreamProvider}",
-        streamId, reportingGrainGuid, streamProvider.GetType().Name);
+        streamId, StreamConstants.ReportingGrainStreamGuid, streamProvider.GetType().Name);
 
       var testEvent = new OrderPaidEvent
       {

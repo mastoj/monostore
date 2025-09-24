@@ -56,13 +56,12 @@ public class PurchaseOrderGrain : Grain, IPurchaseOrderGrain
     logger.LogInformation("Activating {grainKey}", this.GetPrimaryKeyString());
     var id = Guid.Parse(this.GetPrimaryKeyString().Split("/")[1]);
     _currentPurchaseOrder = await eventStore.GetState<PurchaseOrder>(id, default);
-    var streamProvider = this.GetStreamProvider("OrderStreamProvider");
+    var streamProvider = this.GetStreamProvider(StreamConstants.OrderStreamProviderName);
     // Use the reporting grain's GUID as the stream target
-    var reportingGrainGuid = new Guid("11111111-1111-1111-1111-111111111111");
-    var streamId = StreamId.Create("OrderPaidEvent", reportingGrainGuid);
+    var streamId = StreamId.Create(StreamConstants.OrderPaidEventNamespace, StreamConstants.ReportingGrainStreamGuid);
     centralOrderPaidStream = streamProvider.GetStream<OrderPaidEvent>(streamId);
     logger.LogInformation("Publisher initialized stream with StreamId: {StreamId}, GUID: {StreamGuid}",
-      streamId, reportingGrainGuid);
+      streamId, StreamConstants.ReportingGrainStreamGuid);
     await base.OnActivateAsync(cancellationToken);
   }
 
