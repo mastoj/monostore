@@ -3,6 +3,7 @@ using Monostore.ServiceDefaults;
 using MonoStore.Cart.Api;
 using MonoStore.Checkout.Api;
 using MonoStore.Product.Api;
+using MonoStore.MCP;
 using OpenTelemetry.Resources;
 using Scalar.AspNetCore;
 using Serilog;
@@ -96,6 +97,7 @@ try
 
     builder.AddCart();
     builder.AddCheckout();
+    builder.AddMCP();
 
     var app = builder.Build();
     app.UseSerilogDefaults();
@@ -107,6 +109,7 @@ try
     app.UseCart("cart");
     app.UseProduct("product");
     app.UseCheckout("checkout");
+    app.UseMCP("mcp");
     #endregion
 
     app.MapOpenApi();
