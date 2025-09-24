@@ -52,22 +52,23 @@ builder.AddProject<Projects.MonoStore_Service>("monostore-schema-gen")
   .WaitFor(postgres)
   .WithExplicitStart();
 
-var api = builder.AddProject<Projects.MonoStore_Api>("monostore-api")
-  .WithReference(orleans.AsClient())
-  .WithReference(postgres)
-  .WithExternalHttpEndpoints()
-  .WaitForCompletion(migrations)
-  .WithReplicas(1)
-//.WithComputeEnvironment(containerApps)
-.WithComputeEnvironment(compose);
-
-builder.AddProject<Projects.MonoStore_Service>("monostore-service")
+var service = builder.AddProject<Projects.MonoStore_Service>("monostore-service")
   .WithEnvironment("COSMOS_CONNECTION_STRING", Environment.GetEnvironmentVariable("COSMOS_CONNECTION_STRING"))
   .WithReference(postgres)
   .WithReference(orleans)
   .WithReplicas(1)
   .WaitForCompletion(migrations)
 //    .WithComputeEnvironment(containerApps)
+.WithComputeEnvironment(compose);
+
+var api = builder.AddProject<Projects.MonoStore_Api>("monostore-api")
+  .WithReference(orleans.AsClient())
+  .WithReference(postgres)
+  .WithExternalHttpEndpoints()
+  .WaitForCompletion(migrations)
+  .WithReplicas(1)
+  .WaitFor(service)
+//.WithComputeEnvironment(containerApps)
 .WithComputeEnvironment(compose);
 
 builder.AddProject<Projects.MonoStore_Orelans_Dashboard>("orleans-dashboard")

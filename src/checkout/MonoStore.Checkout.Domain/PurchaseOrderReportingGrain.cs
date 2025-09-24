@@ -4,6 +4,8 @@ using Orleans.Streams;
 
 namespace MonoStore.Checkout.Domain;
 
+[KeepAlive]
+[ImplicitStreamSubscription("OrderPaidEvent")]
 public class PurchaseOrderReportingGrain : Grain, IPurchaseOrderReportingGrain
 {
   private readonly ILogger<PurchaseOrderReportingGrain> logger;
@@ -30,20 +32,29 @@ public class PurchaseOrderReportingGrain : Grain, IPurchaseOrderReportingGrain
   {
     try
     {
-      logger.LogInformation("Starting to listen for OrderPaidEvents");
+      logger.LogInformation("Starting to listen for OrderPaidEvents using ImplicitStreamSubscription");
 
       var streamProvider = this.GetStreamProvider("OrderStreamProvider");
 
-      // Subscribe to a centralized OrderPaidEvent stream
-      // All purchase orders will publish to this shared stream
-      orderPaidStream = streamProvider.GetStream<OrderPaidEvent>(StreamId.Create("OrderPaidEvent", Guid.Empty));
+      // Use a fixed GUID for the reporting grain stream
+      var reportingGrainGuid = new Guid("11111111-1111-1111-1111-111111111111");
+      var streamId = StreamId.Create("OrderPaidEvent", reportingGrainGuid);
+      orderPaidStream = streamProvider.GetStream<OrderPaidEvent>(streamId);
 
+      logger.LogInformation("Setting up stream subscription with StreamId: {StreamId}, GUID: {Guid}",
+        streamId, reportingGrainGuid);
+
+      // With ImplicitStreamSubscription, we just need to call SubscribeAsync
+      // The runtime automatically creates subscriptions for grains with the attribute
       subscriptionHandle = await orderPaidStream.SubscribeAsync(
-          OnNextAsync,
-          OnErrorAsync,
-          OnCompletedAsync);
+          async (item, token) =>
+          {
+            logger.LogWarning("🚨🚨🚨 RECEIVED EVENT! Item: {PurchaseOrderId}", item.PurchaseOrderId);
+            await OnNextAsync(item, token);
+          });
 
-      logger.LogInformation("Successfully started listening for OrderPaidEvents");
+      logger.LogInformation("Successfully set up implicit stream subscription. Handle ID: {HandleId}",
+        subscriptionHandle?.HandleId);
     }
     catch (Exception ex)
     {
@@ -80,8 +91,10 @@ public class PurchaseOrderReportingGrain : Grain, IPurchaseOrderReportingGrain
   // Stream subscription observer methods
   public Task OnNextAsync(OrderPaidEvent item, StreamSequenceToken? token = null)
   {
+    logger.LogWarning("🚨 OnNextAsync CALLED! This should be visible!");
+
     logger.LogInformation(
-        "OrderPaidEvent received: PurchaseOrderId={PurchaseOrderId}, TransactionId={TransactionId}, Amount={Amount} {Currency}, PaymentMethod={PaymentMethod}, Status={Status}",
+        "[PurchaseOrderReportingGrain] OrderPaidEvent received: PurchaseOrderId={PurchaseOrderId}, TransactionId={TransactionId}, Amount={Amount} {Currency}, PaymentMethod={PaymentMethod}, Status={Status}",
         item.PurchaseOrderId,
         item.TransactionId,
         item.Amount,
@@ -89,7 +102,7 @@ public class PurchaseOrderReportingGrain : Grain, IPurchaseOrderReportingGrain
         item.PaymentMethod,
         item.Status);
 
-    Console.WriteLine($"OrderPaidEvent received: {item.PurchaseOrderId} - {item.TransactionId} - {item.Amount} {item.Currency} - {item.PaymentMethod} - {item.Status}");
+    Console.WriteLine($"[PurchaseOrderReportingGrain] OrderPaidEvent received (console): {item.PurchaseOrderId} - {item.TransactionId} - {item.Amount} {item.Currency} - {item.PaymentMethod} - {item.Status}");
 
     // TODO: Add your reporting logic here
     // For example: update reporting database, send notifications, etc.
@@ -124,4 +137,46 @@ public class PurchaseOrderReportingGrain : Grain, IPurchaseOrderReportingGrain
     logger.LogInformation("OrderPaidEvent stream subscription completed");
     return Task.CompletedTask;
   }
+
+  public async Task TestPublishEvent()
+  {
+    try
+    {
+      logger.LogInformation("Testing: Publishing a test event to the same stream we're subscribed to");
+
+      var streamProvider = this.GetStreamProvider("OrderStreamProvider");
+      var reportingGrainGuid = new Guid("11111111-1111-1111-1111-111111111111");
+      var streamId = StreamId.Create("OrderPaidEvent", reportingGrainGuid);
+      var testStream = streamProvider.GetStream<OrderPaidEvent>(streamId);
+
+      logger.LogInformation("Publisher stream details - StreamId: {StreamId}, GUID: {StreamGuid}, StreamProvider: {StreamProvider}",
+        streamId, reportingGrainGuid, streamProvider.GetType().Name);
+
+      var testEvent = new OrderPaidEvent
+      {
+        PurchaseOrderId = Guid.NewGuid(),
+        TransactionId = "TEST-TRANSACTION",
+        PaymentMethod = "TEST",
+        PaymentProvider = "TEST",
+        Amount = 100.00m,
+        Currency = "USD",
+        ProcessedAt = DateTimeOffset.UtcNow,
+        Status = "TEST"
+      };
+
+      logger.LogInformation("Publishing test event: {PurchaseOrderId} - {TransactionId}",
+        testEvent.PurchaseOrderId, testEvent.TransactionId);
+
+      await testStream.OnNextAsync(testEvent);
+      logger.LogInformation("Test event published successfully");
+
+
+    }
+    catch (Exception ex)
+    {
+      logger.LogError(ex, "Failed to publish test event");
+    }
+  }
+
+
 }

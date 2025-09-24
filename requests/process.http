@@ -93,3 +93,6 @@ Content-Type: application/json
 
 ### Get purchase order with payment
 GET http://localhost:5170/checkout/{{purchaseOrderId}}
+
+### Test OrderPaidEvent stream (should trigger OnNextAsync in reporting grain)
+POST http://localhost:5170/cart/test/order-paid-event

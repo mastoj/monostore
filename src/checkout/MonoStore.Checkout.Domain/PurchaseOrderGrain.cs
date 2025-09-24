@@ -57,7 +57,12 @@ public class PurchaseOrderGrain : Grain, IPurchaseOrderGrain
     var id = Guid.Parse(this.GetPrimaryKeyString().Split("/")[1]);
     _currentPurchaseOrder = await eventStore.GetState<PurchaseOrder>(id, default);
     var streamProvider = this.GetStreamProvider("OrderStreamProvider");
-    centralOrderPaidStream = streamProvider.GetStream<OrderPaidEvent>(StreamId.Create("OrderPaidEvent", Guid.Empty));
+    // Use the reporting grain's GUID as the stream target
+    var reportingGrainGuid = new Guid("11111111-1111-1111-1111-111111111111");
+    var streamId = StreamId.Create("OrderPaidEvent", reportingGrainGuid);
+    centralOrderPaidStream = streamProvider.GetStream<OrderPaidEvent>(streamId);
+    logger.LogInformation("Publisher initialized stream with StreamId: {StreamId}, GUID: {StreamGuid}",
+      streamId, reportingGrainGuid);
     await base.OnActivateAsync(cancellationToken);
   }
 
@@ -106,6 +111,12 @@ public class PurchaseOrderGrain : Grain, IPurchaseOrderGrain
     if (centralOrderPaidStream != null)
     {
       await centralOrderPaidStream.OnNextAsync(paidEvent);
+      logger.LogInformation("Published OrderPaidEvent to stream: {PurchaseOrderId} - {TransactionId}",
+        paidEvent.PurchaseOrderId, paidEvent.TransactionId);
+    }
+    else
+    {
+      logger.LogWarning("Central OrderPaidEvent stream is null, cannot publish event");
     }
 
     return GrainResult<PurchaseOrderData, CheckoutError>.Success(CurrentPurchaseOrder.AsContract());

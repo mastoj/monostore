@@ -64,4 +64,6 @@ public interface IPurchaseOrderReportingGrain : IGrainWithStringKey
   public static string ReportingGrainId => "purchase-order-reporting";
   Task StartListening();
   Task StopListening();
+  Task TestPublishEvent(); // Add test method
+
 }

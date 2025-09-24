@@ -2,9 +2,33 @@ using MonoStore.Cart.Domain;
 using MonoStore.Checkout.Domain;
 using MonoStore.Product.Domain;
 using JasperFx;
+using dotenv.net;
+using Orleans.Configuration;
 
-var builder = Host.CreateApplicationBuilder(args).UseHosting("monostore-service");
+var DefaultCollectionInterval = TimeSpan.FromSeconds(10);
+var DefaultCollectionAge = TimeSpan.FromSeconds(20);
 
+DotEnv.Load();
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.AddServiceDefaults();
+builder.AddKeyedAzureTableServiceClient("clustering", settings => settings.DisableTracing = true);
+builder.AddKeyedAzureBlobServiceClient("grainstate", settings => settings.DisableTracing = true);
+builder.UseOrleans(siloBuilder =>
+{
+  siloBuilder
+          .AddActivityPropagation()
+          .UseDashboard(x => x.HostSelf = true)
+          .AddMemoryStreams("ProductStreamProvider")
+          .AddMemoryStreams("OrderStreamProvider")
+          .AddMemoryGrainStorage("PubSubStore")
+          .AddStartupTask<PurchaseOrderReportingGrainActivator>()
+          .Configure<GrainCollectionOptions>(options =>
+                {
+                  options.CollectionAge = DefaultCollectionAge;
+                  options.CollectionQuantum = DefaultCollectionInterval;
+                });
+});
 builder.UseMartenEventStore("monostorepg", "monostore", so =>
 {
   return so.AddCartProjections()
@@ -12,9 +36,6 @@ builder.UseMartenEventStore("monostorepg", "monostore", so =>
 });
 
 builder.AddProductService();
-
-// Register the background service to keep the reporting grain active
-builder.Services.AddHostedService<PurchaseOrderReportingService>();
 
 // builder.UseMartenEventStore("monostorepg", "cart", so =>
 // {

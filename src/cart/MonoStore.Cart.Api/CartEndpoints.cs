@@ -159,6 +159,24 @@ public static class CartEndpoints
       return await cartGrain.ArchiveCart(new ArchiveCart());
     }).Produces<GrainResult<CartData, CartError>>();
 
+    // Test endpoint for OrderPaidEvent stream
+    routes.MapPost("/test/order-paid-event", async (IGrainFactory grains) =>
+    {
+      try
+      {
+        var reportingGrain = grains.GetGrain<MonoStore.Contracts.Checkout.Grains.IPurchaseOrderReportingGrain>(
+          MonoStore.Contracts.Checkout.Grains.IPurchaseOrderReportingGrain.ReportingGrainId);
+        
+        await reportingGrain.TestPublishEvent();
+        
+        return Results.Ok(new { message = "Test event published successfully. Check logs for OnNextAsync call." });
+      }
+      catch (Exception ex)
+      {
+        return Results.Problem($"Error testing event: {ex.Message}");
+      }
+    }).Produces<object>();
+
     return routes;
   }
 
